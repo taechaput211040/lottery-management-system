@@ -1,10 +1,9 @@
 <template>
   <div>
-    <h1 class="text-center mt-2">Type Category Detail</h1>
+    <h1 class="mt-2">Type Category Detail</h1>
 
-    <hr class="mt-4 mb-4" />
     <v-btn class="ma-2" color="error" @click="$router.go(-1)">back</v-btn>
-    <v-card class="ma-2 pa-6">
+    <div class="ma-2 pa-6 white rounded-lg">
       <v-row class="select-item "
         ><v-select class="col-6 col-md-2" label="Type Category"></v-select>
         <v-text-field
@@ -86,7 +85,7 @@
         </v-dialog>
         <!-- add  -->
       </v-card>
-    </v-card>
+    </div>
   </div>
 </template>
 

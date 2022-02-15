@@ -3,10 +3,9 @@
     <div v-if="!isLoading">
       <v-row>
         <v-container>
-          <h1 class="text-center mt-2">Program Lotto List</h1>
-          <hr class="mt-4 mb-4" />
+          <h1 class="mt-2">Program Lotto List</h1>
 
-          <v-card class="ma-2 pa-6">
+          <div class="ma-2 pa-6 white rounded-lg">
             <v-row class="select-item ">
               <v-select class="col-6 col-md-2" label="Lotto type"></v-select>
               <v-select class="col-6 col-md-2" label="Type category"></v-select>
@@ -293,7 +292,7 @@
               </v-card>
             </v-dialog>
             <!-- edit -->
-          </v-card>
+          </div>
         </v-container>
       </v-row>
     </div>

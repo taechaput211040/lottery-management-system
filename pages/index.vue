@@ -2,51 +2,208 @@
   <v-flex>
     <div v-if="!isLoading">
       <v-row>
-        <v-container>
-          <h3 class="text-center mt-2">Dashboard</h3>
-          <v-row class="pa-3">
-            <v-col cols="6" md="3" class="pa-2">
-              <v-card class="elevation-2">
-                <v-card-title>หวยยอดนิยม</v-card-title>
-                <div id="card">
-                  <div id="chart">
-                    <VueApexCharts
-                      type="radar"
-                      height="350"
-                      :options="chartOptions"
-                      :series="series"
-                    ></VueApexCharts>
-                  </div>
-                </div> </v-card
-            ></v-col>
+        <v-col cols="12" sm="4"
+          ><card-view
+            title="รวมยอดแทง"
+            iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/bet.png"
+            value="100"
+          ></card-view
+        ></v-col>
+        <v-col cols="12" sm="4"
+          ><card-view
+            title="รวมยอดรางวัล"
+            iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/poker-chips.png"
+            value="100"
+          ></card-view
+        ></v-col>
+        <v-col cols="12" sm="4"
+          ><card-view
+            title="กำไรขาดทุน"
+            iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/online-gambling.png"
+            value="$ 100 "
+          ></card-view
+        ></v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12"
+          ><div class="rounded-lg white">
+            <div
+              class="title_card rounded-t-xl d-sm-flex pa-4 font-weight-bold"
+            >
+              <h2>ยอดกำไรขาดทุน</h2>
+              <v-spacer></v-spacer>
+              <div class="text-center ">
+                <v-btn class="mx-1 font-weight-bold" small color="primary"
+                  >วัน</v-btn
+                ><v-btn class="mx-1 font-weight-bold" small color="primary"
+                  >สัปดาห์</v-btn
+                ><v-btn class="mx-1 font-weight-bold" small color="primary"
+                  >เดือน</v-btn
+                >
+              </div>
+            </div>
+            <v-divider></v-divider>
+            <div class="pa-3">
+              <VueApexCharts
+                type="area"
+                height="350"
+                :options="chartOptions"
+                :series="series"
+              ></VueApexCharts>
+            </div></div
+        ></v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" sm="6">
+          <div class="rounded-xl white">
+            <div class="title_card rounded-t-xl  pa-4 font-weight-bold">
+              <h2>ยอดแทงแต่ละประเภทหวย</h2>
+            </div>
+            <v-divider></v-divider>
+            <div class="pa-5 font-weight-bold">
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หวยรัฐบาล</span>
+                  <span class="primary--text">35000</span>
+                </div>
+                <v-progress-linear
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="75"
+                ></v-progress-linear>
+              </div>
 
-            <v-col cols="6" md="3" class="pa-2">
-              <card-view
-                title="หมายเลขที่ออกล่าสุด"
-                :value="20"
-                color="primary"
-                class="elevation-2"
-                :classChild="{ card_deposit: true }"
-              ></card-view>
-              <card-view
-                title="หมายเลขที่ออกล่าสุด"
-                :value="20"
-                color="primary"
-                class="elevation-2"
-                :classChild="{ card_deposit: true }"
-              ></card-view>
-              <card-view
-                title="หมายเลขที่ออกล่าสุด"
-                :value="20"
-                color="primary"
-                class="elevation-2 "
-                @editTodo="testtodo"
-                :classChild="{ card_deposit: true }"
-              ></card-view
-            ></v-col>
-          </v-row>
-          <!--<report-winlose></report-winlose> -->
-        </v-container>
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หวยออมสิน</span>
+                  <span class="deep-purple--text">35000</span>
+                </div>
+                <v-progress-linear
+                  color="deep-purple accent-4"
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="65"
+                ></v-progress-linear>
+              </div>
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หวยลาว</span>
+                  <span class="deep-orange--text">35000</span>
+                </div>
+                <v-progress-linear
+                  color="deep-orange accent-4"
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="15"
+                ></v-progress-linear>
+              </div>
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หุ้นไต้หวัน</span>
+                  <span class="yellow--text">35000</span>
+                </div>
+                <v-progress-linear
+                  color="yellow accent-4"
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="30"
+                ></v-progress-linear>
+              </div>
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หุ้นอังกฤษ</span>
+                  <span class="green--text">35000</span>
+                </div>
+                <v-progress-linear
+                  color="green accent-4"
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="45"
+                ></v-progress-linear>
+              </div>
+            </div>
+          </div>
+        </v-col>
+        <v-col cols="12" sm="6">
+          <div class="rounded-xl white">
+            <div class="title_card rounded-t-xl  pa-4 font-weight-bold">
+              <h2>ยอดรางวัลแต่ละประเภทหวย</h2>
+            </div>
+            <v-divider></v-divider>
+            <div class="pa-5 font-weight-bold">
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หวยรัฐบาล</span>
+                  <span class="primary--text">35000</span>
+                </div>
+                <v-progress-linear
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="75"
+                ></v-progress-linear>
+              </div>
+
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หวยออมสิน</span>
+                  <span class="deep-purple--text">35000</span>
+                </div>
+                <v-progress-linear
+                  color="deep-purple accent-4"
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="65"
+                ></v-progress-linear>
+              </div>
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หวยลาว</span>
+                  <span class="deep-orange--text">35000</span>
+                </div>
+                <v-progress-linear
+                  color="deep-orange accent-4"
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="15"
+                ></v-progress-linear>
+              </div>
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หุ้นไต้หวัน</span>
+                  <span class="yellow--text">35000</span>
+                </div>
+                <v-progress-linear
+                  color="yellow accent-4"
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="30"
+                ></v-progress-linear>
+              </div>
+              <div class="py-3">
+                <div class="d-flex justify-space-between">
+                  <span>หุ้นอังกฤษ</span>
+                  <span class="green--text">35000</span>
+                </div>
+                <v-progress-linear
+                  color="green accent-4"
+                  height="10"
+                  rounded
+                  class="mt-2"
+                  value="45"
+                ></v-progress-linear>
+              </div>
+            </div>
+          </div>
+        </v-col>
       </v-row>
     </div>
     <div v-if="isLoading" class="text-center">
@@ -68,44 +225,41 @@ export default {
   data() {
     return {
       isLoading: false,
-
       series: [
         {
-          name: "Series 1",
-          data: [80, 50, 30, 40, 100, 20]
+          name: "series1",
+          data: [31, 40, 28, 51, 42, 109, 100, 100]
         },
         {
-          name: "Series 2",
-          data: [20, 30, 40, 80, 20, 80]
-        },
-        {
-          name: "Series 3",
-          data: [44, 76, 78, 13, 43, 10]
-        },
-        {
-          name: "Series 3",
-          data: [14, 76, 8, 3, 43, 40]
+          name: "series2",
+          data: [11, 32, 45, 32, 34, 52, 41, 22]
         }
       ],
       chartOptions: {
         chart: {
           height: 350,
-          type: "radar"
+          type: "area"
         },
-        title: {
-          text: "Radar Chart - Multi Series"
+        dataLabels: {
+          enabled: false
         },
         stroke: {
-          width: 2
-        },
-        fill: {
-          opacity: 0.1
-        },
-        markers: {
-          size: 0
+          curve: "smooth"
         },
         xaxis: {
-          categories: ["2011", "2012", "2013", "2014", "2015", "2016"]
+          categories: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "June",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ]
         }
       }
     };

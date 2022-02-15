@@ -3,10 +3,9 @@
     <div v-if="!isLoading">
       <v-row>
         <v-container>
-          <h1 class="text-center mt-2">List Lotto</h1>
-          <hr class="mt-4 mb-4" />
+          <h1 class=" mt-2">List Lotto</h1>
 
-          <v-card class="ma-2 pa-6">
+          <div class="ma-2 white pa-6 rounded-lg">
             <v-row class="select-item ">
               <v-text-field
                 solo-inverted
@@ -168,7 +167,7 @@
               </v-card>
             </v-dialog>
             <!-- edit -->
-          </v-card>
+          </div>
         </v-container>
       </v-row>
     </div>

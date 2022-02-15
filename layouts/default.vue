@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title class="font-weight-bold" v-text="title" />
+      <v-toolbar-title v-text="title" />
       <v-spacer />
       <v-speed-dial
         absolute
@@ -24,54 +24,51 @@
       </v-speed-dial>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" :clipped="clipped" app fixed>
-      <template>
-        <v-card class="mt-5 ma-2" tile>
-          <v-row>
-            <v-col class="py-0">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title class="text-h6">
-                    LOGO
-                  </v-list-item-title>
-                  <v-list-item-subtitle>WEB Name</v-list-item-subtitle>
-                  <v-list-item-subtitle>Username : </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-col>
-          </v-row>
-        </v-card>
-      </template>
-      <v-list nav dense>
+    <v-navigation-drawer
+      v-model="drawer"
+      :clipped="clipped"
+      app
+      fixed
+      width="300"
+      ><v-toolbar-title class="font-weight-bold pa-4 text-center" align-center>
+        <v-img
+          height="100"
+          contain
+          class="ma-auto my-5"
+          src="https://image.smart-ai-api.com/public/image-storage/smartlotto/logosmartlotto.png"
+        ></v-img>
+      </v-toolbar-title>
+      <v-list dense class="red_list">
         <div v-for="(link, i) in items" :key="i">
           <v-list-item
+            active-class="active_list "
             v-if="!link.subLinks"
             :to="link.to"
-            avatar
-            class="v-list-item "
+            class="v-list-item font-weight-bold "
           >
             <v-list-item-icon>
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-title class="font-weight-bold" v-text="link.title" />
+            <v-list-item-title class="" v-text="link.title" />
           </v-list-item>
 
           <v-list-group
+            active-class=" deep-purple--text"
             v-else
             :key="link.title"
-            no-action
             :prepend-icon="link.icon"
             :value="false"
           >
             <template v-slot:activator>
-              <v-list-item-title class="font-weight-bold">{{
+              <v-list-item-title class=" h1">{{
                 link.title
               }}</v-list-item-title>
             </template>
 
             <v-list-item
-              style="padding-left:30px !important"
+              active-class="active_list"
+              style="padding-left: 30px !important;margin-right: 5px;margin-left: 5px;"
               v-for="sublink in link.subLinks"
               :to="sublink.to"
               :key="sublink.text"
@@ -79,10 +76,7 @@
               <v-list-item-icon>
                 <v-icon>{{ sublink.icon }}</v-icon>
               </v-list-item-icon>
-              <v-list-item-title
-                class="font-weight-bold"
-                v-text="sublink.text"
-              />
+              <v-list-item-title v-text="sublink.text" />
             </v-list-item>
           </v-list-group>
         </div>
@@ -119,54 +113,27 @@ export default {
         {
           title: "Dashboard",
           to: "/",
-          icon: "mdi-view-dashboard",
-          subLinks: [
-            {
-              icon: "mdi-view-dashboard",
-              text: "สรุปผล",
-              to: "/"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "ผล Win/Lose ตามประเภทหวย",
-              to: "/account/changepassword"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "ผลหวยที่ออกไปแล้ว",
-              to: "/account/changepasswd"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "รายการหวยที่กำลังจะออก",
-              to: "/account/changepassd"
-            }
-          ]
+          icon: "mdi-view-dashboard"
         },
         {
-          title: "รายงานการแทง",
+          title: "รายงาน",
           to: "/staff",
           icon: "mdi-account",
           subLinks: [
             {
               icon: "mdi-view-dashboard",
-              text: "ผลรวม / Bet Summary",
-              to: "/account/profile"
+              text: "รายงานผลรางวัล",
+              to: "/report/reportAward"
             },
             {
               icon: "mdi-view-dashboard",
-              text: "รายงาน Agent Win/Lose ",
-              to: "/account/chanword"
+              text: "กำไร / ขาดทุน",
+              to: "/report/chanword"
             },
             {
               icon: "mdi-view-dashboard",
-              text: "รายงาน Member Win/Lose ",
-              to: "/account/changeord"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "ยกเลิกโพย รายการแทง ",
-              to: "/account/changepassd"
+              text: "ยกเลิกโพย / รายการแทง",
+              to: "/report/betReport"
             }
           ]
         },
