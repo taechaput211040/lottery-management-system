@@ -170,6 +170,28 @@ export default {
           ]
         },
         {
+          title: "ตั้งค่า",
+          to: "/company",
+          icon: "mdi-credit-card-plus-outline",
+          subLinks: [
+            {
+              icon: "mdi-view-dashboard",
+              text: "รอบหวย",
+              to: "/setting/lottoSchedule"
+            },
+            {
+              icon: "mdi-view-dashboard",
+              text: "เปิดปิดหวย",
+              to: "/setting/onOff"
+            },
+            {
+              icon: "mdi-view-dashboard",
+              text: "เปิดปิดหวยลูก",
+              to: "/setting/onOffChild"
+            }
+          ]
+        },
+        {
           title: "Company Setting",
           to: "/company",
           icon: "mdi-credit-card-plus-outline",

@@ -9,6 +9,8 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import auth from "./auth";
 import provider from "./provider";
 import group from "./group";
+import moment from "moment";
+Vue.prototype.$moment = moment;
 Vue.use(VueSweetalert2);
 Vue.use(Vuex);
 Vue.use(ElementUI, { locale });
