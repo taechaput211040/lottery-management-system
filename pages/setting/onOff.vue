@@ -64,7 +64,7 @@ export default {
           text: "สถานะ",
           value: "upline_status",
           class: "font-weight-bold",
-          align: "center"
+          align: "start"
         },
       ],
       itemtypeaward: [
