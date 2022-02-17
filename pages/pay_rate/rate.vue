@@ -1,26 +1,18 @@
 <template>
 	<v-flex>
-    <div class="d-flex justify-center"><h2>เปิดปิดหวย</h2></div>
+    <div class="d-flex justify-center"><h2>อัตราจ่ายหวยเพลา</h2></div>
 		
 		<div class="white rounded-lg">
 			<div class="rounded-lg white">
-        <v-data-table :headers="headerOnOffChild" :items="itemtypeaward" >
-					<template #[`item.upline_status`]="{item}">
-						<!-- {{item.upline_status}} -->
-            <v-radio-group v-model="item.upline_status" row >
-							<v-radio
-								label="on"
-								:value=true
-							></v-radio>
-							<v-radio
-								label="off"
-								:value=false
-							></v-radio>
-						</v-radio-group>
-						
+				<div class="d-flex justify-content-end"><v-button> </v-button></div>
+        <v-data-table :headers="headersdatelotto" :items="itemtypeaward" >
+					<template #[`item.action`]="{item}" >
+            <v-btn rounded color="warning" small @click="dialogdetail = true"
+              ><v-icon left>mdi-pen</v-icon> edit
+            </v-btn>
         	</template>
         </v-data-table>
-      </div>
+    	</div>
     </div>
 
 		<!-- edit modal card-->
@@ -47,7 +39,7 @@ export default {
 			row:'',
 			select2Date: false,
       dialogdetail: false,
-      headerOnOffChild: [
+      headersdatelotto: [
         {
           text: "No.",
           value: "num",
@@ -56,37 +48,41 @@ export default {
 					align: "center"
         },
 				{
-          text: "Username",
-          value: "username",
-          class: "font-weight-bold",
-					align: "center"
-        },
-        {
-          text: "ชื่อ",
+          text: "ชนิดหวย",
           value: "title",
           class: "font-weight-bold",
 					align: "center"
         },
+				{
+          text: "อัตราจ่าย",
+          value: "pay_rate",
+          class: "font-weight-bold",
+					align: "center"
+        },
         {
-          text: "สถานะ",
-          value: "upline_status",
+          text: "ส่วนลด",
+          value: "discount",
+          class: "font-weight-bold",
+					align: "center"
+        },
+        {
+          text: "Action",
+          value: "action",
           class: "font-weight-bold",
 					align: "center"
         },
       ],
       itemtypeaward: [
         {
-					num: "2",
-					username: "AA5455454",
-          id:"asd2-52gmp-mo51-3fxcwmql4611111",
-					title: "ฮานอยสตาร์",
-					upline_status: true
+					num: "ๅ",
+					title: "2 ตัวบน",
+					pay_rate: "92",
+					discount: "8",
         },{
-					num:"3",
-					username: "AA5455678",
-					id:"asd2-52gmp-mo51-3fxcwmql461ps6lx",
-					title: "ฮานอยสตาร์",
-					upline_status: false        
+					num: "2",
+					title: "3 ตัวบน",
+					pay_rate: "800",
+					discount: "15",
 				}
       ],
       selecttype: "",

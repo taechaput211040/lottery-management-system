@@ -59,11 +59,11 @@
     <div class="white rounded-lg">
 			<div class="rounded-lg white">
         <v-data-table :headers="headersdatelotto" :items="itemtypeaward" >
-          <template #[`item.bet_open_time`]="{item}"><span class="_greenText">{{item.bet_open_time}}</span></template>
-					<template #[`item.bet_close_time`]="{item}"><span class="_redText">{{item.bet_close_time}}</span></template>
-					<template #[`item.bet_lotto_time`]="{item}"><span class="_redText">{{item.bet_lotto_time}}</span></template>
-					<template #[`item.action`]>
-            <v-btn rounded color="primary" small @click="dialogdetail = true"
+          <template #[`item.bet_open_time`]="{item}"><span >{{item.bet_open_time}}</span></template>
+					<template #[`item.bet_close_time`]="{item}"><span >{{item.bet_close_time}}</span></template>
+					<template #[`item.bet_lotto_time`]="{item}"><span >{{item.bet_lotto_time}}</span></template>
+					<template #[`item.action`]="{item}">
+            <v-btn rounded color="primary" small @click="openEdit(item)"
               ><v-icon left>mdi-magnify</v-icon>แก้ไข
             </v-btn>
           </template>
@@ -85,6 +85,7 @@
 							<v-text-field
 								label="ชื่อ"
 								placeholder="กรอกชื่อ"
+                :value="editing.title"
 							></v-text-field>
 						</v-col>
 					</v-row>
@@ -96,7 +97,7 @@
 						<v-col cols="8">
 							<v-text-field
 								label="จำนวนรอบ"
-								value="รอบเดียว"
+								:value="editing.lotto_round"
 							></v-text-field>
 						</v-col>
 					</v-row>
@@ -109,7 +110,7 @@
 						<v-col cols="8">
 							<v-text-field
 								label="วันที่เปิด"
-								value=""
+								:value="editing.bet_open_time"
 								type="datetime-local"
 							></v-text-field>
 						</v-col>
@@ -122,7 +123,7 @@
 						<v-col cols="8">
 							<v-text-field
 								label="วันที่ปิด"
-								value="12:30:00"
+								:value="editing.bet_close_time"
 								type="datetime-local"
 							></v-text-field>
 						</v-col>
@@ -135,7 +136,7 @@
 						<v-col cols="8">
 							<v-text-field
 								label="วันหวยออก"
-								value=""
+								:value="editing.bet_lotto_time"
 								type="datetime-local"
 							></v-text-field>
 						</v-col>
@@ -148,16 +149,16 @@
 						</v-col>
 						<v-col cols="8">
 							<v-radio-group
-								v-model="row"
+								v-model="editing.status"
 								row
 							>
 								<v-radio
 									label="เปิด"
-									value="เปิด"
+									:value="true"
 								></v-radio>
 								<v-radio
 									label="ปิด"
-									value="ปิด"
+									:value="false"
 								></v-radio>
 							</v-radio-group>
 						</v-col>
@@ -178,6 +179,7 @@ export default {
     return {
 			select2Date: false,
       dialogdetail: false,
+      editing: {},
       headersdatelotto: [
         {
           text: "ลำดับ",
@@ -202,19 +204,22 @@ export default {
           text: "วันที่เปิดแทง",
           value: "bet_open_time",
           align: "center",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold green--text"
         },
         {
           text: "วันที่ปิดแทง",
           value: "bet_close_time",
           align: "center",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold red--text"
         },
         {
           text: "วันที่ออกผล",
           value: "bet_lotto_time",
           align: "center",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold red--text"
         },
         {
           text: "สถานะ",
@@ -281,7 +286,14 @@ export default {
 		getEndDate(){
 			var end = this.$moment(this.filter.endDate).format('DD/MM/YYYY')
 			return end
-		}
+		},
+
+    openEdit(obj){
+      this.editing = obj
+      console.log(obj)
+      console.log(this.editing)
+      this.dialogdetail = true
+    }
 	},
   watch: {
     selecttype(newVal) {

@@ -4,20 +4,19 @@
 		
 		<div class="white rounded-lg">
 			<div class="rounded-lg white">
-        <v-data-table :headers="headersdatelotto" :items="itemtypeaward" >
-					<template #[`item.upline_status`]="{item}">
-						{{item.upline_status}}
-            <v-radio-group v-model="item.upline_status" row >
+        <v-data-table :headers="headerOnOff" :items="itemtypeaward" >
+					<template #[`item.upline_status`]="{item}"  >
+						<!-- {{item.upline_status}} -->
+            <v-radio-group v-model="item.upline_status" row  >
 							<v-radio
 								label="on"
-								value=true
+								:value="true"
 							></v-radio>
 							<v-radio
 								label="off"
-								value=false
+								:value="false"
 							></v-radio>
 						</v-radio-group>
-						
           </template>
         </v-data-table>
       </div>
@@ -47,22 +46,25 @@ export default {
 			row:'',
 			select2Date: false,
       dialogdetail: false,
-      headersdatelotto: [
+      headerOnOff: [
         {
           text: "No.",
           value: "num",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          align: "center"
         },
         {
           text: "ชื่อ",
           value: "title",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          align: "center"
         },
         {
           text: "สถานะ",
           value: "upline_status",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          align: "center"
         },
       ],
       itemtypeaward: [
@@ -84,7 +86,13 @@ export default {
         endDate: ""
       }
     };
+    
   },
+  methods: {
+    _type(object) {
+      return typeof obejct
+    }
+  }
 	
 };
 </script>
