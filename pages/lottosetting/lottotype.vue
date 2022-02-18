@@ -119,19 +119,24 @@
                       filled
                       disabled
                       label="Lotto Type"
-                      v-model="dataEdit.lotto_type"
+                      v-model="dataEdit.title"
                       dense
                       outlined
                     ></v-text-field>
-                    <v-switch
-                      v-model="dataEdit.status"
-                      false-value="inactive"
-                      true-value="active"
-                      :label="`STATUS : ${dataEdit.status}`"
-                      @click="addstatus"
-                      flat
-                    ></v-switch></v-form
-                ></v-card>
+                    <div class="d-flex">
+                      <v-switch
+                        v-model="dataEdit.StatusData"
+                        false-value="0"
+                        true-value="1"
+                        @click="addstatus"
+                        flat
+                      ></v-switch>
+                      STATUS :
+                      <span v-if="dataEdit.StatusData == 1">เปิด</span>
+                      <span v-else>ปิด</span>
+                    </div>
+                  </v-form></v-card
+                >
                 <v-row class="pa-2">
                   <v-spacer></v-spacer>
                   <v-btn
@@ -163,6 +168,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -182,22 +188,26 @@ export default {
           text: "Lotto Type",
           align: "center",
           filterable: false,
-          value: "lotto_type"
+          value: "title"
         },
-        { text: "Type Category", value: "type_category", align: "center" },
-        { text: "status", value: "status", align: "center" },
+        { text: "status", value: "StatusData", align: "center" },
         { text: "Action", value: "action", align: "center" }
       ],
-      itemexam: [
-        {
-          lotto_type: "หวยลาว",
-          type_category: "หวยฮานอย",
-          status: "active"
-        }
-      ]
+      itemexam: []
     };
   },
+
+  async fetch() {
+    try {
+      let response = await this.getLottotype();
+      this.itemexam = response.result.data;
+      console.log(response.result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   methods: {
+    ...mapActions("lottosetting", ["getLottotype"]),
     openEdit(data) {
       this.dataEdit = data;
       this.modal_edit = true;

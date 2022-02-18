@@ -15,10 +15,10 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   proxy: {
-    "/api": {
+    "/api/": {
       // target: "http://192.168.1.123:5000",
       // target: "http://localhost:5000",
-      target: "https://agent-service-backend-kdz5uqbpia-as.a.run.app",
+      target: "https://lottoprize-ehhif4jpyq-as.a.run.app",
       changeOrigin: true
     },
     "/static": {
@@ -29,7 +29,7 @@ export default {
     }
   },
   server: {
-    port: 8001 // default: 3000
+    port: 8030 // default: 3000
   },
   mode: "spa",
   // Global CSS: https://go.nuxtjs.dev/config-css

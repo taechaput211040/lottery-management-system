@@ -6,9 +6,8 @@ import locale from "element-ui/lib/locale/lang/th";
 // we first import the module
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import auth from "./auth";
-import provider from "./provider";
-import group from "./group";
+import lottosetting from "./lottosetting";
+
 import moment from "moment";
 Vue.prototype.$moment = moment;
 Vue.use(VueSweetalert2);
@@ -18,9 +17,7 @@ export default function(/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       // then we reference it
-      auth,
-      provider,
-      group
+      lottosetting
     },
 
     // enable strict mode (adds overhead!)
