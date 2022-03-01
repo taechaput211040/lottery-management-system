@@ -99,7 +99,7 @@
 <script>
 // import { mapActions } from "vuex";
 export default {
-  // middleware: "auth",
+  middleware: "auth",
   data() {
     return {
       fab: false,
@@ -278,7 +278,7 @@ export default {
     // }),
     async logout() {
       try {
-        let token = localStorage.getItem("key");
+        let token = localStorage.getItem("token");
         if (token) {
           localStorage.clear();
           this.$router.push("/login");

@@ -24,7 +24,7 @@
       <v-card class="mx-auto mt-5 justify-center classtable">
         <v-data-table
           :headers="headers"
-          :items="itemexample"
+          :items="renderDetail"
           hide-default-footer
         >
           <template #[`item.no`]="{index}">
@@ -90,6 +90,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -146,7 +147,7 @@ export default {
           value: "action"
         }
       ],
-      itemexample: [
+      renderDetail: [
         {
           title: "หวยฮานอย",
           open_date_time: "2021/07/21 18:00:15",
@@ -158,7 +159,20 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.getDetail();
+  },
   methods: {
+    ...mapActions("lottosetting", ["getTypeCategoryDetailByid"]),
+    async getDetail() {
+      try {
+        let id = this.$route.query.id;
+        const { data } = await this.getTypeCategoryDetailByid(id);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     showdetail(id) {
       console.log(id);
     },

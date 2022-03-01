@@ -21,6 +21,10 @@
       >
       <v-card class="mx-auto mt-5 justify-center classtable">
         <v-data-table
+          :server-items-length="pagination.rowsNumber"
+          :items-per-page.sync="pagination.rowsPerPage"
+          :page.sync="pagination.page"
+          :options.sync="options"
           :headers="headers"
           :items="itemexample"
           hide-default-footer
@@ -53,7 +57,7 @@
           </template>
           <template #[`item.status`]="{item}">
             <v-chip
-              v-if="item.status == 'active'"
+              v-if="item.status == 1"
               class="ma-2"
               color="success"
               outlined
@@ -61,18 +65,13 @@
               <v-icon left>
                 mdi-circle
               </v-icon>
-              {{ item.status }}
+              active
             </v-chip>
-            <v-chip
-              v-if="item.status == 'inactive'"
-              class="ma-2"
-              color="error"
-              outlined
-            >
+            <v-chip v-if="item.status == 0" class="ma-2" color="error" outlined>
               <v-icon left>
                 mdi-circle
               </v-icon>
-              {{ item.status }}
+              unactive
             </v-chip>
           </template>
           <template #[`item.permaxbet`]="{item}">
@@ -167,9 +166,18 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      option: {},
+      pagination: {
+        sortBy: "desc",
+        descending: false,
+        page: 1,
+        rowsPerPage: 15,
+        rowsNumber: 0
+      },
       dataEdit: [],
       modal_edit: false,
       select_status: "inactive",
@@ -199,47 +207,39 @@ export default {
           filterable: false,
           value: "status"
         },
-        { text: "Create Date ", value: "create_date", align: "center" },
-        { text: "Create By", value: "create_by", align: "center" },
-        { text: "Upload Date", value: "upload_date", align: "center" },
-        { text: "Upload By", value: "upload_by", align: "center" },
+        { text: "Create Date ", value: "created_at", align: "center" },
+        { text: "Create By", value: "created_by", align: "center" },
+        { text: "Upload Date", value: "updated_at", align: "center" },
+        { text: "Upload By", value: "updated_by", align: "center" },
         { text: "Action", value: "action", align: "center" }
       ],
-      itemexample: [
-        {
-          title: "หวยฮานอย",
-          id: "1234",
-          type_Category_detail: [
-            { open_datetime: "datsadsaa" },
-            { close_datetime: "datsadsaa" },
-            { prize: "datsadsaa" },
-            { plan_type: "datsadsaa" }
-          ],
-          status: "inactive",
-          create_date: "2021/12/12",
-          create_by: "admin",
-          upload_date: "2021/12/12",
-          upload_by: "admin"
-        },
-        {
-          title: "หวยร้าบาล",
-          id: "1235",
-          type_Category_detail: [
-            { open_datetime: "datsadsaa" },
-            { close_datetime: "datsadsaa" },
-            { prize: "datsadsaa" },
-            { plan_type: "datsadsaa" }
-          ],
-          status: "active",
-          create_date: "2021/12/12",
-          create_by: "admin",
-          upload_date: "2021/12/12",
-          upload_by: "admin"
-        }
-      ]
+      itemexample: []
     };
   },
+  watch: {
+    options: {
+      async handler() {
+        await this.onRequest({
+          pagination: this.pagination_render
+        });
+      }
+    }
+  },
+  async fetch() {
+    try {
+      let param = {
+        page: this.pagination.page,
+        limit: this.pagination.rowsPerPage
+      };
+      const response = await this.getTypeCategory(param);
+      this.itemexample = response.result.data;
+      console.log(this.itemexample);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   methods: {
+    ...mapActions("lottosetting", ["getTypeCategory"]),
     showdetail(id) {
       this.$router.push(`${this.$route.path}?id=${id}`);
     },

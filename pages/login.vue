@@ -33,7 +33,7 @@
                     block
                     rounded
                     dark
-                    @click.prevent="login()"
+                    @click.prevent="auth()"
                     >Login</v-btn
                   >
                   <v-card-actions class="text--secondary">
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-// import { mapActions } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   layout: "session",
   data() {
@@ -61,38 +61,30 @@ export default {
     };
   },
   async beforeMount() {
-    // this.checklogin();
+    this.checklogin();
   },
   methods: {
-    // ...mapActions("auth", {
-    //   auth: "login"
-    // }),
-    async login() {
-      // try {
-      //   const response = await this.auth({
-      //     username: this.username,
-      //     password: this.password
-      //   });
-      //   console.log(response.data);
-      //   if (response.data.key) {
-      //     this.$router.push("/");
-      //   }
-      // } catch (err) {
-      //   console.log(err);
-      // }
-      //thisheraraererererer//
-      // const tolog = this.$axios.defaults.headers.common['Authorization']
-      // console.log(tolog);
-      // const logindata = {
-      //   username: this.username,
-      //   password: this.password
-      // };
+    ...mapActions("auth", ["login", "gettoken"]),
+    async auth() {
+      try {
+        const { data: response } = await this.login({
+          username: this.username,
+          password: this.password
+        });
+        console.log(response.hash);
+        if (response.hash) {
+          this.gettoken(response.hash);
+          this.$router.push("/");
+        }
+      } catch (err) {
+        console.log(err);
+      }
     },
     checklogin() {
-      // const token = localStorage.getItem("key");
-      // if (token) {
-      //   this.$router.push("/");
-      // }
+      const token = localStorage.getItem("token");
+      if (token) {
+        this.$router.push("/");
+      }
     }
   }
 };

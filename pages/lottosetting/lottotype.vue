@@ -23,7 +23,7 @@
             <v-card class="mx-auto mt-5 justify-center classtable">
               <v-data-table
                 :headers="headers"
-                :items="itemexam"
+                :items="dataRender"
                 hide-default-footer
               >
                 <template #[`item.no`]="{index}">
@@ -31,7 +31,7 @@
                 </template>
                 <template #[`item.status`]="{item}">
                   <v-chip
-                    v-if="item.status == 'active'"
+                    v-if="item.status == '1'"
                     class="ma-2"
                     color="success"
                     outlined
@@ -39,10 +39,10 @@
                     <v-icon left>
                       mdi-circle
                     </v-icon>
-                    {{ item.status }}
+                    active
                   </v-chip>
                   <v-chip
-                    v-if="item.status == 'inactive'"
+                    v-if="item.status == '0'"
                     class="ma-2"
                     color="error"
                     outlined
@@ -50,56 +50,93 @@
                     <v-icon left>
                       mdi-circle
                     </v-icon>
-                    {{ item.status }}
+                    inactive
                   </v-chip>
                 </template>
                 <template #[`item.action`]="{item}">
-                  <v-btn
-                    class="mx-auto"
-                    fab
-                    dark
-                    x-small
-                    color="warning"
-                    @click="openEdit(item)"
-                  >
-                    <v-icon dark>
-                      mdi-pencil
-                    </v-icon>
-                  </v-btn>
+                  <v-tooltip bottom color="warning">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        class="mx-1"
+                        fab
+                        dark
+                        x-small
+                        color="warning"
+                        @click="openEdit(item)"
+                      >
+                        <v-icon dark>
+                          mdi-pencil
+                        </v-icon>
+                      </v-btn></template
+                    >
+                    <span>แก้ไขหวย</span>
+                  </v-tooltip>
+
+                  <v-tooltip bottom color="black">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        class="mx-1"
+                        fab
+                        dark
+                        x-small
+                        color="black"
+                        @click="closeConfig(item)"
+                      >
+                        <v-icon dark>
+                          mdi-lock
+                        </v-icon>
+                      </v-btn></template
+                    >
+                    <span>ปิดหวย</span>
+                  </v-tooltip>
+                  <v-tooltip bottom color="error">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        class="mx-1"
+                        fab
+                        dark
+                        x-small
+                        color="error"
+                        @click="deleteConfig(item)"
+                      >
+                        <v-icon dark>
+                          mdi-delete
+                        </v-icon>
+                      </v-btn></template
+                    >
+                    <span>ลบหวย</span>
+                  </v-tooltip>
                 </template>
               </v-data-table>
             </v-card>
             <!-- add -->
-            <v-dialog full-width v-model="modal_add" max-width="400">
+            <v-dialog v-model="modal_add" max-width="400">
               <v-card class="pa-4">
                 <v-card-title class="text-h5">
                   List Lotto - ADD
                 </v-card-title>
                 <v-card class="pa-4 ma-3">
-                  <v-form>
+                  <v-form ref="formcreate" v-model="valid">
                     <v-text-field
                       label="Lotto Type"
                       dense
+                      :rules="titleRules"
+                      v-model="formCreate.title"
+                      required
                       outlined
-                    ></v-text-field>
-                    <v-switch
-                      v-model="select_status"
-                      false-value="inactive"
-                      true-value="active"
-                      :label="`STATUS : ${select_status}`"
-                      @click="addstatus"
-                      flat
-                    ></v-switch> </v-form
+                    ></v-text-field> </v-form
                 ></v-card>
                 <v-row class="pa-2">
                   <v-spacer></v-spacer>
-                  <v-btn
-                    color="success"
-                    small
-                    class="mx-2"
-                    @click="modal_add = false"
+                  <v-btn color="success" small class="mx-2" @click="addConfig()"
                     >ADD</v-btn
-                  ><v-btn color="error" small @click="modal_add = false"
+                  ><v-btn color="error" small @click="closeCreateconfig()"
                     >CANCLE</v-btn
                   >
                   <v-spacer></v-spacer>
@@ -108,7 +145,7 @@
             </v-dialog>
             <!-- add -->
             <!-- edit -->
-            <v-dialog full-width v-model="modal_edit" max-width="400">
+            <v-dialog v-model="modal_edit" max-width="400">
               <v-card class="pa-4">
                 <v-card-title class="text-h5">
                   List Lotto - EDIT
@@ -117,22 +154,21 @@
                   <v-form>
                     <v-text-field
                       filled
-                      disabled
                       label="Lotto Type"
                       v-model="dataEdit.title"
                       dense
                       outlined
                     ></v-text-field>
-                    <div class="d-flex">
+                    <div class="d-flex align-center">
                       <v-switch
-                        v-model="dataEdit.StatusData"
-                        false-value="0"
-                        true-value="1"
-                        @click="addstatus"
+                        hide-details="auto"
+                        v-model="dataEdit.status"
+                        :false-value="0"
+                        :true-value="1"
                         flat
                       ></v-switch>
                       STATUS :
-                      <span v-if="dataEdit.StatusData == 1">เปิด</span>
+                      <span v-if="dataEdit.status == 1">เปิด</span>
                       <span v-else>ปิด</span>
                     </div>
                   </v-form></v-card
@@ -143,9 +179,9 @@
                     color="success"
                     small
                     class="mx-2"
-                    @click="modal_edit = false"
+                    @click="editConfig(dataEdit)"
                     >SAVE</v-btn
-                  ><v-btn color="error" small @click="modal_edit = false"
+                  ><v-btn color="error" small @click="closeEditconfig"
                     >CANCLE</v-btn
                   >
                   <v-spacer></v-spacer>
@@ -170,49 +206,188 @@
 <script>
 import { mapActions } from "vuex";
 export default {
+  watch: {
+    modal_add: {
+      handler() {
+        this.formCreate = {
+          title: ""
+        };
+      },
+      deep: true
+    }
+  },
   data() {
     return {
-      select_status: "inactive",
+      titleRules: [v => !!v || "กรุรากรอกชื่อหวย"],
+      valid: true,
+      select_status: "0",
       modal_edit: false,
       dataEdit: [],
       modal_add: false,
       isLoading: false,
+      formCreate: {
+        title: ""
+      },
       headers: [
         {
           text: "No.",
           value: "no",
           align: "center",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold",
+          width: "100px"
+        },
+        {
+          text: "ID.",
+          value: "id",
+          align: "center",
+          class: "font-weight-bold",
+          width: "350px"
         },
         {
           text: "Lotto Type",
           align: "center",
-          filterable: false,
+          filtertable: false,
           value: "title"
         },
-        { text: "status", value: "StatusData", align: "center" },
-        { text: "Action", value: "action", align: "center" }
+        { text: "status", value: "status", align: "center" },
+        { text: "Action", value: "action", align: "center", width: "200px" }
       ],
-      itemexam: []
+      dataRender: []
     };
   },
 
   async fetch() {
+    this.isLoading = true;
     try {
       let response = await this.getLottotype();
-      this.itemexam = response.result.data;
-      console.log(response.result.data);
+      this.dataRender = response.result.data;
+      this.isLoading = false;
     } catch (error) {
       console.log(error);
+      this.isLoading = false;
     }
   },
   methods: {
-    ...mapActions("lottosetting", ["getLottotype","createLottotype"]),
+    ...mapActions("lottosetting", [
+      "getLottotype",
+      "createLottotype",
+      "updateLottotype",
+      "deleteLottotype",
+      "closeLottotype"
+    ]),
     openEdit(data) {
       this.dataEdit = data;
       this.modal_edit = true;
     },
-    addstatus() {}
+    async editConfig(item) {
+      try {
+        let response = await this.updateLottotype(item);
+        console.log(response);
+        this.modal_edit = false;
+        this.$swal({
+          icon: "success",
+          title: "แก้ไขเรียบร้อย",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.$fetch();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    closeEditconfig() {
+      this.modal_edit = false;
+      this.$fetch();
+    },
+    async closeConfig(item) {
+      try {
+        this.$swal({
+          title: "แน่ใจหรือไม่ว่าต้องการปิดหวย?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ปิดหวย"
+        }).then(async result => {
+          if (result.isConfirmed) {
+            await this.closeLottotype(item);
+            this.$swal({
+              icon: "success",
+              title: "ปิดเรียบร้อย",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            this.$fetch();
+          } else {
+            this.$fetch();
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteConfig(item) {
+      try {
+        this.$swal({
+          title: "แน่ใจหรือไม่ว่าต้องการลบ?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ลบ"
+        }).then(async result => {
+          if (result.isConfirmed) {
+            await this.deleteLottotype(item);
+            this.$swal(
+              "ลบเรียบร้อย!",
+              "Your file has been deleted.",
+              "success"
+            );
+            this.$fetch();
+          } else {
+            this.$fetch();
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async addConfig() {
+      if (this.$refs.formcreate.validate()) {
+        try {
+          await this.createLottotype(this.formCreate);
+          this.$swal({
+            icon: "success",
+            title: "สร้างหวยเรียบร้อย",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.modal_add = false;
+          this.$fetch();
+        } catch (error) {
+          this.$swal({
+            icon: "error",
+            title: "สร้างผิดพลาด",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          console.log(error);
+        }
+      } else {
+        this.$swal({
+          icon: "error",
+          title: "กรุณากรอกชื่อหวย",
+          showConfirmButton: false,
+          timer: 1000
+        });
+        console.log("nope");
+      }
+    },
+    closeCreateconfig() {
+      this.modal_add = false;
+      this.$fetch();
+    }
   }
 };
 </script>

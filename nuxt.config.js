@@ -15,17 +15,13 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   proxy: {
-    "/api/": {
-      // target: "http://192.168.1.123:5000",
-      // target: "http://localhost:5000",
-      target: "https://lottoprize-ehhif4jpyq-as.a.run.app",
-      changeOrigin: true
+    "/apilogin/": {
+      target: "https://lotto-launchgame-service-ehhif4jpyq-as.a.run.app",
+      pathRewrite: { "^/apilogin/": "" }
     },
-    "/static": {
-      // target: "http://localhost:5000",
-      // target: "http://192.168.1.123:5000",
-      target: "https://agent.bet-kub.com",
-      changeOrigin: true
+    "/program/": {
+      target: "https://lottoprize-ehhif4jpyq-as.a.run.app",
+      pathRewrite: { "^/program/": "" }
     }
   },
   server: {

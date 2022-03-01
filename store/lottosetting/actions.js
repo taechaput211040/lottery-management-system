@@ -2,7 +2,7 @@
 export async function getLottotype({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/LottoType/get`);
+      let response = await this.$axios.get(`/program/api/LottoType/get`);
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -10,11 +10,13 @@ export async function getLottotype({ commit }) {
   });
 }
 
-//LottoType/insert											
-export async function createLottotype({ commit , body}) {
+//LottoType/insert
+export async function createLottotype({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`/api/LottoType/insert`, body);
+      let response = await this.$axios.post(`/program/api/LottoType/insert`, {
+        title: body.title
+      });
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -22,12 +24,18 @@ export async function createLottotype({ commit , body}) {
   });
 }
 
-
-//LottoType/update											
-export async function updateLottotype({ commit, id, body }) {
+//LottoType/update
+export async function updateLottotype({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.patch(`/api/LottoType/insert/${id}`, body);
+      // console.log(body);
+      let response = await this.$axios.patch(
+        `/program/api/LottoType/update/${body.id}`,
+        {
+          title: body.title,
+          status: body.status
+        }
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -35,11 +43,13 @@ export async function updateLottotype({ commit, id, body }) {
   });
 }
 
-//LottoType/delete											
-export async function deleteLottotype({ commit, id}) {
+//LottoType/delete
+export async function deleteLottotype({ commit }, param) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/api/LottoType/delete/${id}`);
+      let response = await this.$axios.delete(
+        `/program/api/LottoType/delete/${param.id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -47,11 +57,13 @@ export async function deleteLottotype({ commit, id}) {
   });
 }
 
-//LottoType/close											
-export async function closeLottotype({ commit, id}) {
+//LottoType/close
+export async function closeLottotype({ commit }, param) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/api/LottoType/close/${id}`);
+      let response = await this.$axios.delete(
+        `/program/api/LottoType/close/${param.id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -60,10 +72,12 @@ export async function closeLottotype({ commit, id}) {
 }
 
 //TypeCategory/Id
-export async function getTypeCategory({ commit, id}) {
+export async function getTypeCategoryByid({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/TypeCategory/id/${id}`);
+      let response = await this.$axios.get(
+        `/program/api/TypeCategory/id/${id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -72,11 +86,13 @@ export async function getTypeCategory({ commit, id}) {
 }
 
 //TypeCategoryDetail/Id
-export async function getTypeCategoryDetail({ commit, id}) {
+export async function getTypeCategoryDetailByid({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/TypeCategoryDetail/id/${id}`);
-      resolve(response.data);
+      let response = await this.$axios.get(
+        `/program/api/TypeCategoryDetail/id/${id}`
+      );
+      resolve(response);
     } catch (error) {
       reject(error);
     }
@@ -84,11 +100,25 @@ export async function getTypeCategoryDetail({ commit, id}) {
 }
 
 //TypeCategory/get
-export async function getTypeCategory({ commit }) {
+export async function getTypeCategory(
+  { commit },
+  params = {
+    page: undefined,
+    limit: undefined
+  }
+) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/TypeCategory/get`);
-      resolve(response.data);
+      let response = await this.$axios.get(
+        `/program/api/TypeCategory/orderby`,
+        {
+          params: {
+            currentPage: params.page,
+            limit: params.limit
+          }
+        }
+      );
+      resolve(response.data, "item");
     } catch (error) {
       reject(error);
     }
@@ -96,10 +126,12 @@ export async function getTypeCategory({ commit }) {
 }
 
 //TypeCategoryDetail/get
-export async function getTypeCategoryDetail({ commit}) {
+export async function getTypeCategoryDetail({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/TypeCategoryDetail/get`);
+      let response = await this.$axios.get(
+        `/program/api/TypeCategoryDetail/get`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -111,7 +143,10 @@ export async function getTypeCategoryDetail({ commit}) {
 export async function orderByTypeCategory({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/TypeCategory/orderby`, sort_param);
+      let response = await this.$axios.get(
+        `/program/api/TypeCategory/orderby`,
+        sort_param
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -120,10 +155,13 @@ export async function orderByTypeCategory({ commit, sort_param }) {
 }
 
 //TypeCategoryDetail/orderby
-export async function orderByTypeCategoryDetail({ commit, sort_param}) {
+export async function orderByTypeCategoryDetail({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/TypeCategoryDetail/orderby`, sort_param);
+      let response = await this.$axios.get(
+        `/program/api/TypeCategoryDetail/orderby`,
+        sort_param
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -135,7 +173,10 @@ export async function orderByTypeCategoryDetail({ commit, sort_param}) {
 export async function createTypeCategory({ commit, body }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`/api/TypeCategory/insert`, body);
+      let response = await this.$axios.post(
+        `/program/api/TypeCategory/insert`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -148,7 +189,10 @@ export async function createTypeCategory({ commit, body }) {
 export async function createTypeCategoryDetail({ commit, body }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`/api/TypeCategoryDetail/insert`, body);
+      let response = await this.$axios.post(
+        `/program/api/TypeCategoryDetail/insert`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -160,7 +204,10 @@ export async function createTypeCategoryDetail({ commit, body }) {
 export async function updateTypeCategory({ commit, id, body }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.patch(`/api/TypeCategory/update/${id}`, body);
+      let response = await this.$axios.patch(
+        `/program/api/TypeCategory/update/${id}`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -172,7 +219,9 @@ export async function updateTypeCategory({ commit, id, body }) {
 export async function deleteTypeCategory({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/api/TypeCategory/delete/${id}`);
+      let response = await this.$axios.delete(
+        `/program/api/TypeCategory/delete/${id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -184,7 +233,9 @@ export async function deleteTypeCategory({ commit, id }) {
 export async function closeTypeCategory({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/api/TypeCategory/close/${id}`);
+      let response = await this.$axios.delete(
+        `/program/api/TypeCategory/close/${id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -193,10 +244,12 @@ export async function closeTypeCategory({ commit, id }) {
 }
 
 //ProgramLotto/Id
-export async function getProgramLotto({ commit, id }) {
+export async function getProgramLottoById({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/ProgramLotto/id/${id}`);
+      let response = await this.$axios.get(
+        `/program/api/ProgramLotto/id/${id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -208,7 +261,7 @@ export async function getProgramLotto({ commit, id }) {
 export async function getProgramLotto({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/ProgramLotto/get`);
+      let response = await this.$axios.get(`/program/api/ProgramLotto/get`);
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -220,7 +273,10 @@ export async function getProgramLotto({ commit }) {
 export async function orderByProgramLotto({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/ProgramLotto/orderby`,sort_param);
+      let response = await this.$axios.get(
+        `/program/api/ProgramLotto/orderby`,
+        sort_param
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -232,7 +288,10 @@ export async function orderByProgramLotto({ commit, sort_param }) {
 export async function createProgramLotto({ commit, body }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`/api/ProgramLotto/insert`, body);
+      let response = await this.$axios.post(
+        `/program/api/ProgramLotto/insert`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -244,7 +303,10 @@ export async function createProgramLotto({ commit, body }) {
 export async function updateProgramLotto({ commit, id, body }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.patch(`/api/ProgramLotto/update/${id}`, body);
+      let response = await this.$axios.patch(
+        `/program/api/ProgramLotto/update/${id}`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -256,7 +318,10 @@ export async function updateProgramLotto({ commit, id, body }) {
 export async function deleteProgramLotto({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/api/ProgramLotto/delete/${id}`, body);
+      let response = await this.$axios.delete(
+        `/program/api/ProgramLotto/delete/${id}`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -268,7 +333,10 @@ export async function deleteProgramLotto({ commit, id }) {
 export async function closeProgramLotto({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/api/ProgramLotto/close/${id}`, body);
+      let response = await this.$axios.delete(
+        `/program/api/ProgramLotto/close/${id}`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -277,10 +345,12 @@ export async function closeProgramLotto({ commit, id }) {
 }
 
 //ProgramLotto/CheckLotto
-export async function checkProgramLotto({ commit}) {
+export async function checkProgramLotto({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/ProgramLotto/CheckLotto`);
+      let response = await this.$axios.get(
+        `/program/api/ProgramLotto/CheckLotto`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -289,10 +359,12 @@ export async function checkProgramLotto({ commit}) {
 }
 
 //ProgramLotto/CheckLottoById/{id}
-export async function checkIdProgramLotto({ commit, id}) {
+export async function checkIdProgramLotto({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/ProgramLotto/CheckLottoById/${id}`);
+      let response = await this.$axios.get(
+        `/program/api/ProgramLotto/CheckLottoById/${id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -301,10 +373,12 @@ export async function checkIdProgramLotto({ commit, id}) {
 }
 
 //ProgramLotto/CheckLottoByTitle/{title}
-export async function checkTitleProgramLotto({ commit, title}) {
+export async function checkTitleProgramLotto({ commit, title }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/ProgramLotto/CheckLottoById/${title}`);
+      let response = await this.$axios.get(
+        `/program/api/ProgramLotto/CheckLottoById/${title}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -313,10 +387,12 @@ export async function checkTitleProgramLotto({ commit, title}) {
 }
 
 //ProgramLotto/GenProgramLotto/{num_of_month}
-export async function genProgramLotto({ commit, num_of_month}) {
+export async function genProgramLotto({ commit, num_of_month }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`/api/ProgramLotto/GenProgramLotto/${num_of_month}`);
+      let response = await this.$axios.post(
+        `/program/api/ProgramLotto/GenProgramLotto/${num_of_month}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -325,10 +401,12 @@ export async function genProgramLotto({ commit, num_of_month}) {
 }
 
 // LottoNumberType/Id
-export async function getLottoNumberType({ commit, id}) {
+export async function getLottoNumberTypeByid({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/LottoNumberType/id/${id}`);
+      let response = await this.$axios.get(
+        `/program/api/LottoNumberType/id/${id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -337,10 +415,10 @@ export async function getLottoNumberType({ commit, id}) {
 }
 
 // LottoNumberType/get
-export async function getLottoNumberType({ commit}) {
+export async function getLottoNumberType({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/LottoNumberType/get`);
+      let response = await this.$axios.get(`/program/api/LottoNumberType/get`);
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -349,10 +427,13 @@ export async function getLottoNumberType({ commit}) {
 }
 
 // LottoNumberType/orderby
-export async function getLottoNumberType({ commit, sort_param}) {
+export async function getLottoNumberTypeSort({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/LottoNumberType/orderby`,sort_param);
+      let response = await this.$axios.get(
+        `/program/api/LottoNumberType/orderby`,
+        sort_param
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -360,13 +441,14 @@ export async function getLottoNumberType({ commit, sort_param}) {
   });
 }
 
-
-
 // LottoNumberType/insrt
-export async function createLottoNumberType({ commit, body}) {
+export async function createLottoNumberType({ commit, body }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`/api/LottoNumberType/insert`,body);
+      let response = await this.$axios.post(
+        `/program/api/LottoNumberType/insert`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -375,10 +457,13 @@ export async function createLottoNumberType({ commit, body}) {
 }
 
 // LottoNumberType/update
-export async function updateLottoNumberType({ commit, id, body}) {
+export async function updateLottoNumberTypeByid({ commit, id, body }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.patch(`/api/LottoNumberType/update/${id}`,body);
+      let response = await this.$axios.patch(
+        `/program/api/LottoNumberType/update/${id}`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -387,10 +472,12 @@ export async function updateLottoNumberType({ commit, id, body}) {
 }
 
 // LottoNumberType/delete
-export async function updateLottoNumberType({ commit, id}) {
+export async function deleteLottoNumberType({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/api/LottoNumberType/delete/${id}`);
+      let response = await this.$axios.delete(
+        `/program/api/LottoNumberType/delete/${id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -399,10 +486,12 @@ export async function updateLottoNumberType({ commit, id}) {
 }
 
 // LottoNumberType/close
-export async function updateLottoNumberType({ commit, id}) {
+export async function closeLottoNumberType({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/api/LottoNumberType/close/${id}`);
+      let response = await this.$axios.delete(
+        `/program/api/LottoNumberType/close/${id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -411,10 +500,10 @@ export async function updateLottoNumberType({ commit, id}) {
 }
 
 //LottoPrize/id
-export async function getLottoPrize({ commit, id}) {
+export async function getLottoPrizeByid({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/LottoPrize/id/`,id);
+      let response = await this.$axios.get(`/program/api/LottoPrize/id/`, id);
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -423,10 +512,10 @@ export async function getLottoPrize({ commit, id}) {
 }
 
 //LottoPrize/get
-export async function getLottoPrize({ commit}) {
+export async function getLottoPrize({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/LottoPrize/get`);
+      let response = await this.$axios.get(`/program/api/LottoPrize/get`);
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -435,10 +524,13 @@ export async function getLottoPrize({ commit}) {
 }
 
 //LottoPrize/orderby
-export async function getLottoPrize({ commit, sort_param}) {
+export async function getLottoPrizeByOrder({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/api/LottoPrize/orderby`,sort_param);
+      let response = await this.$axios.get(
+        `/program/api/LottoPrize/orderby`,
+        sort_param
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -447,10 +539,13 @@ export async function getLottoPrize({ commit, sort_param}) {
 }
 
 //LottoPrize/insert
-export async function createLottoPrize({ commit, body}) {
+export async function createLottoPrize({ commit, body }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`/api/LottoPrize/insert`,body);
+      let response = await this.$axios.post(
+        `/program/api/LottoPrize/insert`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -462,7 +557,10 @@ export async function createLottoPrize({ commit, body}) {
 export async function updateLottoPrize({ commit, id, body }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.patch(`/api/LottoPrize/update/${id}`,body);
+      let response = await this.$axios.patch(
+        `/program/api/LottoPrize/update/${id}`,
+        body
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -471,10 +569,10 @@ export async function updateLottoPrize({ commit, id, body }) {
 }
 
 //LottoPrize/delete
-export async function getLottoPrize({ commit, id}) {
+export async function deleteLottoPrize({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/api/LottoPrize/${id}`);
+      let response = await this.$axios.delete(`/program/api/LottoPrize/${id}`);
       resolve(response.data);
     } catch (error) {
       reject(error);
