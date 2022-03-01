@@ -207,7 +207,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("lottosetting", ["getLottotype"]),
+    ...mapActions("lottosetting", ["getLottotype","createLottotype"]),
     openEdit(data) {
       this.dataEdit = data;
       this.modal_edit = true;
