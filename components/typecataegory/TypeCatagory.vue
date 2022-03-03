@@ -24,13 +24,14 @@
           :server-items-length="pagination.rowsNumber"
           :items-per-page.sync="pagination.rowsPerPage"
           :page.sync="pagination.page"
-          :options.sync="options"
           :headers="headers"
           :items="itemexample"
+          :options.sync="options"
           hide-default-footer
+          :loading="isLoading"
         >
           <template #[`item.no`]="{index}">
-            {{ index + 1 }}
+            {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
           <template #[`item.action`]="{item}">
             <v-btn
@@ -161,6 +162,23 @@
         </v-dialog>
         <!-- edit  -->
       </v-card>
+      <v-row align="baseline" class="ma-3 ">
+        <v-col cols="12" sm="2" lg="1">
+          <v-select
+            v-model="pagination.rowsPerPage"
+            :items="pageSizes"
+            @change="handlePageSizeChange"
+            label="Items per Page"
+          ></v-select>
+        </v-col>
+        <v-col cols="12" sm="10" lg="11">
+          <v-pagination
+            v-model="pagination.page"
+            :total-visible="7"
+            :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
+          ></v-pagination>
+        </v-col>
+      </v-row>
     </div>
   </div>
 </template>
@@ -170,7 +188,9 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      option: {},
+      isLoading: false,
+      pageSizes: [5, 10, 15, 25],
+      options: {},
       pagination: {
         sortBy: "desc",
         descending: false,
@@ -216,30 +236,39 @@ export default {
       itemexample: []
     };
   },
+
   watch: {
     options: {
       async handler() {
-        await this.onRequest({
-          pagination: this.pagination_render
-        });
-      }
+        await this.getdataRender();
+      },
+      deep: true
     }
   },
-  async fetch() {
-    try {
-      let param = {
-        page: this.pagination.page,
-        limit: this.pagination.rowsPerPage
-      };
-      const response = await this.getTypeCategory(param);
-      this.itemexample = response.result.data;
-      console.log(this.itemexample);
-    } catch (error) {
-      console.log(error);
-    }
+  async mounted() {
+    this.getdataRender();
   },
+
   methods: {
     ...mapActions("lottosetting", ["getTypeCategory"]),
+    async getdataRender() {
+      this.isLoading = true;
+      try {
+        let params = {
+          currentPage: this.pagination.page,
+          limit: this.pagination.rowsPerPage
+        };
+        const response = await this.getTypeCategory(params);
+        this.itemexample = response.result.data;
+        this.pagination.rowsNumber = response.result.total;
+        console.log(this.itemexample);
+        this.isLoading = false;
+      } catch (error) {
+        console.log(error);
+        this.isLoading = false;
+      }
+    },
+
     showdetail(id) {
       this.$router.push(`${this.$route.path}?id=${id}`);
     },
@@ -247,6 +276,11 @@ export default {
     openEdit(data) {
       this.dataEdit = data;
       this.modal_edit = true;
+    },
+    async handlePageSizeChange(size) {
+      this.pagination.page = 1;
+      this.pagination.rowsPerPage = size;
+      this.getdataRender();
     }
   }
 };

@@ -24,6 +24,7 @@
               <v-data-table
                 :headers="headers"
                 :items="dataRender"
+                :loading="isLoading"
                 hide-default-footer
               >
                 <template #[`item.no`]="{index}">

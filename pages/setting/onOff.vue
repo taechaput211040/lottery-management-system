@@ -4,13 +4,43 @@
 
     <div class="white rounded-lg">
       <div class="rounded-lg white">
-        <v-data-table :headers="headerOnOff" :items="itemtypeaward">
+        <v-data-table
+          :headers="headerOnOff"
+          :loading="isLoading"
+          :items="itemtypeaward"
+        >
+          <template #[`item.no`]="{index}">
+            <!-- {{item.upline_status}} -->
+            {{ index + 1 }}
+          </template>
+          <template #[`item.self_status`]="{item}">
+            <!-- {{item.upline_status}} -->
+            <v-chip color="success" small v-if="item.self_status == true"
+              ><v-icon left>mdi-circle</v-icon> เปิดใช้งาน</v-chip
+            >
+            <v-chip color="error" small v-else-if="item.self_status == false"
+              ><v-icon left>mdi-circle</v-icon> ปิดใช้งาน</v-chip
+            >
+            <v-chip color="grey" small v-else
+              ><v-icon left>mdi-circle</v-icon> ไม่เปิดใช้งาน</v-chip
+            >
+          </template>
           <template #[`item.upline_status`]="{item}">
             <!-- {{item.upline_status}} -->
-            <v-radio-group v-model="item.upline_status" row>
-              <v-radio label="on" :value="true"></v-radio>
-              <v-radio label="off" :value="false"></v-radio>
-            </v-radio-group>
+            <v-chip color="success" small v-if="item.upline_status == true"
+              ><v-icon left>mdi-circle</v-icon> เปิดใช้งาน</v-chip
+            >
+            <v-chip color="error" small v-else-if="item.upline_status == false"
+              ><v-icon left>mdi-circle</v-icon> ปิดใช้งาน</v-chip
+            >
+            <v-chip color="grey" small v-else
+              ><v-icon left>mdi-circle</v-icon> ไม่เปิดใช้งาน</v-chip
+            >
+          </template>
+          <template #[`item.actions`]="{item}">
+            <v-btn color="warning" rounded small @click="configStatus(item)"
+              ><v-icon>mdi-pencil</v-icon> จัดการสถานะ</v-btn
+            >
           </template>
         </v-data-table>
       </div>
@@ -19,60 +49,83 @@
     <!-- edit modal card-->
     <!-- TODO : change after edit -->
     <!-- TODO : change and cancel button -->
-    <v-dialog v-model="dialogdetail" max-width="800">
+    <v-dialog v-model="dialogConfig" max-width="600">
       <v-card class="pa-3">
-        <v-container fluid> </v-container>
-      </v-card>
+        <v-card-title class="justify-center">จัดการสถานะ</v-card-title>
+        <v-text-field
+          :value="editItem.title"
+          disabled
+          filled
+          dense
+          class="ma-3"
+          label="ชื่อหวย"
+        ></v-text-field>
+        <div class="ma-3 d-column">
+          self_status
+          <v-switch
+            v-model="editItem.self_status"
+            hide-details="auto"
+          ></v-switch>
+        </div>
 
-      <!-- button -->
-      <v-btn color="success" @click="dialogdetail = false">แก้ไข</v-btn>
-      <v-btn color="error" @click="dialogdetail = false">ปิด</v-btn>
+        <!-- button -->
+        <v-card-actions class="justify-center">
+          <v-btn color="success" @click="updatesatatus(editItem)">แก้ไข</v-btn>
+          <v-btn color="error" @click="dialogConfig = false">ปิด</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </v-flex>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      isLoading: false,
+      editItem: {},
       row: "",
       select2Date: false,
-      dialogdetail: false,
+      dialogConfig: false,
       headerOnOff: [
         {
           text: "No.",
-          value: "num",
+          value: "no",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          align: "center"
+          align: "center",
+          width: "80px"
         },
         {
           text: "ชื่อ",
           value: "title",
           class: "font-weight-bold",
-          align: "center"
+          align: "left"
         },
         {
-          text: "สถานะ",
+          text: "self_status",
+          value: "self_status",
+          class: "font-weight-bold",
+          align: "center",
+          width: "180px"
+        },
+        {
+          text: "upline_status",
           value: "upline_status",
           class: "font-weight-bold",
-          align: "start"
-        }
-      ],
-      itemtypeaward: [
-        {
-          num: "4",
-          id: "asd2-52gmp-mo51-3fxcwmql4611111",
-          title: "ฮานอยสตาร์",
-          upline_status: true
+          align: "center",
+          width: "180px"
         },
         {
-          num: "3",
-          id: "asd2-52gmp-mo51-3fxcwmql461ps6lx",
-          title: "ฮานอยสตาร์",
-          upline_status: false
+          text: "ดำเนินการ",
+          value: "actions",
+          class: "font-weight-bold",
+          align: "center",
+          width: "200px"
         }
       ],
+      itemtypeaward: [],
       selecttype: "",
       filter: {
         startDate: "",
@@ -80,6 +133,33 @@ export default {
       }
     };
   },
-  methods: {}
+  async fetch() {
+    this.isLoading = true;
+    try {
+      const { data } = await this.getAllsetting();
+      console.log(data);
+      this.itemtypeaward = data.result;
+      this.isLoading = false;
+    } catch (error) {
+      console.log(error);
+      this.isLoading = false;
+    }
+  },
+  methods: {
+    ...mapActions("seller", ["getAllsetting", "changeStaussetting"]),
+    async configStatus(item) {
+      this.editItem = item;
+      this.dialogConfig = true;
+    },
+    async updatesatatus(item) {
+      try {
+        await this.changeStaussetting(item);
+        this.dialogConfig = false;
+        this.$fetch();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 };
 </script>

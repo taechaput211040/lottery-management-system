@@ -8,8 +8,9 @@ import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import lottosetting from "./lottosetting";
 import auth from "./auth";
-
+import seller from "./seller";
 import moment from "moment";
+import shaft from "./shaft";
 Vue.prototype.$moment = moment;
 Vue.use(VueSweetalert2);
 Vue.use(Vuex);
@@ -19,7 +20,9 @@ export default function(/* { ssrContext } */) {
     modules: {
       // then we reference it
       lottosetting,
-      auth
+      auth,
+      seller,
+      shaft
     },
 
     // enable strict mode (adds overhead!)

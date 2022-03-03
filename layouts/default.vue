@@ -193,35 +193,8 @@ export default {
         },
         {
           title: "เพลา",
-          to: "/pay_rate",
-          icon: "mdi-credit-card-plus-outline",
-          subLinks: [
-            {
-              icon: "mdi-view-dashboard",
-              text: "อัตราจ่าย",
-              to: "/pay_rate/rate"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "ส่วนลด",
-              to: "/pay_rate/discount"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "เปอร์เซ็นถือสู้",
-              to: "/pay_rate/percent_hold"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "เลขอั้น",
-              to: "/pay_rate/hold_number"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "รับของ",
-              to: "/pay_rate/receive"
-            }
-          ]
+          to: "/pay_rate/rate",
+          icon: "mdi-credit-card-plus-outline"
         },
         {
           title: "Company Setting",

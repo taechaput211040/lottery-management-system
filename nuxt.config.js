@@ -22,7 +22,15 @@ export default {
     "/program/": {
       target: "https://lottoprize-ehhif4jpyq-as.a.run.app",
       pathRewrite: { "^/program/": "" }
-    }
+    },
+    "/sellapi/": {
+      target: "https://lotto-setting-seller-ehhif4jpyq-as.a.run.app",
+      pathRewrite: { "^/sellapi/": "" }
+    },
+    "/settinglottoapi/": {
+      target: "https://lotto-setting-ehhif4jpyq-as.a.run.app",
+      pathRewrite: { "^/settinglottoapi/": "" }
+    },
   },
   server: {
     port: 8030 // default: 3000

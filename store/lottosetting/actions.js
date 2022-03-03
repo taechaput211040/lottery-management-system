@@ -103,21 +103,18 @@ export async function getTypeCategoryDetailByid({ commit }, id) {
 export async function getTypeCategory(
   { commit },
   params = {
-    page: undefined,
+    currentPage: undefined,
     limit: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(
-        `/program/api/TypeCategory/orderby`,
-        {
-          params: {
-            currentPage: params.page,
-            limit: params.limit
-          }
+      let response = await this.$axios.get(`/program/api/TypeCategory/get`, {
+        params: {
+          currentPage: params.currentPage,
+          limit: params.limit
         }
-      );
+      });
       resolve(response.data, "item");
     } catch (error) {
       reject(error);
@@ -126,12 +123,24 @@ export async function getTypeCategory(
 }
 
 //TypeCategoryDetail/get
-export async function getTypeCategoryDetail({ commit }) {
+export async function getTypeCategoryDetail(
+  { commit },
+  params = {
+    currentPage: undefined,
+    limit: undefined
+  }
+) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/TypeCategoryDetail/get`
+        `/program/api/TypeCategoryDetail/get`,{
+          params: {
+          currentPage: params.currentPage,
+          limit: params.limit
+        }
+        }
       );
+
       resolve(response.data);
     } catch (error) {
       reject(error);
