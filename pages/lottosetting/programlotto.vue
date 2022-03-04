@@ -99,16 +99,20 @@
             </v-col>
           </v-row>
         </div>
-        <v-dialog full-width v-model="modal_add" max-width="800">
+        <v-dialog full-width v-model="modal_add" max-width="800" persistent>
           <v-card class="pa-4">
             <v-card-title class="text-h5"> List Lotto - ADD</v-card-title>
+            <pre>{{ form }}</pre>
+
             <v-card class="pa-2">
-              <v-form>
+              <v-form ref="form" v-model="validForm">
                 <v-select
-                  v-model="form.selecttype"
+                  v-model="selecttype"
                   :items="typeList"
                   item-text="title"
                   item-value="id"
+                  :rules="formRules.selecttype"
+                  @change="rendertypecate"
                   label="ประเภทหวย"
                   outlined
                   class="col-12 col-md-6 col-lg-4"
@@ -116,7 +120,11 @@
                   hide-details="auto"
                 ></v-select>
                 <v-select
+                  @change="selectTitle(typeCateList, form.title)"
                   v-model="form.title"
+                  :disabled="form.selecttype == ''"
+                  :items="typeCateList"
+                  :rules="formRules.title"
                   item-text="title"
                   item-value="title"
                   label=""
@@ -126,14 +134,101 @@
                   placeholder="ชื่อหวย"
                   hide-details="auto"
                 ></v-select>
-                <div class="align-baseline align-center mt-2">
+                <div class="align-baseline align-center my-2">
                   <v-row class="ma-3">
-                    <v-col cols="6" class="pa-0">วันที่เปิดรับ</v-col>
-                    <v-col cols="6" class="pa-0">เวลาเปิดรับ</v-col>
-                    <v-col cols="6" class="pa-0">วันที่ปิดรับ</v-col>
-                    <v-col cols="6" class="pa-0">เวลาปิดรับ</v-col>
-                    <v-col cols="6" class="pa-0">วันที่ออกผล</v-col>
-                    <v-col cols="6" class="pa-0">เวลาออกผล</v-col>
+                    <v-col cols="6" class="pa-0 align-baseline"
+                      >วันที่เปิดรับ
+                      <v-text-field
+                        dense
+                        :rules="formRules.open_day"
+                        placeholder="กรุณากรอกวันที่เปิดรับ"
+                        hide-details="auto"
+                        outlined
+                        required
+                        type="number"
+                        class=" col-12 col-sm-6"
+                        v-model="form.open_day"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6" class="pa-0"
+                      ><div>เวลาเปิดรับ</div>
+                      <el-time-select
+                        :picker-options="{
+                          start: '00:00',
+                          step: '00:15',
+                          end: '23:59'
+                        }"
+                        class=""
+                        :rules="formRules.open_time"
+                        format="HH:mm"
+                        arrow-control
+                        placeholder="เวลาเปิดรับ"
+                        v-model="form.open_time"
+                      >
+                      </el-time-select>
+                    </v-col>
+                    <v-col cols="6" class="pa-0  align-baseline"
+                      >วันที่ปิดรับ
+                      <v-text-field
+                        dense
+                        required
+                        outlined
+                        :rules="formRules.close_day"
+                        placeholder="กรุณากรอกวันที่ปิดรับ"
+                        hide-details="auto"
+                        class=" col-12 col-sm-6"
+                        type="number"
+                        v-model="form.close_day"
+                      ></v-text-field
+                    ></v-col>
+                    <v-col cols="6" class="pa-0"
+                      ><div>เวลาปิดรับ</div>
+                      <el-time-select
+                        class=""
+                        :rules="formRules.close_time"
+                        format="HH:mm"
+                        :picker-options="{
+                          start: '00:00',
+                          step: '00:15',
+                          end: '23:59'
+                        }"
+                        arrow-control
+                        placeholder="เวลาปิดรับ"
+                        v-model="form.close_time"
+                      >
+                      </el-time-select>
+                    </v-col>
+                    <v-col cols="6" class="pa-0  align-baseline"
+                      >วันที่ออกผล
+                      <v-text-field
+                        dense
+                        outlined
+                        required
+                        :rules="formRules.lotto_day"
+                        placeholder="กรุณากรอกวันที่ออกผล"
+                        hide-details="auto"
+                        class=" col-12 col-sm-6"
+                        type="number"
+                        v-model="form.lotto_day"
+                      ></v-text-field
+                    ></v-col>
+                    <v-col cols="6" class="pa-0"
+                      ><div>เวลาออกผล</div>
+                      <el-time-select
+                        :picker-options="{
+                          start: '00:00',
+                          step: '00:15',
+                          end: '23:59'
+                        }"
+                        class=""
+                        format="HH:mm"
+                        :rules="formRules.lotto_time"
+                        arrow-control
+                        placeholder="เวลาออกผล"
+                        v-model="form.lotto_time"
+                      >
+                      </el-time-select>
+                    </v-col>
                   </v-row>
                   <div class="d-flex align-baseline">
                     รอบที่ออกผล :
@@ -142,6 +237,8 @@
                       dense
                       label="รอบที่ออกผล"
                       outlined
+                      :rules="formRules.lotto_round"
+                      v-model="form.lotto_round"
                     ></v-text-field>
                   </div>
                   <span class="font-weight-bold primary--text">ออกผลเเบบ</span>
@@ -149,13 +246,13 @@
                     row
                     hide-details="auto"
                     class="mb-2"
-                    v-model="typedate"
+                    v-model="form.plan_type"
                   >
-                    <v-radio label="รายเดือน" value="mounth"></v-radio>
-                    <v-radio label="รายวัน" value="day"></v-radio>
+                    <v-radio label="รายเดือน" :value="0"></v-radio>
+                    <v-radio label="รายวัน" :value="1"></v-radio>
                   </v-radio-group>
                   <div class="row">
-                    <div class="col-12 col-md-8" v-if="typedate == 'day'">
+                    <div class="col-12 col-md-8" v-if="form.plan_type == 0">
                       <span class="primary--text font-weight-bold"
                         >เดือนที่ออกผล</span
                       >
@@ -226,7 +323,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-12 col-md-6" v-if="typedate == 'mounth'">
+                    <div class="col-12 col-md-6" v-if="form.plan_type == 1">
                       <span class="purple--text font-weight-bold"
                         >วันที่ออกผล</span
                       >
@@ -268,13 +365,34 @@
                     </div>
                   </div>
                 </div>
+                <v-btn color="success" @click="submitForm()">สร้าง</v-btn>
               </v-form>
-              <v-card-actions class="justify-center">
-                <v-btn color="primary" dark @click="modal_add = false"
-                  >บันทึก</v-btn
-                >
-              </v-card-actions>
+
+              <!-- detail  -->
             </v-card>
+          </v-card>
+        </v-dialog>
+        <!-- dllisttype -->
+        <v-dialog max-width="600"
+          ><div>
+            <div class="d-flex">
+              รายละเอียดตัวเลข / หวยไทย <v-spacer></v-spacer
+              ><v-btn color="primary" rounded small @click="createNumprize()"
+                ><v-icon>mdi-plus</v-icon>เพิ่มตัวเลข</v-btn
+              >
+            </div>
+
+            <v-data-table
+              :header="headerGenlotto"
+              class="elevation-2 rounded-lg my-5"
+            ></v-data-table></div
+        ></v-dialog>
+        <v-dialog full-width v-model="dlcreateNum" max-width="600">
+          <v-card class="pa-4">
+            <v-card-title><h4>สร้างตัวเลข</h4></v-card-title>
+            <div>ชื่อหวย</div>
+            <div>จำนวนตัวเลข</div>
+            <div>จำนวนรางวัล</div>
           </v-card>
         </v-dialog>
       </v-container>
@@ -283,9 +401,21 @@
 </template>
 
 <script>
+import { FormWizard, TabContent } from "vue-form-wizard";
+import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import { mapActions } from "vuex";
 export default {
+  components: {
+    FormWizard,
+    TabContent
+  },
   watch: {
+    typeSelect: {
+      handler() {
+        this.getTypeCategoryList();
+      },
+      deep: true
+    },
     typedate(newVal, oldVal) {
       if (newVal) {
         this.form = {
@@ -307,7 +437,19 @@ export default {
   },
   data() {
     return {
-      typedate: "mounth",
+      dlcreateNum: false,
+      validForm: true,
+      selecttype: "",
+      formRules: {
+        selecttype: [v => !!v || "Item is required"],
+        title: [v => !!v || "Name is required"],
+        open_day: [v => !!v || "Name is required"],
+        close_day: [v => !!v || "Name is required"],
+        lotto_day: [v => !!v || "Name is required"],
+        lotto_round: [v => !!v || "Name is required"]
+      },
+      typeCateList: [],
+      typedate: "0",
       typeList: [],
       isLoading: false,
       pageSizes: [5, 10, 15, 25],
@@ -324,17 +466,16 @@ export default {
       select_status: "inactive",
       modal_add: false,
       form: {
-        selecttype: "",
         typecategory_id: "",
         title: "",
-        open_day: 0,
-        open_time: "15:20",
-        close_day: 0,
-        close_time: "15:30",
-        lotto_day: 0,
-        lotto_time: "15:20",
+        open_day: "",
+        open_time: "00:00",
+        close_day: "",
+        close_time: "00:00",
+        lotto_day: "",
+        lotto_time: "00:00",
         plan_type: 0,
-        lotto_round: "รอบเดียว",
+        lotto_round: "",
         status: 0,
         monday: false,
         tuesday: false,
@@ -356,6 +497,62 @@ export default {
         nov: false,
         dec: false
       },
+      headerGenlotto: [
+        {
+          text: "ชื่อหวย.",
+          value: "name",
+          align: "center",
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold",
+          width: "150px"
+        },
+        {
+          text: "จำนวนตัวเลข",
+          value: "number",
+          filterable: false
+        },
+        {
+          text: "จำนวนรางวัล",
+          value: "amount_reward",
+          filterable: false
+        },
+        {
+          text: "สถานะ",
+          align: "status",
+          filterable: false,
+          value: "type"
+        },
+        {
+          text: "สร้างหวยเมื่อ",
+          value: "created_at",
+          filterable: false,
+          width: "150px"
+        },
+        {
+          text: "แก้ไขล่าสุด",
+          value: "update_at",
+          filterable: false,
+          width: "150px"
+        },
+        {
+          text: "สร้างโดย",
+          value: "created_by",
+          filterable: false,
+          width: "150px"
+        },
+        {
+          text: "แก้ไขโดย",
+          value: "update_by",
+          filterable: false,
+          width: "150px"
+        },
+        {
+          text: "ดำเนินการ",
+          value: "action",
+          filterable: false,
+          width: "150px"
+        }
+      ],
       headers: [
         {
           text: "No.",
@@ -410,7 +607,47 @@ export default {
   },
 
   methods: {
-    ...mapActions("lottosetting", ["getTypeCategoryDetail", "getLottotype"]),
+    createNumprize() {
+      this.dlcreateNum = true;
+    },
+    async submitForm() {
+      if (!this.$refs.form.validate()) {
+        return false;
+      } else {
+        try {
+          await this.createTypeCategory(this.form);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    },
+    async selectTitle(listitem, title) {
+      let data = listitem.find(x => {
+        return x.title === title;
+      });
+      console.log(data);
+      this.form.typecategory_id = data.id;
+    },
+    async rendertypecate(value) {
+      try {
+        let params = {
+          currentPage: 1,
+          limit: 1000,
+          type_id: value
+        };
+        let response = await this.getTypeCategory(params);
+
+        this.typeCateList = response.result[0].lottotype_id.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    ...mapActions("lottosetting", [
+      "getTypeCategoryDetail",
+      "getLottotype",
+      "getTypeCategory",
+      "createTypeCategory"
+    ]),
     async gettypelist() {
       try {
         let response = await this.getLottotype();
@@ -420,6 +657,7 @@ export default {
         console.log(error);
       }
     },
+
     async getdataRender() {
       this.isLoading = true;
       try {

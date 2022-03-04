@@ -256,7 +256,7 @@ export default {
       try {
         let params = {
           currentPage: this.pagination.page,
-          limit: this.pagination.rowsPerPage
+          limit: this.pagination.rowsPerPage,
         };
         const response = await this.getTypeCategory(params);
         this.itemexample = response.result.data;

@@ -104,7 +104,8 @@ export async function getTypeCategory(
   { commit },
   params = {
     currentPage: undefined,
-    limit: undefined
+    limit: undefined,
+    type_id: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -112,7 +113,8 @@ export async function getTypeCategory(
       let response = await this.$axios.get(`/program/api/TypeCategory/get`, {
         params: {
           currentPage: params.currentPage,
-          limit: params.limit
+          limit: params.limit,
+          lottotype_id: params.type_id
         }
       });
       resolve(response.data, "item");
@@ -133,11 +135,12 @@ export async function getTypeCategoryDetail(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/TypeCategoryDetail/get`,{
+        `/program/api/TypeCategoryDetail/get`,
+        {
           params: {
-          currentPage: params.currentPage,
-          limit: params.limit
-        }
+            currentPage: params.currentPage,
+            limit: params.limit
+          }
         }
       );
 
@@ -179,13 +182,14 @@ export async function orderByTypeCategoryDetail({ commit, sort_param }) {
 }
 
 //TypeCategory/insert
-export async function createTypeCategory({ commit, body }) {
+export async function createTypeCategory({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `/program/api/TypeCategory/insert`,
+        `/program/api/TypeCategoryDetail/insert`,
         body
       );
+      console.log(response, "res");
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -294,12 +298,12 @@ export async function orderByProgramLotto({ commit, sort_param }) {
 }
 
 //ProgramLotto/insert
-export async function createProgramLotto({ commit, body }) {
+export async function createProgramLotto({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
         `/program/api/ProgramLotto/insert`,
-        body
+        { body }
       );
       resolve(response.data);
     } catch (error) {
