@@ -1,8 +1,9 @@
 <template>
   <div>
-    <h1 class=" mt-2">Type Category</h1>
+    <h1 class=" mt-2">ชนิดของหวย</h1>
     <div class="ma-2 pa-6 white rounded-lg">
       <v-row class="select-item "
+        ><v-btn color="red" @click="$router.go(-1)" small dark>back</v-btn
         ><v-select class="col-6 col-md-2" label="Type Category"></v-select>
         <v-text-field
           dense
@@ -15,8 +16,8 @@
           ></v-text-field
         >
         <v-spacer></v-spacer>
-        <v-btn color="primary" rounded dark @click="modal_add = true">
-          <v-icon>mdi-plus</v-icon>add</v-btn
+        <v-btn color="primary" rounded dark @click="openAdddialog()">
+          <v-icon>mdi-plus</v-icon>เพิ่มชนิดของหวย</v-btn
         ></v-row
       >
       <v-card class="mx-auto mt-5 justify-center classtable">
@@ -47,32 +48,19 @@
               </v-icon>
             </v-btn>
           </template>
-          <template #[`item.type_Category_detail`]="{item}">
-            <v-btn
-              color="grey darken-4 "
-              dark
-              small
-              @click="showdetail(item.id)"
-              >SHOWMORE</v-btn
-            >
-          </template>
+
           <template #[`item.status`]="{item}">
-            <v-chip
-              v-if="item.status == 1"
-              class="ma-2"
-              color="success"
-              outlined
-            >
+            <v-chip small v-if="item.status == 1" class="ma-2" color="success">
               <v-icon left>
                 mdi-circle
               </v-icon>
-              active
+              เปิดใช้งาน
             </v-chip>
-            <v-chip v-if="item.status == 0" class="ma-2" color="error" outlined>
+            <v-chip small v-if="item.status == 0" class="ma-2" color="error">
               <v-icon left>
                 mdi-circle
               </v-icon>
-              unactive
+              ปิดใช้งาน
             </v-chip>
           </template>
           <template #[`item.permaxbet`]="{item}">
@@ -82,32 +70,28 @@
         <!-- add -->
         <v-dialog full-width v-model="modal_add" max-width="600">
           <v-card class="pa-4">
-            <v-card-title class="text-h5">
-              List Lotto - ADD
+            <v-card-title>
+              <h3>เพิ่มชนิดของหวย</h3>
             </v-card-title>
             <v-card class="pa-4 ma-3">
               <v-form>
-                <v-select label="lotto type"></v-select>
-                <v-text-field label="title" dense outlined></v-text-field>
-                <v-text-field label="flax" dense outlined></v-text-field>
-
-                <v-switch
-                  v-model="select_status"
-                  false-value="inactive"
-                  true-value="active"
-                  :label="`STATUS : ${select_status.toString()}`"
-                  @click="addstatus"
-                  flat
-                ></v-switch>
+                <v-text-field
+                  label="ชื่อหวย"
+                  v-model="formCreate.title"
+                  dense
+                  outlined
+                ></v-text-field>
+                <v-text-field
+                  label="กฏกติกา"
+                  v-model="formCreate.rule_play"
+                  dense
+                  outlined
+                ></v-text-field>
               </v-form>
             </v-card>
             <v-row class="pa-2">
               <v-spacer></v-spacer>
-              <v-btn
-                color="success"
-                small
-                class="mx-2"
-                @click="modal_add = false"
+              <v-btn color="success" small class="mx-2" @click="addCategpry()"
                 >ADD</v-btn
               ><v-btn color="error" small @click="modal_add = false"
                 >CANCLE</v-btn
@@ -120,12 +104,11 @@
         <!-- edit  -->
         <v-dialog full-width v-model="modal_edit" max-width="600">
           <v-card class="pa-4">
-            <v-card-title class="text-h5">
-              List Lotto - EDIT
+            <v-card-title>
+              <h3>แก้ไขชนิดของหวย</h3>
             </v-card-title>
             <v-card class="pa-4 ma-3">
               <v-form>
-                <v-select label="lotto type"></v-select>
                 <v-text-field
                   v-model="dataEdit.title"
                   label="title"
@@ -133,25 +116,23 @@
                   disabled
                   dense
                 ></v-text-field>
-                <v-text-field label="flax" dense outlined></v-text-field>
-
+                <v-text-field
+                  v-model="dataEdit.rule_play"
+                  dense
+                  outlined
+                ></v-text-field>
+                สถานะการใช้งาน
                 <v-switch
                   v-model="dataEdit.status"
-                  false-value="inactive"
-                  true-value="active"
-                  :label="`STATUS : ${dataEdit.status}`"
+                  :false-value="0"
+                  :true-value="1"
                   @click="addstatus"
-                  flat
                 ></v-switch>
               </v-form>
             </v-card>
             <v-row class="pa-2">
               <v-spacer></v-spacer>
-              <v-btn
-                color="success"
-                small
-                class="mx-2"
-                @click="modal_edit = false"
+              <v-btn color="success" small class="mx-2" @click="confirmEdit()"
                 >SAVE</v-btn
               ><v-btn color="error" small @click="modal_edit = false"
                 >CANCLE</v-btn
@@ -188,6 +169,11 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      formCreate: {
+        title: "",
+        lotto_flag: "",
+        rule_play: ""
+      },
       isLoading: false,
       pageSizes: [5, 10, 15, 25],
       options: {},
@@ -207,31 +193,28 @@ export default {
           text: "No.",
           value: "no",
           align: "center",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold"
         },
         {
-          text: "Title",
+          text: "ชื่อ",
           align: "center",
           filterable: false,
-          value: "title"
+          value: "title",
+          cellClass: "font-weight-bold"
         },
+
         {
-          text: "Type Category Detail",
-          align: "center",
-          filterable: false,
-          value: "type_Category_detail"
-        },
-        {
-          text: "status",
+          text: "สถานะ",
           align: "status",
           filterable: false,
           value: "status"
         },
-        { text: "Create Date ", value: "created_at", align: "center" },
-        { text: "Create By", value: "created_by", align: "center" },
-        { text: "Upload Date", value: "updated_at", align: "center" },
-        { text: "Upload By", value: "updated_by", align: "center" },
-        { text: "Action", value: "action", align: "center" }
+        { text: "สร้างเมื่อ ", value: "created_at", align: "center" },
+        { text: "สร้างโดย", value: "created_by", align: "center" },
+        { text: "แก้ไขเมื่อ", value: "updated_at", align: "center" },
+        { text: "แก้ไขโดย", value: "updated_by", align: "center" },
+        { text: "ดำเนินการ", value: "action", align: "center" }
       ],
       itemexample: []
     };
@@ -245,23 +228,44 @@ export default {
       deep: true
     }
   },
-  async mounted() {
+  async fetch() {
     this.getdataRender();
   },
 
   methods: {
-    ...mapActions("lottosetting", ["getTypeCategory"]),
+    ...mapActions("lottosetting", [
+      "getTypeCategory",
+      "createType",
+      "updateTypeCategory"
+    ]),
+    async addCategpry() {
+      try {
+        let body = {
+          title: this.formCreate.title,
+          lotto_flag: this.formCreate.lotto_flag,
+          rule_play: this.formCreate.rule_play,
+          lottotype_id: this.$route.query.id
+        };
+        await this.createType(body);
+        this.modal_add = false;
+        this.$fetch();
+      } catch (error) {
+        console.log(error);
+        this.modal_add = false;
+        this.$fetch();
+      }
+    },
     async getdataRender() {
       this.isLoading = true;
       try {
         let params = {
+          type_id: this.$route.query.id,
           currentPage: this.pagination.page,
-          limit: this.pagination.rowsPerPage,
+          limit: this.pagination.rowsPerPage
         };
         const response = await this.getTypeCategory(params);
-        this.itemexample = response.result.data;
-        this.pagination.rowsNumber = response.result.total;
-        console.log(this.itemexample);
+        this.itemexample = response.result[0].lottotype_id.data;
+        this.pagination.rowsNumber = response.result[0].lottotype_id.total;
         this.isLoading = false;
       } catch (error) {
         console.log(error);
@@ -281,6 +285,28 @@ export default {
       this.pagination.page = 1;
       this.pagination.rowsPerPage = size;
       this.getdataRender();
+    },
+    openAdddialog() {
+      this.modal_add = true;
+    },
+    async confirmEdit() {
+      try {
+        let body = {
+          id: this.dataEdit.id,
+          title: this.dataEdit.title,
+          status: this.dataEdit.status,
+          lotto_flag: this.dataEdit.lotto_flag,
+          rule_play: this.dataEdit.rule_play,
+          lottotype_id: this.$route.query.id
+        };
+        await this.updateTypeCategory(body);
+        this.$fetch();
+        this.modal_edit = false;
+      } catch (error) {
+        console.log(error);
+        this.modal_edit = false;
+        this.$fetch();
+      }
     }
   }
 };
