@@ -257,7 +257,7 @@ export async function updateTypeCategory({ commit }, body) {
 }
 
 //TypeCategory/delete
-export async function deleteTypeCategory({ commit, id }) {
+export async function deleteTypeCategory({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
@@ -271,7 +271,7 @@ export async function deleteTypeCategory({ commit, id }) {
 }
 
 //TypeCategory/close
-export async function closeTypeCategory({ commit, id }) {
+export async function closeTypeCategory({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
@@ -309,7 +309,7 @@ export async function closeCategoryTypeDetail({ commit }, id) {
   });
 }
 //ProgramLotto/Id
-export async function getProgramLottoById({ commit, id }) {
+export async function getProgramLottoById({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
@@ -323,10 +323,23 @@ export async function getProgramLottoById({ commit, id }) {
 }
 
 //ProgramLotto/get
-export async function getProgramLotto({ commit }) {
+export async function getProgramLotto(
+  { commit },
+  params = {
+    currentPage: undefined,
+    limit: undefined,
+    type_id: undefined
+  }
+) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/program/api/ProgramLotto/get`);
+      let response = await this.$axios.get(`/program/api/ProgramLotto/get`, {
+        params: {
+          currentPage: params.currentPage,
+          limit: params.limit,
+          LottoTypeId: params.type_id
+        }
+      });
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -365,12 +378,37 @@ export async function createProgramLotto({ commit }, body) {
 }
 
 //ProgramLotto/update
-export async function updateProgramLotto({ commit, id, body }) {
+export async function updateProgramLotto({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `/program/api/ProgramLotto/update/${id}`,
-        body
+        `/program/api/ProgramLotto/update/${body.id}`,
+        {
+          bet_open_time: body.bet_open_time,
+          bet_close_time: body.bet_close_time,
+          bet_lotto_time: body.bet_lotto_time,
+          lottotype_id: body.LottoTypeId,
+          typecategory_id: body.TypeCategoryId,
+          typecategorydetail_id: body.TypeCategoryDetailId,
+          status: body.status,
+          status_lotto: body.status_lotto,
+          status_calculate: body.status_calculate
+        }
+      );
+
+      resolve(response.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+//ProgramLotto/delete
+export async function deleteProgramLotto({ commit }, id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.delete(
+        `/program/api/ProgramLotto/delete/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -380,27 +418,11 @@ export async function updateProgramLotto({ commit, id, body }) {
 }
 
 //ProgramLotto/delete
-export async function deleteProgramLotto({ commit, id }) {
+export async function closeProgramLotto({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/ProgramLotto/delete/${id}`,
-        body
-      );
-      resolve(response.data);
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-
-//ProgramLotto/delete
-export async function closeProgramLotto({ commit, id }) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let response = await this.$axios.delete(
-        `/program/api/ProgramLotto/close/${id}`,
-        body
+        `/program/api/ProgramLotto/close/${id}`
       );
       resolve(response.data);
     } catch (error) {

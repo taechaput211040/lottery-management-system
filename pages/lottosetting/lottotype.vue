@@ -1,7 +1,7 @@
 <template>
   <v-flex>
     <div v-if="!isLoading">
-      <v-container v-if="!this.$route.query.id">
+      <div v-if="!this.$route.query.id">
         <h1 class="mt-2">ประเภทของหวย</h1>
         <div class="white rounded-lg ma-2 pa-6">
           <v-row class="select-item ">
@@ -34,8 +34,8 @@
                   color="grey darken-4 "
                   dark
                   small
-                  @click="showdetail(item.id)"
-                  >SHOWMORE</v-btn
+                  @click="showdetail(item.id, item.title)"
+                  >ดูรายชื่อหวยใน{{ item.title }}</v-btn
                 >
               </template>
               <template #[`item.status`]="{item}">
@@ -200,7 +200,7 @@
           </v-dialog>
           <!-- edit -->
         </div>
-      </v-container>
+      </div>
       <type-catagory v-else></type-catagory>
     </div>
     <div v-if="isLoading" class="text-center">
@@ -395,8 +395,8 @@ export default {
       this.modal_add = false;
       this.$fetch();
     },
-    showdetail(id) {
-      this.$router.push(`${this.$route.path}?id=${id}`);
+    showdetail(id, title) {
+      this.$router.push(`${this.$route.path}?id=${id}&type=${title}`);
     }
   }
 };

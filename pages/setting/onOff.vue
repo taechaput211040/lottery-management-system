@@ -1,8 +1,8 @@
 <template>
   <v-flex>
-    <div class="d-flex justify-center"><h2>เปิดปิดหวย</h2></div>
+    <h2>เปิดปิดหวย</h2>
 
-    <div class="white rounded-lg">
+    <div class="white rounded-lg mt-2">
       <div class="rounded-lg white">
         <v-data-table
           :headers="headerOnOff"
@@ -25,18 +25,7 @@
               ><v-icon left>mdi-circle</v-icon> ไม่เปิดใช้งาน</v-chip
             >
           </template>
-          <template #[`item.upline_status`]="{item}">
-            <!-- {{item.upline_status}} -->
-            <v-chip color="success" small v-if="item.upline_status == true"
-              ><v-icon left>mdi-circle</v-icon> เปิดใช้งาน</v-chip
-            >
-            <v-chip color="error" small v-else-if="item.upline_status == false"
-              ><v-icon left>mdi-circle</v-icon> ปิดใช้งาน</v-chip
-            >
-            <v-chip color="grey" small v-else
-              ><v-icon left>mdi-circle</v-icon> ไม่เปิดใช้งาน</v-chip
-            >
-          </template>
+
           <template #[`item.actions`]="{item}">
             <v-btn color="warning" rounded small @click="configStatus(item)"
               ><v-icon>mdi-pencil</v-icon> จัดการสถานะ</v-btn
@@ -61,7 +50,7 @@
           label="ชื่อหวย"
         ></v-text-field>
         <div class="ma-3 d-column">
-          self_status
+          สถานะ
           <v-switch
             v-model="editItem.self_status"
             hide-details="auto"
@@ -104,15 +93,8 @@ export default {
           align: "left"
         },
         {
-          text: "self_status",
+          text: "สถานะการใช้งาน",
           value: "self_status",
-          class: "font-weight-bold",
-          align: "center",
-          width: "180px"
-        },
-        {
-          text: "upline_status",
-          value: "upline_status",
           class: "font-weight-bold",
           align: "center",
           width: "180px"

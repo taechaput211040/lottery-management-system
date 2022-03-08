@@ -151,21 +151,6 @@ export default {
               icon: "mdi-view-dashboard",
               text: "โปรแกรมหวย",
               to: "/lottosetting/programlotto"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "อัตราจ่ายตามประเภทชนิดหวย",
-              to: "/lottosetting/typecategory"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "อัตราจ่ายน้ำไหล",
-              to: "/lottosetting/lottonumbertype"
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "ราคาขายขั้นต่ำ/สูงสุด",
-              to: "/lottosetting/listlotto"
             }
           ]
         },

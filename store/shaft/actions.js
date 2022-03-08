@@ -9,39 +9,39 @@ export async function getSellerAll({ commit }) {
     }
   });
 }
-export async function getDiscont({ commit }, id) {
+export async function getAllsettingseller({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/sellapi/api/seller/all_get_setting_outcomerate/${id}`
+        `/sellapi/api/seller/get_all_setting_seller/${id}`
       );
-
+      console.log(response);
       resolve(response);
     } catch (error) {
       reject(error);
     }
   });
 }
-export async function getSelfrecieve({ commit }, id) {
+export async function getAllsettingUpline({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/sellapi/api/seller/all_get_setting_selfreclive/${id}`
+        `/sellapi/api/seller/get_all_setting_seller_upline/${id}`
       );
-
+      console.log(response);
       resolve(response);
     } catch (error) {
       reject(error);
     }
   });
 }
-export async function getOutcomerate({ commit }, id) {
+export async function getAllunlimited({ commit }, params) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/sellapi/api/seller/all_get_discount/${id}`
+        `/sellapi/api/seller/get_limited_number/${params.typecategory_id}&${params.lottonumbertype_id}`
       );
-
+      console.log(response);
       resolve(response);
     } catch (error) {
       reject(error);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class=" mt-2">ชนิดของหวย</h1>
+    <h1 class=" mt-2">ชนิดของหวย : {{ $route.query.type }}</h1>
     <div class="ma-2 pa-6 white rounded-lg">
       <v-row class="select-item "
         ><v-btn color="red" @click="$router.go(-1)" small dark>back</v-btn
@@ -35,18 +35,60 @@
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
           <template #[`item.action`]="{item}">
-            <v-btn
-              class="mx-auto"
-              fab
-              dark
-              x-small
-              color="warning"
-              @click="openEdit(item)"
-            >
-              <v-icon dark>
-                mdi-pencil
-              </v-icon>
-            </v-btn>
+            <v-tooltip bottom color="warning">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  class="mx-1"
+                  fab
+                  dark
+                  x-small
+                  color="warning"
+                  @click="openEdit(item)"
+                  ><v-icon dark>
+                    mdi-pencil
+                  </v-icon>
+                </v-btn></template
+              >
+              <span>แก้ไขหวย</span>
+            </v-tooltip>
+            <v-tooltip bottom color="red">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  class="mx-1"
+                  fab
+                  dark
+                  x-small
+                  color="red"
+                  @click="deleteConfig(item)"
+                  ><v-icon dark>
+                    mdi-delete
+                  </v-icon>
+                </v-btn></template
+              >
+              <span>ลบหวย</span>
+            </v-tooltip>
+            <v-tooltip bottom color="black">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  color="black"
+                  class="mx-1"
+                  fab
+                  dark
+                  x-small
+                  @click="closeConfig(item)"
+                  ><v-icon dark>
+                    mdi-lock
+                  </v-icon>
+                </v-btn></template
+              >
+              <span>ปิดหวย</span>
+            </v-tooltip>
           </template>
 
           <template #[`item.status`]="{item}">
@@ -117,6 +159,7 @@
                   dense
                 ></v-text-field>
                 <v-text-field
+                  label="กฎกติกา"
                   v-model="dataEdit.rule_play"
                   dense
                   outlined
@@ -236,7 +279,9 @@ export default {
     ...mapActions("lottosetting", [
       "getTypeCategory",
       "createType",
-      "updateTypeCategory"
+      "updateTypeCategory",
+      "deleteTypeCategory",
+      "closeTypeCategory"
     ]),
     async addCategpry() {
       try {
@@ -306,6 +351,59 @@ export default {
         console.log(error);
         this.modal_edit = false;
         this.$fetch();
+      }
+    },
+    async deleteConfig(item) {
+      try {
+        this.$swal({
+          title: "แน่ใจหรือไม่ว่าต้องการลบ?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ลบ"
+        }).then(async result => {
+          if (result.isConfirmed) {
+            await this.deleteTypeCategory(item.id);
+            this.$swal(
+              "ลบเรียบร้อย!",
+              "Your file has been deleted.",
+              "success"
+            );
+            this.$fetch();
+          } else {
+            this.$fetch();
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async closeConfig(item) {
+      try {
+        this.$swal({
+          title: "แน่ใจหรือไม่ว่าต้องการปิดหวย?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ปิดหวย"
+        }).then(async result => {
+          if (result.isConfirmed) {
+            await this.closeTypeCategory(item.id);
+            this.$swal({
+              icon: "success",
+              title: "ปิดเรียบร้อย",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            this.$fetch();
+          } else {
+            this.$fetch();
+          }
+        });
+      } catch (error) {
+        console.log(error);
       }
     }
   }

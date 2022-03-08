@@ -1,7 +1,7 @@
 <template>
   <v-flex>
-    <div class="d-flex justify-center"><h2>เปิดปิดหวยในสายงาน</h2></div>
-    <div class="white rounded-lg" v-if="!this.$route.query.username">
+    <h2>เปิดปิดหวยในสายงาน</h2>
+    <div class="white rounded-lg mt-2" v-if="!this.$route.query.username">
       <div class="rounded-lg white">
         <v-data-table
           :headers="headerOnOff"
@@ -21,26 +21,7 @@
       </div>
     </div>
     <div class="white rounded-lg" v-else>
-      <v-btn color="red" @click="$router.go(-1)" dark small class="ma-3"
-        >Back</v-btn
-      >
-      <div class="rounded-lg white">
-        <v-data-table
-          :headers="headerDetail"
-          :items="dataDetail"
-          :loading="isLoading"
-        >
-          <template #[`item.no`]="{index}">
-            <!-- {{item.upline_status}} -->
-            {{ index + 1 }}
-          </template>
-          <template #[`item.actions`]="{item}">
-            <v-btn color="warning" rounded small @click="configStatus(item)"
-              ><v-icon>mdi-pencil</v-icon> จัดการสถานะ</v-btn
-            >
-          </template>
-        </v-data-table>
-      </div>
+      <category-byuser></category-byuser>
     </div>
 
     <!-- edit modal card-->
@@ -76,7 +57,9 @@
 
 <script>
 import { mapActions } from "vuex";
+import CategoryByuser from "../../components/onOfflotto/CategoryByuser.vue";
 export default {
+  components: { CategoryByuser },
   data() {
     return {
       itemdetail: [],
@@ -109,57 +92,8 @@ export default {
           width: "200px"
         }
       ],
-      headerDetail: [
-        {
-          text: "No.",
-          value: "no",
-          class: "font-weight-bold",
-          cellClass: "font-weight-bold",
-          align: "center",
-          width: "80px"
-        },
-        {
-          text: "ชื่อ",
-          value: "title",
-          class: "font-weight-bold",
-          align: "left"
-        },
-        {
-          text: "self_status",
-          value: "self_status",
-          class: "font-weight-bold",
-          align: "center",
-          width: "180px"
-        },
-        {
-          text: "upline_status",
-          value: "upline_status",
-          class: "font-weight-bold",
-          align: "center",
-          width: "180px"
-        },
-        {
-          text: "ดำเนินการ",
-          value: "actions",
-          class: "font-weight-bold",
-          align: "center",
-          width: "200px"
-        }
-      ],
-      itemtypeaward: [
-        {
-          num: "4",
-          id: "asd2-52gmp-mo51-3fxcwmql4611111",
-          title: "ฮานอยสตาร์",
-          upline_status: true
-        },
-        {
-          num: "3",
-          id: "asd2-52gmp-mo51-3fxcwmql461ps6lx",
-          title: "ฮานอยสตาร์",
-          upline_status: false
-        }
-      ],
+
+      itemtypeaward: [],
       selecttype: "",
       filter: {
         startDate: "",
@@ -172,18 +106,19 @@ export default {
     try {
       const { data } = await this.getLottoDownline();
       this.isLoading = false;
-      this.itemtypeaward = data;
+      this.itemtypeaward = data.result;
     } catch (error) {
       this.isLoading = false;
       console.log(error);
     }
   },
   methods: {
-    ...mapActions("seller", ["getLottoDownline", "changeStaussetting"]),
-    async configStatus(item) {
-      this.editItem = item;
-      this.dialogConfig = true;
-    },
+    ...mapActions("seller", [
+      "getLottoDownline",
+      "changeStaussetting",
+      "getTypeByJser"
+    ]),
+
     async showdetial(data) {
       this.$router.push(`${this.$route.path}?username=${data.username}`);
       this.dataDetail = data.typecategory;

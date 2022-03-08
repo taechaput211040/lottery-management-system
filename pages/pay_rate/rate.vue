@@ -1,21 +1,24 @@
 <template>
   <v-flex>
-    <div class="d-flex justify-center"><h2>ตั้งค่าหวยเพลา</h2></div>
-
+    <h2>ตั้งค่าหวยเพลา</h2>
     <div v-if="!this.$route.query.id">
       <main-table></main-table>
     </div>
-    <div v-else>
+    <div
+      v-else-if="this.$route.query.id && !this.$route.query.lottonumbertype_id"
+    >
       <detail-table></detail-table>
     </div>
+    <div v-else><unlimited-table></unlimited-table></div>
   </v-flex>
 </template>
 
 <script>
 import DetailTable from "../../components/shaft/DetailTable.vue";
 import MainTable from "../../components/shaft/MainTable.vue";
+import UnlimitedTable from "../../components/shaft/UnlimitedTable.vue";
 export default {
-  components: { MainTable, DetailTable },
+  components: { MainTable, DetailTable, UnlimitedTable },
   data() {
     return {
       datarender: [],

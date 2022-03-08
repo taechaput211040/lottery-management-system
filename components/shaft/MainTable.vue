@@ -1,8 +1,11 @@
 <template>
   <div class="white rounded-lg">
     <div class="rounded-lg white">
-     
-      <v-data-table :headers="headersdatelotto" :items="datarender">
+      <v-data-table class="elevation-2"
+        :headers="headersdatelotto"
+        :loading="isLoading"
+        :items="datarender"
+      >
         <template #[`item.no`]="{index}">
           {{ index + 1 }}
         </template>
@@ -46,7 +49,7 @@ export default {
           align: "start"
         },
         {
-          text: "Action",
+          text: "ดำเนินการ",
           value: "action",
           class: "font-weight-bold",
           align: "center",
