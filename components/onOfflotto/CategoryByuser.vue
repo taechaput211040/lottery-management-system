@@ -124,7 +124,7 @@ export default {
     },
     async confirmToEdit() {
       try {
-        console.log(this.edititem);
+      
         await this.changeStausDownline(this.edititem);
         this.dialogEdit = false;
         this.$fetch();

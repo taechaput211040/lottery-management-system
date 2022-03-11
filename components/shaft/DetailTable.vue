@@ -247,7 +247,7 @@ export default {
         let { data } = await this.getAllsettingseller(this.$route.query.id);
         this.datarender = data.result;
         this.isLoading = false;
-        console.log(data);
+ 
       } catch (error) {
         this.isLoading = false;
       }
@@ -258,7 +258,7 @@ export default {
         let { data } = await this.getAllsettingUpline(this.$route.query.id);
         this.uplinedItem = data.result;
         this.isLoading = false;
-        console.log(data, "upline");
+      
       } catch (error) {
         this.isLoading = false;
       }
@@ -266,7 +266,7 @@ export default {
     openDialogupdate(item) {
       this.updateDiaglog = true;
       this.form_edit = item;
-      console.log(this.form_edit);
+    
     },
     async submitUpdate() {
       try {

@@ -22,13 +22,13 @@
           {{ index + 1 }}
         </template>
         <template #[`item.save`]="{item}">
-          <v-btn color="primary" small rounded @click="openDlupdate(item)"
-            ><v-icon>mdi-save</v-icon> บันทึกผลรางวัล</v-btn
+          <v-btn color="black" dark small rounded @click="openDlupdate(item)"
+            ><v-icon left>mdi-calculator</v-icon> คำนวณผลรางวัล</v-btn
           >
         </template>
         <template #[`item.calculate`]="{}">
           <v-btn color="primary" small rounded
-            ><v-icon>mdi-save</v-icon> บันทึกผลรางวัล</v-btn
+            ><v-icon left>mdi-download-box</v-icon> บันทึกผลรางวัล</v-btn
           >
         </template>
       </v-data-table>

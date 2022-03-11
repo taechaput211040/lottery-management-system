@@ -190,7 +190,7 @@ export default {
   },
   methods: {
     limitDetail(item) {
-      console.log(item);
+    
       this.$router.push(
         `${this.$route.fullPath}&lottonumbertype_id=${item.lottonumbertype_id}`
       );
@@ -216,7 +216,7 @@ export default {
           this.isLoading = false;
         }
 
-        console.log(data);
+    
       } catch (error) {
         this.isLoading = false;
       }

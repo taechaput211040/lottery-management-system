@@ -243,7 +243,7 @@ export default {
       const response = await this.getLottoNumberType(params);
       this.itemDetail = response.result[0].typecategory_id.data;
       this.modaladdType = false;
-      console.log(response);
+ 
     } catch (error) {
       console.log(error);
       this.modaladdType = false;
@@ -258,7 +258,7 @@ export default {
       "closeLottoNumberType"
     ]),
     edititem(item) {
-      console.log(item);
+
       this.modlEdit = true;
       this.editform = item;
     },

@@ -95,7 +95,8 @@
             ></v-switch>
           </div>
           <v-card-actions>
-            <v-btn color="success" @click="submitsetting()">ยืนยัน</v-btn
+            <v-btn color="success" @click="submitsetting(updateform.username)"
+              >ยืนยัน</v-btn
             ><v-btn color="error" @click="updateDialog = false">ปิด</v-btn>
           </v-card-actions>
         </v-card>
@@ -151,11 +152,21 @@ export default {
     },
     async submitsetting() {
       try {
-        let body = {
-          username: this.updateform.username,
-          flex_odd: this.updateform.self_flex,
-          seller: this.updateform.self_seller
-        };
+        let body = {};
+        if (this.updateform.username == this.$store.state.auth.username) {
+          body = {
+            username: this.updateform.username,
+            flex_odd: this.updateform.self_flex,
+            seller: this.updateform.self_seller
+          };
+        } else {
+          body = {
+            username: this.updateform.username,
+            flex_odd: this.updateform.upline_flex_odd,
+            seller: this.updateform.upline_seller
+          };
+        }
+
         await this.changeStausType(body);
         this.updateDialog = false;
         this.$fetch();

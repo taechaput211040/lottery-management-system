@@ -168,7 +168,7 @@ export default {
       try {
         let id = this.$route.query.id;
         const { data } = await this.getTypeCategoryDetailByid(id);
-        console.log(data);
+
       } catch (error) {
         console.log(error);
       }
