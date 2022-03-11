@@ -31,6 +31,10 @@ export default {
       target: "https://lotto-setting-ehhif4jpyq-as.a.run.app",
       pathRewrite: { "^/settinglottoapi/": "" }
     },
+    "/setflexodd/": {
+      target: "https://lotto-setting-flex-odd-ehhif4jpyq-as.a.run.app",
+      pathRewrite: { "^/setflexodd/": "" }
+    }
   },
   server: {
     port: 8030 // default: 3000

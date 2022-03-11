@@ -138,6 +138,11 @@ export default {
           ]
         },
         {
+          title: "ผลรางวัล",
+          to: "/award",
+          icon: "mdi-view-dashboard"
+        },
+        {
           title: "ตั้งค่าหวย",
           to: "/staff",
           icon: "mdi-credit-card-check",
@@ -151,6 +156,11 @@ export default {
               icon: "mdi-view-dashboard",
               text: "โปรแกรมหวย",
               to: "/lottosetting/programlotto"
+            },
+            {
+              icon: "mdi-view-dashboard",
+              text: "ประเภทการแทง",
+              to: "/lottosetting/settingtype"
             }
           ]
         },
@@ -179,6 +189,11 @@ export default {
         {
           title: "เพลา",
           to: "/pay_rate/rate",
+          icon: "mdi-credit-card-plus-outline"
+        },
+        {
+          title: "น้ำไหล",
+          to: "/flexodd",
           icon: "mdi-credit-card-plus-outline"
         },
         {

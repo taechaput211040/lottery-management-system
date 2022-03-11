@@ -691,3 +691,45 @@ export async function deleteLottoPrize({ commit, id }) {
     }
   });
 }
+export async function getawardlotto(
+  { commit },
+  params = {
+    start_date: undefined,
+    end_date: undefined,
+    status_lotto: undefined,
+    currentPage: undefined,
+    limit: undefined
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `/program/api/ProgramLotto/get_award`,
+        {
+          params: {
+            start_date: params.start_date,
+            end_date: params.end_date,
+            status_lotto: params.status_lotto,
+            currentPage: params.currentPage,
+            limit: params.limit
+          }
+        }
+      );
+      resolve(response.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+export async function getlottobyprogram({ commit }, id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `/program/api/LottoPrize/get_by_program_id/${id}`
+      );
+      resolve(response.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

@@ -19,8 +19,13 @@
             ><v-icon left>mdi-plus</v-icon>เพิ่มเลขอั้น
           </v-btn>
         </template>
-        <template #[`item.action`]>
-          <v-btn rounded color="black" dark small
+        <template #[`item.action`]="{item}">
+          <v-btn
+            rounded
+            color="black"
+            dark
+            small
+            @click="openDialogupdate(item)"
             ><v-icon left>mdi-cog</v-icon> ตั้งค่า
           </v-btn>
         </template>
@@ -39,6 +44,57 @@
         </template>
       </v-data-table>
     </div>
+    <v-dialog max-width="600px" v-model="updateDiaglog">
+      <v-card class="pa-3">
+        <v-card-title>แก้ไขชนิดหวย</v-card-title>
+        <div>
+          <v-text-field
+            hide-details="auto"
+            v-model="form_edit.maximum_out_come_rate"
+            label="อัตราจ่ายสูงสุด"
+            outlined
+            dense
+            class="my-2"
+          ></v-text-field>
+          <v-text-field
+            hide-details="auto"
+            v-model="form_edit.minimum_bet_prize"
+            label="อัตราจ่ายต่ำสุด"
+            dense
+            outlined
+            class="my-2"
+          ></v-text-field>
+          <v-text-field
+            hide-details="auto"
+            v-model="form_edit.maximum_bet_prize"
+            label="แทงสูงสุด"
+            dense
+            outlined
+            class="my-2"
+          ></v-text-field>
+          <v-text-field
+            hide-details="auto"
+            v-model="form_edit.self_receive_amount"
+            label="แทงต่ำสุด"
+            dense
+            class="my-2"
+            outlined
+          ></v-text-field>
+          <v-text-field
+            hide-details="auto"
+            v-model="form_edit.discount_amount"
+            label="ยอดส่วนลด"
+            outlined
+            class="my-2"
+            dense
+          ></v-text-field>
+        </div>
+        <v-card-actions>
+          <v-btn class="success" @click="submitUpdate()">เเก้ไข</v-btn>
+          <v-btn class="error" @click="updateDiaglog = false">ปิด</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -47,6 +103,8 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      updateDiaglog: false,
+      form_edit: {},
       uplinedItem: [],
       isLoading: true,
       row: "",
@@ -151,12 +209,7 @@ export default {
           class: "font-weight-bold",
           align: "start"
         },
-        {
-          text: "แก้ไขโดย",
-          value: "minimum_bet_prize",
-          class: "font-weight-bold",
-          align: "start"
-        },
+
         {
           text: "ดำเนินการ",
           value: "action",
@@ -183,7 +236,11 @@ export default {
         `${this.$route.fullPath}&lottonumbertype_id=${item.lottonumbertype_id}`
       );
     },
-    ...mapActions("shaft", ["getAllsettingseller", "getAllsettingUpline"]),
+    ...mapActions("shaft", [
+      "getAllsettingseller",
+      "getAllsettingUpline",
+      "updateSettingseller"
+    ]),
     async getSelfeData() {
       this.isLoading = true;
       try {
@@ -204,6 +261,35 @@ export default {
         console.log(data, "upline");
       } catch (error) {
         this.isLoading = false;
+      }
+    },
+    openDialogupdate(item) {
+      this.updateDiaglog = true;
+      this.form_edit = item;
+      console.log(this.form_edit);
+    },
+    async submitUpdate() {
+      try {
+        let body = {
+          typecategory_id: this.$route.query.id,
+          lotto_numbertype: [
+            {
+              lottonumbertype_id: this.form_edit.lottonumbertype_id,
+              maximum_out_come_rate: this.form_edit.maximum_out_come_rate,
+              minimum_bet_prize: this.form_edit.minimum_bet_prize,
+              maximum_bet_prize: this.form_edit.maximum_bet_prize,
+              self_receive_amount: this.form_edit.self_receive_amount,
+              discount_amount: this.form_edit.discount_amount
+            }
+          ]
+        };
+        await this.updateSettingseller(body);
+        this.updateDiaglog = false;
+        this.$fetch();
+      } catch (error) {
+        console.log(error);
+        this.updateDiaglog = false;
+        this.$fetch();
       }
     }
   }

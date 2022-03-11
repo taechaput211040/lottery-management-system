@@ -73,6 +73,7 @@
           :page.sync="pagination.page"
           :options.sync="options"
           hide-default-footer
+          :loading="isLoading"
           :headers="headersdatelotto"
           :items="itemtypeaward"
         >
@@ -279,6 +280,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      isLoading: true,
       pageSizes: [5, 10, 15, 25],
       options: {},
       pagination: {
@@ -368,6 +370,7 @@ export default {
       "closeProgramLotto"
     ]),
     async getdataRender() {
+      this.isLoading = true;
       try {
         let params = {
           currentPage: this.pagination.page,
@@ -376,8 +379,10 @@ export default {
         let data = await this.getProgramLotto(params);
         this.itemtypeaward = data.result[0].data;
         this.pagination.rowsNumber = data.result[0].total;
+        this.isLoading = false;
       } catch (error) {
         console.log(error);
+        this.isLoading = false;
       }
     },
 

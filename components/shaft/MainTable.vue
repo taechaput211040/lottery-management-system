@@ -1,7 +1,25 @@
 <template>
-  <div class="white rounded-lg">
-    <div class="rounded-lg white">
-      <v-data-table class="elevation-2"
+  <div>
+    <div class="pa-1 rounded-lg white my-3 pa-2">
+      เลือกประเภทหวย
+      <v-radio-group
+        hide-details="auto"
+        class="my-3"
+        v-model="selectType"
+        row
+        @change="selectCatebytype"
+      >
+        <v-radio
+          v-for="(item, i) in this.listtype"
+          :key="i"
+          :label="item.title"
+          :value="item.id"
+        ></v-radio>
+      </v-radio-group>
+    </div>
+    <div class="rounded-lg white" v-if="selectType != null">
+      <v-data-table
+        class="elevation-2"
         :headers="headersdatelotto"
         :loading="isLoading"
         :items="datarender"
@@ -15,7 +33,7 @@
             color="black"
             dark
             small
-            @click="getDetail(item.title_id)"
+            @click="getDetail(item.typecategory_id)"
             ><v-icon left>mdi-cog</v-icon> ตั้งค่า
           </v-btn>
         </template>
@@ -44,7 +62,7 @@ export default {
         },
         {
           text: "ชนิดหวย",
-          value: "title",
+          value: "typecategory_title",
           class: "font-weight-bold",
           align: "start"
         },
@@ -57,18 +75,19 @@ export default {
         }
       ],
       datarender: [],
-      selecttype: "",
+      selectType: null,
       filter: {
         startDate: "",
         endDate: ""
-      }
+      },
+      listtype: []
     };
   },
   async fetch() {
     this.isLoading = true;
     try {
-      const { data } = await this.getSellerAll();
-      this.datarender = data.result;
+      const { data } = await this.getTypelottoAll();
+      this.listtype = data.result;
       this.isLoading = false;
     } catch (error) {
       console.log(error);
@@ -77,8 +96,19 @@ export default {
   },
   methods: {
     ...mapActions("shaft", ["getSellerAll"]),
+    ...mapActions("flexodd", ["getTypelottoAll"]),
     getDetail(id) {
       this.$router.push(`${this.$route.path}?id=${id}`);
+    },
+    async selectCatebytype() {
+      try {
+        const { data } = await this.getSellerAll(this.selectType);
+        this.datarender = data.result;
+        this.isLoading = false;
+      } catch (error) {
+        console.log(error);
+        this.isLoading = false;
+      }
     }
   }
 };

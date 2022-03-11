@@ -217,11 +217,9 @@
 </template>
 <script>
 import VueApexCharts from "vue-apexcharts";
-import reportWinlose from "../components/reportWinlose.vue";
 import CardView from "../components/form/CardView.vue";
-
 export default {
-  components: { reportWinlose, VueApexCharts, CardView },
+  components: { VueApexCharts, CardView },
   data() {
     return {
       isLoading: false,

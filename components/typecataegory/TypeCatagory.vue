@@ -156,13 +156,19 @@
                   label="title"
                   filled
                   disabled
+                  required
                   dense
                 ></v-text-field>
-                <v-text-field
+                <v-textarea
                   label="กฎกติกา"
                   v-model="dataEdit.rule_play"
                   dense
+                  required
                   outlined
+                ></v-textarea>
+
+                <v-text-field
+                  v-model="dataEdit.lotto_flag"
                 ></v-text-field>
                 สถานะการใช้งาน
                 <v-switch

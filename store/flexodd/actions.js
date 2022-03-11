@@ -1,8 +1,8 @@
-export async function getSellerAll({ commit }, id) {
+export async function getTypelottoAll({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/sellapi/api/seller/all_title/${id}`
+        `/setflexodd/api/flex_odd/all_lottotype`
       );
 
       resolve(response);
@@ -11,54 +11,71 @@ export async function getSellerAll({ commit }, id) {
     }
   });
 }
-export async function getAllsettingseller({ commit }, id) {
+export async function getCategoryflexbyid({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/sellapi/api/seller/get_all_setting_seller/${id}`
+        `/setflexodd/api/flex_odd/all_title/${id}`
       );
-      console.log(response);
-      resolve(response);
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-export async function getAllsettingUpline({ commit }, id) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let response = await this.$axios.get(
-        `/sellapi/api/seller/get_all_setting_seller_upline/${id}`
-      );
-      console.log(response);
-      resolve(response);
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-export async function getAllunlimited({ commit }, params) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let response = await this.$axios.get(
-        `/sellapi/api/seller/get_limited_number/${params.typecategory_id}&${params.lottonumbertype_id}`
-      );
-      console.log(response);
-      resolve(response);
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
 
-export async function Addlimited({ commit }, body) {
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+export async function getOutcomerate({ commit }, id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `/setflexodd/api/flex_odd/all_outcomrate_getsetting/${id}`
+      );
+
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+export async function getOutcomerateUplined({ commit }, id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `/setflexodd/api/flex_odd/all_outcomrate_getsetting_upline/${id}`
+      );
+
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+export async function updateFlexOutcomerate({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `/sellapi/api/seller/limited_number/`,
+        `/setflexodd/api/flex_odd/update/outcomerate`,
         body
       );
-      console.log(response);
+
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+export async function setflexoddProfit({ commit }, body) {
+  return new Promise(async (resolve, reject) => {
+    console.log(body, "body");
+    try {
+      let response = await this.$axios.patch(
+        `/setflexodd/api/flex_odd/update/flex_odd_lotto`,
+        {
+          flex_odd_lotto: parseInt(body.flexodd),
+          profit: parseInt(body.profit)
+        }
+      );
+
       resolve(response);
     } catch (error) {
       reject(error);
@@ -66,14 +83,13 @@ export async function Addlimited({ commit }, body) {
   });
 }
 
-export async function updateSettingseller({ commit }, body) {
+export async function getPerflex({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.patch(
-        `/sellapi/api/seller/update_setting_seller/`,
-        body
+      let response = await this.$axios.get(
+        `/setflexodd/api/flex_odd/get_per_flex`
       );
-      console.log(response);
+
       resolve(response);
     } catch (error) {
       reject(error);

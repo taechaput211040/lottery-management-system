@@ -4,7 +4,11 @@
       >Back</v-btn
     >
     <div class="rounded-lg white">
-      <v-data-table :headers="headerDetail" :items="dataDetail">
+      <v-data-table
+        :headers="headerDetail"
+        :loading="isLoading"
+        :items="dataDetail"
+      >
         <template #[`item.no`]="{index}">
           <!-- {{item.upline_status}} -->
           {{ index + 1 }}
@@ -52,6 +56,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      isLoading: false,
       dialogEdit: false,
       edititem: {
         username: "",
@@ -97,8 +102,15 @@ export default {
   methods: {
     ...mapActions("seller", ["getTypeByUser", "changeStausDownline"]),
     async renderDetail() {
-      let { data } = await this.getTypeByUser(this.$route.query.username);
-      this.dataDetail = data.result;
+      this.isLoading = true;
+      try {
+        let { data } = await this.getTypeByUser(this.$route.query.username);
+        this.dataDetail = data.result;
+        this.isLoading = false;
+      } catch (error) {
+        console.log(error);
+        this.isLoading = false;
+      }
     },
     openEdit(item) {
       if (item.self_status == true && item.upline_status == true) {
