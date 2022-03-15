@@ -38,12 +38,12 @@
           </template>
           <template #[`item.save`]="{item}">
             <v-btn color="black" dark small rounded @click="openDlupdate(item)"
-              ><v-icon left>mdi-calculator</v-icon>บันทึกผลรางวัล
+              ><v-icon left>mdi-download-box</v-icon>บันทึกผลรางวัล
             </v-btn>
           </template>
           <template #[`item.calculate`]="{}">
             <v-btn color="primary" small rounded
-              ><v-icon left>mdi-download-box</v-icon>คำนวณผลรางวัล
+              ><v-icon left>mdi-calculator</v-icon>คำนวณผลรางวัล
             </v-btn> </template
           ><template #[`item.status_lotto`]="{item}">
             <v-chip color="success" v-if="item.status_lotto == true"

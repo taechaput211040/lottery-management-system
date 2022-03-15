@@ -328,53 +328,5 @@ export default {
   align-items: baseline;
 }
 
-.classtable {
-  .color_subtitle {
-    color: black !important;
-    background-color: #bdbdbd !important;
-  }
-  .color_winlose {
-    background-color: #767676 !important;
-  }
-  table thead > tr > th,
-  table thead > tr > th > i {
-    color: whitesmoke !important;
-    text-align: center !important;
-  }
 
-  table thead > tr > th:nth-child(even),
-  table thead > tr > th:nth-child(even).active {
-    background-color: #3b3b3b;
-    border: 1px solid #fff;
-  }
-
-  table thead > tr > th:nth-child(odd),
-  table thead > tr > th:nth-child(odd).active {
-    background-color: #3b3b3b;
-    border: 1px solid #fff;
-  }
-
-  table tbody tr:nth-child(even) {
-    background-color: #efefef;
-  }
-
-  table tbody tr:nth-child(odd) {
-    background-color: #ffffff;
-  }
-  table.v-table tbody td:first-child,
-  table.v-table tbody td:not(:first-child),
-  table.v-table tbody th:first-child,
-  table.v-table tbody th:not(:first-child),
-  table.v-table thead td:first-child,
-  table.v-table thead td:not(:first-child),
-  table.v-table thead th:first-child,
-  table.v-table thead th:not(:first-child) {
-    padding: 0 10px;
-  }
-}
-.v-data-table > .v-data-table__wrapper > table > tbody > tr > th,
-.v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-.v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
-  font-size: 16px !important;
-}
 </style>

@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <v-app-bar :clipped-left="clipped" fixed app>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" />
+    <v-app-bar :clipped-left="clipped" fixed app >
+      <v-app-bar-nav-icon large @click.stop="drawer = !drawer" color="black"/>
+      <v-toolbar-title v-text="title"  class="font-weight-bold"/>
       <v-spacer />
       <v-speed-dial
         absolute
@@ -11,8 +11,8 @@
         transition="slide-y-transition"
       >
         <template v-slot:activator>
-          <v-btn v-model="fab" color="blue darken-2" dark fab>
-            <v-icon> mdi-account-circle </v-icon>
+          <v-btn v-model="fab" color="blue darken-2"  dark fab>
+            <v-icon large center>mdi-account-circle </v-icon>
           </v-btn>
         </template>
         <v-btn fab dark small color="orange">
@@ -24,24 +24,25 @@
       </v-speed-dial>
     </v-app-bar>
 
-    <v-navigation-drawer
+    <v-navigation-drawer dark
       v-model="drawer"
       :clipped="clipped"
       app
       fixed
       width="300"
-      ><v-toolbar-title class="font-weight-bold pa-4 text-center" align-center>
+      ><v-toolbar-title class="font-weight-bold  text-center" align-center>
         <v-img
-          height="100"
+          height="65"
           contain
           class="ma-auto my-5"
-          src="https://image.smart-ai-api.com/public/image-storage/smartlotto/logosmartlotto.png"
+          src="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/smart-lotto-final3D%201.png"
         ></v-img>
       </v-toolbar-title>
       <v-list dense class="red_list">
         <div v-for="(link, i) in items" :key="i">
           <v-list-item
-            active-class="active_list "
+           
+            active-class="black--text active_list white"
             v-if="!link.subLinks"
             :to="link.to"
             class="v-list-item font-weight-bold "
@@ -54,9 +55,10 @@
           </v-list-item>
 
           <v-list-group
-            active-class=" deep-purple--text"
+            active-class="black--text active_list white"
             v-else
             :key="link.title"
+            class="white--text"
             :prepend-icon="link.icon"
             :value="false"
           >
@@ -67,8 +69,9 @@
             </template>
 
             <v-list-item
-              active-class="active_list"
-              style="padding-left: 30px !important;margin-right: 5px;margin-left: 5px;"
+              dark
+              active-class="black--text active_list white"
+              style="padding-left: 30px !important;"
               v-for="sublink in link.subLinks"
               :to="sublink.to"
               :key="sublink.text"

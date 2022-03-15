@@ -43,7 +43,7 @@
             label="เลข"
             class="my-2"
             dense
-            v-model="form.lottonumber_name"
+            v-model="form.lotto_number"
             hide-details="auto"
           ></v-text-field>
           <v-text-field
@@ -84,7 +84,7 @@
             class="my-2"
             type="number"
             dense
-            v-model="form.lottonumber_name"
+            v-model="form.lotto_number"
             hide-details="auto"
           ></v-text-field>
           <v-text-field
@@ -147,7 +147,7 @@ export default {
         },
         {
           text: "เลข",
-          value: "lottonumber_name",
+          value: "lotto_number",
           class: "font-weight-bold",
           align: "start"
         },
@@ -231,7 +231,7 @@ export default {
         lottonumbertype_id: this.$route.query.lottonumbertype_id,
         lottonumbers: [
           {
-            lottonumber_name: this.form.lottonumber_name,
+            lottonumber_name: this.form.lotto_number,
             out_come_rate: this.form.out_come_rate,
             self_receive_amount: this.form.self_receive_amount
           }

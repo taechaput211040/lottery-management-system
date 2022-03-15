@@ -33,7 +33,7 @@ span {
 }
 .card-child {
   flex: 1 1 auto;
-  padding: 1rem;
+  padding: 10px 20px;
   border-radius: 6px;
   background-color: #ffffff;
   height: 100%;
@@ -52,6 +52,12 @@ span {
 }
 .icon-show {
   width: 70px;
+}
+.icon-show {
+  width: 70px;
+}
+.icon-table {
+  width:50px;
 }
 .img_section {
   display: flex;
@@ -79,4 +85,86 @@ span {
 }
 .vue-form-wizard .wizard-tab-content {
   padding: 0px 0px 0px !important;
+}
+.v-navigation-drawer__content {
+  background: url("https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/BG.png");
+}
+.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+  border-top: 1px solid white !important;
+  border-bottom: 1px solid white !important;
+  padding: 2.5px 10px;
+}
+.v-list {
+  padding: 0px !important;
+}
+.v-list-item {
+  padding: 2.5px 10px !important;
+}
+.v-list .v-list-item--active {
+  padding: 2.5px 10px;
+  color: rgb(0, 0, 0);
+}
+.v-navigation-drawer .v-list:not(.v-select-list) {
+  background: none !important;
+}
+.v-list-item--dense,
+.v-list--dense .v-list-item {
+  color: #ffffff;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.color_subtitle {
+  color: black !important;
+  background-color: #bdbdbd !important;
+}
+.color_winlose {
+  background-color: #767676 !important;
+}
+table thead > tr > th,
+table thead > tr > th > i {
+  color: whitesmoke !important;
+  text-align: center !important;
+}
+
+table thead > tr > th:nth-child(even),
+table thead > tr > th:nth-child(even).active {
+  background: #1a68d3;
+}
+
+table thead > tr > th:nth-child(odd),
+table thead > tr > th:nth-child(odd).active {
+  background: #1a68d3;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #efefef;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+table.v-table tbody td:first-child,
+table.v-table tbody td:not(:first-child),
+table.v-table tbody th:first-child,
+table.v-table tbody th:not(:first-child),
+table.v-table thead td:first-child,
+table.v-table thead td:not(:first-child),
+table.v-table thead th:first-child,
+table.v-table thead th:not(:first-child) {
+  padding: 0 10px;
+}
+
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > th,
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th,
+.v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
+  font-size: 16px !important;
+}
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td,
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > th,
+.v-data-table > .v-data-table__wrapper > table > thead > tr > td,
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th,
+.v-data-table > .v-data-table__wrapper > table > tfoot > tr > td,
+.v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
+  padding: 5px !important;
 }

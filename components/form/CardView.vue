@@ -2,13 +2,13 @@
   <div class=" card-child card-dashboard ">
     <div class="row">
       <div class="col-8">
-        <h1 :class="titleclass">{{ title }}</h1>
+        <h2 :class="titleclass">{{ title }}</h2>
         <div class=" card-icontitle" v-if="condition == true">
           <h2 v-if="value > 0" class="success--text">+{{ value }}</h2>
           <h2 v-if="value < 0" class="red--text">{{ value }}</h2>
         </div>
 
-        <div class=" card-icontitle" v-else>
+        <div class=" card-icontitle " :class="value_class" v-else>
           <h2>{{ value }}</h2>
         </div>
       </div>
@@ -29,7 +29,8 @@ export default {
     title: { type: String, default: "" },
     value: { type: [Number, String], default: "" },
     iconSrc: { type: String, default: "" },
-    titleclass: ""
+    titleclass: "",
+    value_class: ""
   }
 };
 </script>
