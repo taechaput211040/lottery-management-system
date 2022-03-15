@@ -733,3 +733,17 @@ export async function getlottobyprogram({ commit }, id) {
     }
   });
 }
+
+export async function savelottonumber({ commit }, body) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.patch(
+        `/program/api/LottoPrize/update_reward`,
+        body
+      );
+      resolve(response.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

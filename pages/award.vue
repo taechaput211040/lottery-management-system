@@ -1,68 +1,134 @@
 <template>
-  <div>
-    <h2>บันทึกผลรางวัล</h2>
-    รายการแทง
-    <div class="white rounded-lg pa-3">
-      ตัวเลือกการค้นหา
-    </div>
-    <v-radio-group
-      v-model="selectType"
-      hide-details="auto"
-      class="my-3"
-      row
-      @change="selectSection"
-    >
-      <v-radio label="ทั้งหมด" value="all"></v-radio>
-      <v-radio label="ออกผลมาแล้ว" value="success"></v-radio>
-      <v-radio label="ผลยังไม่ออก" value="unsuccess"></v-radio>
-    </v-radio-group>
-    <div class="rounded-lg mt-5 pa-3 white">
-      <v-data-table :headers="header" :items="dataAwardrender">
-        <template #[`item.no`]="{index}">
-          {{ index + 1 }}
-        </template>
-        <template #[`item.save`]="{item}">
-          <v-btn color="black" dark small rounded @click="openDlupdate(item)"
-            ><v-icon left>mdi-calculator</v-icon> คำนวณผลรางวัล</v-btn
-          >
-        </template>
-        <template #[`item.calculate`]="{}">
-          <v-btn color="primary" small rounded
-            ><v-icon left>mdi-download-box</v-icon> บันทึกผลรางวัล</v-btn
-          >
-        </template>
-      </v-data-table>
-    </div>
-    <v-dialog max-width="600px" v-model="dlSavenumber">
-      <v-card class="pa-3">
-        <v-card-title class="justify-center primary--text font-weight-bold">
-          บันทึกข้อมูลผลรางวัล
-        </v-card-title>
-        <div v-for="(item, i) in itemNumber" :key="i">
-          <div class="row align-baseline">
-            <div class="col-3">{{ item.name }}</div>
-            <div class="col-9 row my-1">
-              <v-text-field
-                class="col-2 mx-1 text-center"
-                v-for="j in parseInt(item.amount_reward)"
-                :key="j"
-                outlined
-                type="number"
-                hide-details="auto"
-                dense
-                v-model="keynumber[i]"
-                small
-              ></v-text-field>
+  <v-flex>
+    <div v-if="!isLoading">
+      <h2>บันทึกผลรางวัล</h2>
+      รายการแทง
+      <div class="white rounded-lg pa-3">
+        ตัวเลือกการค้นหา
+      </div>
+      <v-radio-group
+        v-model="selectType"
+        hide-details="auto"
+        class="my-3"
+        row
+        @change="selectSection"
+      >
+        <v-radio label="ทั้งหมด" value="all"></v-radio>
+        <v-radio label="ออกผลมาแล้ว" value="success"></v-radio>
+        <v-radio label="ผลยังไม่ออก" value="unsuccess"></v-radio>
+      </v-radio-group>
+      <div class="rounded-lg mt-5 pa-3 white">
+        <v-text-field
+          v-model="search"
+          class="col-md-4 col-6 pa-2"
+          append-icon="mdi-magnify"
+          label="Search"
+          outlined
+          single-line
+          dense
+          hide-details
+        ></v-text-field>
+        <v-data-table
+          :headers="header"
+          :items="dataAwardrender"
+          :search="search"
+        >
+          <template #[`item.no`]="{index}">
+            {{ index + 1 }}
+          </template>
+          <template #[`item.save`]="{item}">
+            <v-btn color="black" dark small rounded @click="openDlupdate(item)"
+              ><v-icon left>mdi-calculator</v-icon>บันทึกผลรางวัล
+            </v-btn>
+          </template>
+          <template #[`item.calculate`]="{}">
+            <v-btn color="primary" small rounded
+              ><v-icon left>mdi-download-box</v-icon>คำนวณผลรางวัล
+            </v-btn> </template
+          ><template #[`item.status_lotto`]="{item}">
+            <v-chip color="success" v-if="item.status_lotto == true"
+              ><v-icon left>mdi-circle</v-icon> ออกผลมาแล้ว</v-chip
+            >
+            <v-chip color="error" v-if="item.status_lotto == false"
+              ><v-icon left>mdi-circle</v-icon> ผลยังไม่ออก</v-chip
+            >
+          </template>
+          <template #[`item.status_calculate`]="{item}">
+            <v-chip color="success" v-if="item.status_lotto == true"
+              ><v-icon left>mdi-circle</v-icon>คำนวณผลเรียบร้อย</v-chip
+            >
+            <v-chip color="error" v-if="item.status_lotto == false"
+              ><v-icon left>mdi-circle</v-icon>ยังไม่คำนวณผล</v-chip
+            >
+          </template>
+        </v-data-table>
+      </div>
+      <v-dialog max-width="600px" v-model="dlSavenumber">
+        <v-card class="pa-3">
+          <v-card-title class="justify-center primary--text font-weight-bold">
+            บันทึกข้อมูลผลรางวัล
+          </v-card-title>
+
+          <div v-for="(item, i) in this.itemNumber" :key="i">
+            <div class="row align-baseline">
+              <div class="col-3">{{ item.name }}</div>
+
+              <div
+                class="col-9 row my-1"
+                v-if="Array.isArray(item.lotto_number) == true"
+              >
+                <v-text-field
+                  class="col-2 mx-1 text-center"
+                  v-for="(j, n_key) in parseInt(item.amount_reward)"
+                  :key="n_key"
+                  outlined
+                  type="number"
+                  hide-details="auto"
+                  dense
+                  v-model="item.lotto_number[n_key]"
+                  @keydown="
+                    e =>
+                      rangeInput(
+                        e,
+                        parseInt(item.number),
+                        item.lotto_number[n_key]
+                      )
+                  "
+                  :counter="parseInt(item.number)"
+                  small
+                ></v-text-field>
+              </div>
+              <div class="col-9 row my-1" v-else>
+                <v-text-field
+                  class="col-2 mx-1 text-center"
+                  outlined
+                  type="number"
+                  v-model="item.lotto_number"
+                  @keydown="
+                    e => rangeInput(e, parseInt(item.number), item.lotto_number)
+                  "
+                  :counter="parseInt(item.number)"
+                  hide-details="auto"
+                  dense
+                ></v-text-field>
+              </div>
             </div>
           </div>
-        </div>
-        <v-card-actions class="justify-center">
-          <v-btn color="success" @click="submitnumber()">บันทึก</v-btn
-          ><v-btn color="error" @click="dlSavenumber = false">ปิด</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+          <v-card-actions class="justify-center">
+            <v-btn color="success" @click="submitnumber()">บันทึก</v-btn
+            ><v-btn color="error" @click="dlSavenumber = false">ปิด</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+    <div v-if="isLoading" class="text-center">
+      <v-progress-circular
+        :size="50"
+        color="primary"
+        indeterminate
+      ></v-progress-circular>
+    </div>
+  </v-flex>
 </template>
 
 <script>
@@ -70,6 +136,9 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      isArray: false,
+      search: "",
+      isLoading: false,
       keynumber: [],
       dlSavenumber: false,
       selectType: "all",
@@ -125,11 +194,12 @@ export default {
           align: "left"
         }
       ],
+      progranlottoID: "",
       itemNumber: {},
       dataAwardrender: [],
       filter: {
         start_date: "2022-03-14 01:00:00.000",
-        end_date: "2022-03-20 01:00:00.000"
+        end_date: "2022-04-01 01:00:00.000"
       },
       pagination: {
         sortBy: "desc",
@@ -149,7 +219,11 @@ export default {
       console.log(item);
       console.log(key);
     },
-    ...mapActions("lottosetting", ["getawardlotto", "getlottobyprogram"]),
+    ...mapActions("lottosetting", [
+      "getawardlotto",
+      "getlottobyprogram",
+      "savelottonumber"
+    ]),
     getParameter(status) {
       let params = {
         start_date: this.filter.start_date,
@@ -161,6 +235,7 @@ export default {
       return params;
     },
     async selectSection(value) {
+      this.isLoading = true;
       let status = undefined;
       if (value === "success") {
         status = true;
@@ -173,22 +248,81 @@ export default {
       try {
         const data = await this.getawardlotto(params);
         this.dataAwardrender = data.result;
-        console.log(this.dataAwardrender);
+        this.isLoading = false;
       } catch (error) {
         console.log(error);
+        this.isLoading = false;
       }
     },
     async openDlupdate(item) {
       try {
+        this.progranlottoID = item.programlotto_id;
         let data = await this.getlottobyprogram(item.programlotto_id);
         this.itemNumber = data;
         this.dlSavenumber = true;
+        console.log(this.itemNumber);
+        for (let i = 0; i < this.itemNumber.length; i++) {
+          if (this.itemNumber[i].lotto_number == null) {
+            this.itemNumber[i].lotto_number = [];
+          }
+        }
       } catch (error) {
         console.log(error);
       }
     },
-    modelnumberlotto() {
-      return;
+    async submitnumber() {
+      let body = {
+        program_id: this.progranlottoID,
+        lottonumbertype_details: []
+      };
+      this.isArray = Array.isArray(this.itemNumber[0].lotto_number);
+
+      if (this.isArray === true) {
+        for (let i = 0; i < this.itemNumber.length; i++) {
+          for (let j = 0; j < this.itemNumber[i].lotto_number.length; j++) {
+            body.lottonumbertype_details.push({
+              lottonumbertype_id: this.itemNumber[i].id,
+              lotto_number: this.itemNumber[i].lotto_number[j]
+            });
+          }
+        }
+      } else if (this.isArray === false) {
+        for (let i = 0; i < this.itemNumber.length; i++) {
+          body.lottonumbertype_details.push({
+            lottonumbertype_id: this.itemNumber[i].id,
+            lotto_number: this.itemNumber[i].lotto_number
+          });
+        }
+      }
+      console.log(this.isArray, "array");
+      console.log(body, "body");
+      try {
+        await this.savelottonumber(body);
+
+        this.$swal({
+          icon: "success",
+          title: "บันทึกผลเรียบร้อย",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.dlSavenumber = false;
+      } catch (error) {
+        this.$swal({
+          icon: "error",
+          title: "บันทึกผลผิดพลาด",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        console.log(error);
+      }
+    },
+    rangeInput(self, length, itemmodel) {
+      // console.log(itemmodel);
+      if (itemmodel == undefined) {
+        itemmodel = "";
+      } else if (/[0-9]/g.test(self.key) && itemmodel.length >= length) {
+        self.preventDefault();
+      }
     }
   }
 };
