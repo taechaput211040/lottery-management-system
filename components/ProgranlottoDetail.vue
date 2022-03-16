@@ -18,6 +18,12 @@
       </div>
 
       <v-data-table :headers="headers" :items="itemDetail">
+        <template #[`item.created_at`]="{item}">
+          {{ dateformat(item.created_at) }}
+        </template>
+        <template #[`item.updated_at`]="{item}">
+          {{ dateformat(item.updated_at) }}
+        </template>
         <template #[`item.status`]="{item}">
           <v-chip color="success" v-if="item.status == 1" dark small>
             <v-icon left small>mdi-circle-medium</v-icon>เปิดใช้งาน
@@ -243,7 +249,6 @@ export default {
       const response = await this.getLottoNumberType(params);
       this.itemDetail = response.result[0].typecategory_id.data;
       this.modaladdType = false;
- 
     } catch (error) {
       console.log(error);
       this.modaladdType = false;
@@ -257,8 +262,10 @@ export default {
       "deleteLottoNumberType",
       "closeLottoNumberType"
     ]),
+    dateformat(date) {
+      return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
+    },
     edititem(item) {
-
       this.modlEdit = true;
       this.editform = item;
     },

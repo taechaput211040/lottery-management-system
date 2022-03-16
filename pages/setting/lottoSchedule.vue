@@ -7,61 +7,21 @@
       </h4>
     </div>
     <div class="my-3 rounded-lg white">
-      <h3 class="pa-3">ตัวเลือกการค้นหา</h3>
-
+      <h3 class="pa-3">กรอกชื่อหวยที่ต้องการ</h3>
       <v-divider></v-divider>
-      <div class="pa-3">
-        <v-radio-group v-model="selecttype" row>
-          <v-radio label="วันนี้" value="day"></v-radio>
-          <v-radio label="เมื่อวาน" value="yesterday"></v-radio>
-          <v-radio label="สัปดาห์นี้" value="week"></v-radio>
-          <v-radio label="สัปดาห์ที่แล้ว" value="lastweek"></v-radio>
-          <v-radio label="เดือน" value="mounth"></v-radio>
-          <v-radio label="วันที่" value="findate"></v-radio>
-        </v-radio-group>
-        <v-row>
-          <v-col cols="12" sm="6" v-if="selecttype == 'mounth'">
-            <div class="px-2 font-weight-bold">
-              เลือกเดือน :
-              <el-date-picker
-                type="month"
-                v-model.trim="filter.month"
-                arrow-control
-                placeholder="เลือกเดือน"
-              >
-              </el-date-picker>
-            </div>
-          </v-col>
-          <v-col cols="12" v-if="selecttype == 'findate'">
-            <div class="px-2 font-weight-bold row">
-              <div class="col-12  col-sm-6 col-lg-3">
-                ตั้งเเต่วันที่ :
-                <el-date-picker
-                  class="full-width"
-                  v-model.trim="filter.startDate"
-                  arrow-control
-                  placeholder="เลือกวันที่ต้องการค้นหา"
-                >
-                </el-date-picker>
-              </div>
-              <div class="col-12 col-sm-6 col-lg-3">
-                ถึงวันที่ :
-                <el-date-picker
-                  class="full-width"
-                  v-model.trim="filter.endDate"
-                  arrow-control
-                  placeholder="เลือกวันที่ต้องการค้นหา"
-                >
-                </el-date-picker>
-              </div>
-            </div>
-          </v-col>
-          <v-col cols="12"
-            ><v-btn color="primary" @click="check2DateSelect()"
-              >ค้นหา</v-btn
-            ></v-col
-          >
-        </v-row>
+      <div class="pa-3 d-flex align-center">
+        <v-text-field
+          outlined
+          dense
+          @keyup.enter="searchlotto()"
+          placeholder="กรอกชื่อหวยที่ต้องการจะค้นหา"
+          v-model="title_lotto"
+          class="my-2 col-12 col-sm-6 col-lg-4"
+          hide-details="auto"
+        ></v-text-field
+        ><v-btn color="primary" class="mx-2" @click="searchlotto()"
+          ><v-icon left>mdi-magnify</v-icon> ค้นหา</v-btn
+        >
       </div>
     </div>
     <div><h2>รายชื่อโปรแกรมรอบหวย</h2></div>
@@ -137,6 +97,15 @@
               >
               <span>ปิดหวย</span>
             </v-tooltip>
+          </template>
+          <template #[`item.bet_open_time`]="{item}">
+            {{ dateformat(item.bet_open_time) }}
+          </template>
+          <template #[`item.bet_close_time`]="{item}">
+            {{ dateformat(item.bet_close_time) }}
+          </template>
+          <template #[`item.bet_lotto_time`]="{item}">
+            {{ dateformat(item.bet_lotto_time) }}
           </template>
           <template #[`item.status`]="{item}"
             ><v-chip color="success" dark small v-if="item.status == 1"
@@ -280,6 +249,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      title_lotto: undefined,
       isLoading: true,
       pageSizes: [5, 10, 15, 25],
       options: {},
@@ -319,21 +289,21 @@ export default {
           value: "bet_open_time",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold green--text"
+          cellClass: "font-weight-bold "
         },
         {
           text: "วันที่ปิดแทง",
           value: "bet_close_time",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold red--text"
+          cellClass: "font-weight-bold "
         },
         {
           text: "วันที่ออกผล",
           value: "bet_lotto_time",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold red--text"
+          cellClass: "font-weight-bold "
         },
         {
           text: "สถานะ",
@@ -369,6 +339,40 @@ export default {
       "deleteProgramLotto",
       "closeProgramLotto"
     ]),
+    async searchlotto(e) {
+      this.isLoading = true;
+      try {
+        let params = {
+          title: this.title_lotto,
+          currentPage: this.pagination.page,
+          limit: this.pagination.rowsPerPage
+        };
+        let data = await this.getProgramLotto(params);
+        this.pagination.rowsNumber = 0;
+        if (!data.result[0].title.data) {
+          this.itemtypeaward = [];
+          this.$swal({
+            icon: "warning",
+            title: "กรุณากรอกชื่อหวยให้ถูกต้อง",
+            showConfirmButton: false,
+            timer: 2000
+          });
+        } else {
+          this.itemtypeaward = data.result[0].title.data;
+          this.pagination.rowsNumber = data.result[0].title.total;
+        }
+        this.isLoading = false;
+      } catch (err) {
+        console.log(err);
+        this.isLoading = false;
+        this.$swal({
+          icon: "warning",
+          title: "กรุณากรอกชื่อหวยให้ถูกต้อง",
+          showConfirmButton: false,
+          timer: 2000
+        });
+      }
+    },
     async getdataRender() {
       this.isLoading = true;
       try {
@@ -406,7 +410,9 @@ export default {
       this.pagination.rowsPerPage = size;
       this.getdataRender();
     },
-
+    dateformat(date) {
+      return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
+    },
     openEdit(obj) {
       this.editing = obj;
       console.log(this.editing);
@@ -416,11 +422,25 @@ export default {
       try {
         await this.updateProgramLotto(this.editing);
         this.dialogdetail = false;
-        this.$fetch();
+        this.$swal({
+          icon: "success",
+          title: "เเก้ไขเรียบร้อย",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        if (this.title_lotto) {
+          this.searchlotto();
+        } else {
+          this.$fetch();
+        }
       } catch (error) {
         console.log(error);
         this.dialogdetail = false;
-        this.$fetch();
+        if (this.title_lotto) {
+          this.searchlotto();
+        } else {
+          this.$fetch();
+        }
       }
     },
     async deleteConfig(item) {
@@ -440,9 +460,17 @@ export default {
               "Your file has been deleted.",
               "success"
             );
-            this.$fetch();
+            if (this.title_lotto) {
+              this.searchlotto();
+            } else {
+              this.$fetch();
+            }
           } else {
-            this.$fetch();
+            if (this.title_lotto) {
+              this.searchlotto();
+            } else {
+              this.$fetch();
+            }
           }
         });
       } catch (error) {
@@ -467,9 +495,17 @@ export default {
               showConfirmButton: false,
               timer: 1500
             });
-            this.$fetch();
+            if (this.title_lotto) {
+              this.searchlotto();
+            } else {
+              this.$fetch();
+            }
           } else {
-            this.$fetch();
+            if (this.title_lotto) {
+              this.searchlotto();
+            } else {
+              this.$fetch();
+            }
           }
         });
       } catch (error) {
@@ -480,7 +516,11 @@ export default {
   watch: {
     options: {
       async handler() {
-        await this.getdataRender();
+        if (this.title_lotto) {
+          await this.searchlotto();
+        } else {
+          await this.getdataRender();
+        }
       },
       deep: true
     },

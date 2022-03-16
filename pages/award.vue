@@ -2,10 +2,7 @@
   <v-flex>
     <div v-if="!isLoading">
       <h2>บันทึกผลรางวัล</h2>
-      รายการแทง
-      <div class="white rounded-lg pa-3">
-        ตัวเลือกการค้นหา
-      </div>
+      <filter-search @search="searchfunction"></filter-search>
       <v-radio-group
         v-model="selectType"
         hide-details="auto"
@@ -133,7 +130,9 @@
 
 <script>
 import { mapActions } from "vuex";
+import FilterSearch from "../components/form/FilterSearch.vue";
 export default {
+  components: { FilterSearch },
   data() {
     return {
       isArray: false,
@@ -215,6 +214,9 @@ export default {
     this.selectSection();
   },
   methods: {
+    searchfunction(value) {
+      console.log(value);
+    },
     submitnumber(item, key) {
       console.log(item);
       console.log(key);

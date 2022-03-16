@@ -326,6 +326,7 @@ export async function getProgramLottoById({ commit }) {
 export async function getProgramLotto(
   { commit },
   params = {
+    title: undefined,
     currentPage: undefined,
     limit: undefined,
     type_id: undefined
@@ -335,6 +336,7 @@ export async function getProgramLotto(
     try {
       let response = await this.$axios.get(`/program/api/ProgramLotto/get`, {
         params: {
+          title: params.title,
           currentPage: params.currentPage,
           limit: params.limit,
           LottoTypeId: params.type_id
