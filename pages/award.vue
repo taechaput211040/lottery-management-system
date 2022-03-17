@@ -214,8 +214,8 @@ export default {
     this.selectSection();
   },
   methods: {
-    searchfunction(value) {
-      console.log(value);
+    searchfunction(filter) {
+      console.log(filter);
     },
     submitnumber(item, key) {
       console.log(item);

@@ -2,10 +2,13 @@
 export async function login(context, { username, password }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`/apilogin/api/auth/user/hash`, {
-        username,
-        password
-      });
+      let response = await this.$axios.post(
+        `https://lotto-launchgame-service-ehhif4jpyq-as.a.run.app/api/auth/user/hash`,
+        {
+          username,
+          password
+        }
+      );
       context.commit("set_hash", response.data);
       resolve(response);
     } catch (error) {
@@ -18,7 +21,7 @@ export async function gettoken(context, hash) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `/apilogin/api/auth/user/token/${hash}`,
+        `https://lotto-launchgame-service-ehhif4jpyq-as.a.run.app/api/auth/user/token/${hash}`,
         {
           ip: "192.168.1.1"
         }

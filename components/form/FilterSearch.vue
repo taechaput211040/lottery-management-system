@@ -63,6 +63,9 @@ export default {
       }
     };
   },
+  mounted() {
+    this.selectfiltertype(this.selecttype);
+  },
   methods: {
     searchbyfillter() {
       this.$emit("search", this.filter);
@@ -73,7 +76,7 @@ export default {
     selectfiltertype(value) {
       let today = new Date();
       switch (value) {
-        case "day":
+        case "findate":
           this.filter = {
             startDate: this.getDateTime(
               new Date(today.getFullYear(), today.getMonth(), 1)
@@ -101,7 +104,7 @@ export default {
             )
           };
           break;
-        case "findate":
+        case "day":
           console.log("htti");
           break;
         default:
