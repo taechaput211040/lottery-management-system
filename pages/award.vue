@@ -35,7 +35,7 @@
           </template>
           <template #[`item.save`]="{item}">
             <v-btn color="black" dark small rounded @click="openDlupdate(item)"
-              ><v-icon left>mdi-download-box</v-icon>บันทึกผลรางวัล
+              ><v-icon left>mdi-download-box</v-icon>กรอกผลรางวัล
             </v-btn>
           </template>
           <template #[`item.calculate`]="{}">
@@ -63,7 +63,7 @@
       <v-dialog max-width="600px" v-model="dlSavenumber">
         <v-card class="pa-3">
           <v-card-title class="justify-center primary--text font-weight-bold">
-            บันทึกข้อมูลผลรางวัล
+            กรอกข้อมูลผลรางวัล
           </v-card-title>
 
           <div v-for="(item, i) in this.itemNumber" :key="i">
@@ -187,7 +187,7 @@ export default {
           align: "left"
         },
         {
-          text: "บันทึกผลรางวัล",
+          text: "กรอกผลรางวัล",
           value: "save",
           class: "font-weight-bold",
           align: "left"
@@ -197,8 +197,8 @@ export default {
       itemNumber: {},
       dataAwardrender: [],
       filter: {
-        start_date: "2022-03-14 01:00:00.000",
-        end_date: "2022-04-01 01:00:00.000"
+        startDate: "2022-03-14 01:00:00.000",
+        endDate: "2022-04-01 01:00:00.000"
       },
       pagination: {
         sortBy: "desc",
@@ -215,7 +215,9 @@ export default {
   },
   methods: {
     searchfunction(filter) {
-      console.log(filter);
+      this.filter = filter;
+
+      this.selectSection();
     },
     submitnumber(item, key) {
       console.log(item);
@@ -228,8 +230,8 @@ export default {
     ]),
     getParameter(status) {
       let params = {
-        start_date: this.filter.start_date,
-        end_date: this.filter.end_date,
+        start_date: this.filter.startDate,
+        end_date: this.filter.endDate,
         status_lotto: status,
         currentPage: this.pagination.page,
         limit: this.pagination.rowsPerPage
@@ -237,7 +239,6 @@ export default {
       return params;
     },
     async selectSection(value) {
-      this.isLoading = true;
       let status = undefined;
       if (value === "success") {
         status = true;
@@ -250,10 +251,8 @@ export default {
       try {
         const data = await this.getawardlotto(params);
         this.dataAwardrender = data.result;
-        this.isLoading = false;
       } catch (error) {
         console.log(error);
-        this.isLoading = false;
       }
     },
     async openDlupdate(item) {

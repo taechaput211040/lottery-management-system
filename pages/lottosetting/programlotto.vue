@@ -4,19 +4,25 @@
       <v-container>
         <div v-if="!this.$route.query.id">
           <h1 class="mt-2">รายชื่อโปรแกรมหวย</h1>
-          <div class="ma-2 pa-6 white rounded-lg">
-            <v-row class="select-item "
-              ><v-select
-                class="col-6 col-md-2"
-                label="Type Category"
-              ></v-select>
+          <div class="ma-2  white rounded-lg">
+            <v-row class="select-item pa-3 ">
               <v-text-field
                 dense
                 solo-inverted
+                v-model="title_search"
                 label="Title"
+                hide-details="auto"
+                @keyup.enter="searchlotto()"
                 required
-                class="col-6 col-md-3"
-                ><v-btn slot="append" color="success" fab dark x-small>
+                class="col-6 col-md-3 mx-2"
+                ><v-btn
+                  slot="append"
+                  color="success"
+                  @click="searchlotto()"
+                  fab
+                  dark
+                  x-small
+                >
                   <v-icon>mdi-magnify</v-icon></v-btn
                 ></v-text-field
               >
@@ -31,11 +37,17 @@
                   โปรเเกรมหวย
                 </h4>
               </div>
-              <v-btn color="primary" class="mx-2 px-2" rounded dark @click="modal_add = true">
+              <v-btn
+                color="primary"
+                class="mx-2 px-2"
+                rounded
+                dark
+                @click="modal_add = true"
+              >
                 <v-icon>mdi-plus</v-icon>สร้างชนิดหวย</v-btn
               ></v-row
             >
-            <v-card class="mx-auto mt-5 justify-center classtable">
+            <v-card class="mx-auto  justify-center classtable">
               <v-data-table
                 :server-items-length="pagination.rowsNumber"
                 :items-per-page.sync="pagination.rowsPerPage"
@@ -774,6 +786,7 @@ export default {
   },
   data() {
     return {
+      title_search: undefined,
       modaledit: false,
       dlcreateNum: false,
       validForm: true,
@@ -1038,7 +1051,48 @@ export default {
         console.log(error);
       }
     },
-
+    async searchlotto(e) {
+      this.isLoading = true;
+      if (
+        !this.title_search ||
+        this.title_search === undefined ||
+        this.title_search === ""
+      ) {
+        this.getdataRender();
+      } else {
+        try {
+          let params = {
+            title: this.title_search ? this.title_search : undefined,
+            currentPage: this.pagination.page,
+            limit: this.pagination.rowsPerPage
+          };
+          let data = await this.getTypeCategoryDetail(params);
+          this.pagination.rowsNumber = 0;
+          if (!data.result[0].title.data) {
+            this.itemtypeaward = [];
+            this.$swal({
+              icon: "warning",
+              title: "กรุณากรอกชื่อหวยให้ถูกต้อง",
+              showConfirmButton: false,
+              timer: 2000
+            });
+          } else {
+            this.itemexample = data.result[0].title.data;
+            this.pagination.rowsNumber = data.result[0].title.total;
+          }
+          this.isLoading = false;
+        } catch (err) {
+          console.log(err);
+          this.isLoading = false;
+          this.$swal({
+            icon: "warning",
+            title: "กรุณากรอกชื่อหวยให้ถูกต้อง",
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      }
+    },
     async getdataRender() {
       this.isLoading = true;
       try {
@@ -1075,7 +1129,11 @@ export default {
       try {
         await this.updateTypeCategoryDetail(this.Editform);
         this.modaledit = false;
-        this.$fetch();
+        if (this.title_search) {
+          this.searchlotto();
+        } else {
+          this.$fetch();
+        }
       } catch (error) {
         console.log(error);
       }
@@ -1103,8 +1161,17 @@ export default {
               "success"
             );
             this.$fetch();
+            if (this.title_search) {
+              this.searchlotto();
+            } else {
+              this.$fetch();
+            }
           } else {
-            this.$fetch();
+            if (this.title_search) {
+              this.searchlotto();
+            } else {
+              this.$fetch();
+            }
           }
         });
       } catch (error) {
@@ -1129,9 +1196,17 @@ export default {
               showConfirmButton: false,
               timer: 1500
             });
-            this.$fetch();
+            if (this.title_search) {
+              this.searchlotto();
+            } else {
+              this.$fetch();
+            }
           } else {
-            this.$fetch();
+            if (this.title_search) {
+              this.searchlotto();
+            } else {
+              this.$fetch();
+            }
           }
         });
       } catch (error) {

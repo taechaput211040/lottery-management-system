@@ -1,26 +1,15 @@
 <template>
   <div>
-    <h1 class=" mt-2">ชนิดของหวย : {{ $route.query.type }}</h1>
-    <div class="ma-2 pa-6 white rounded-lg">
-      <v-row class="select-item "
-        ><v-btn color="red" @click="$router.go(-1)" small dark>back</v-btn
-        ><v-select class="col-6 col-md-2" label="Type Category"></v-select>
-        <v-text-field
-          dense
-          solo-inverted
-          label="Title"
-          required
-          class="col-6 col-md-3"
-          ><v-btn slot="append" color="success" fab dark x-small>
-            <v-icon>mdi-magnify</v-icon></v-btn
-          ></v-text-field
-        >
+    <h1 class="mt-2">ชนิดของหวย : {{ $route.query.type }}</h1>
+    <div class="ma-2  white rounded-lg">
+      <div class="d-flex ">
+        <v-btn color="red" @click="$router.go(-1)" small dark>back</v-btn>
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded dark @click="openAdddialog()">
           <v-icon>mdi-plus</v-icon>เพิ่มชนิดของหวย</v-btn
-        ></v-row
-      >
-      <v-card class="mx-auto mt-5 justify-center classtable">
+        >
+      </div>
+      <v-card class="mx-auto  justify-center classtable">
         <v-data-table
           :server-items-length="pagination.rowsNumber"
           :items-per-page.sync="pagination.rowsPerPage"
@@ -167,9 +156,7 @@
                   outlined
                 ></v-textarea>
 
-                <v-text-field
-                  v-model="dataEdit.lotto_flag"
-                ></v-text-field>
+                <v-text-field v-model="dataEdit.lotto_flag"></v-text-field>
                 สถานะการใช้งาน
                 <v-switch
                   v-model="dataEdit.status"

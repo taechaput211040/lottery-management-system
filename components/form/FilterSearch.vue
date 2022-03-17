@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       itemdate: [
-        { text: "วันนี้", value: "day" },
+        { text: "เดือนนี้", value: "thismounth" },
         { text: "สัปดาห์นี้", value: "week" },
         { text: "วันที่", value: "findate" }
       ],
@@ -104,12 +104,25 @@ export default {
             )
           };
           break;
-        case "day":
-          console.log("htti");
+        case "thismounth":
+          this.filter = {
+            startDate: this.getDateTime(
+              new Date(today.getFullYear(), today.getMonth(), 1)
+            ),
+            endDate: this.getDateTime(
+              new Date(today.getFullYear(), today.getMonth() + 1, 0).setHours(
+                23,
+                59,
+                59,
+                999
+              )
+            )
+          };
           break;
         default:
           break;
       }
+      this.$emit("search", this.filter);
     }
   }
 };

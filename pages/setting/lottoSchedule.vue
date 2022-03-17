@@ -341,36 +341,44 @@ export default {
     ]),
     async searchlotto(e) {
       this.isLoading = true;
-      try {
-        let params = {
-          title: this.title_lotto,
-          currentPage: this.pagination.page,
-          limit: this.pagination.rowsPerPage
-        };
-        let data = await this.getProgramLotto(params);
-        this.pagination.rowsNumber = 0;
-        if (!data.result[0].title.data) {
-          this.itemtypeaward = [];
+      if (
+        !this.title_lotto ||
+        this.title_lotto === undefined ||
+        this.title_lotto === ""
+      ) {
+        this.getdataRender();
+      } else {
+        try {
+          let params = {
+            title: this.title_lotto ? this.title_lotto : undefined,
+            currentPage: this.pagination.page,
+            limit: this.pagination.rowsPerPage
+          };
+          let data = await this.getProgramLotto(params);
+          this.pagination.rowsNumber = 0;
+          if (!data.result[0].title.data) {
+            this.itemtypeaward = [];
+            this.$swal({
+              icon: "warning",
+              title: "กรุณากรอกชื่อหวยให้ถูกต้อง",
+              showConfirmButton: false,
+              timer: 2000
+            });
+          } else {
+            this.itemtypeaward = data.result[0].title.data;
+            this.pagination.rowsNumber = data.result[0].title.total;
+          }
+          this.isLoading = false;
+        } catch (err) {
+          console.log(err);
+          this.isLoading = false;
           this.$swal({
             icon: "warning",
             title: "กรุณากรอกชื่อหวยให้ถูกต้อง",
             showConfirmButton: false,
             timer: 2000
           });
-        } else {
-          this.itemtypeaward = data.result[0].title.data;
-          this.pagination.rowsNumber = data.result[0].title.total;
         }
-        this.isLoading = false;
-      } catch (err) {
-        console.log(err);
-        this.isLoading = false;
-        this.$swal({
-          icon: "warning",
-          title: "กรุณากรอกชื่อหวยให้ถูกต้อง",
-          showConfirmButton: false,
-          timer: 2000
-        });
       }
     },
     async getdataRender() {

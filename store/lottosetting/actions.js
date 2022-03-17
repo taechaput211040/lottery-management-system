@@ -2,7 +2,9 @@
 export async function getLottotype({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/program/api/LottoType/get`);
+      let response = await this.$axios.get(
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoType/get`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -14,9 +16,12 @@ export async function getLottotype({ commit }) {
 export async function createLottotype({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`/program/api/LottoType/insert`, {
-        title: body.title
-      });
+      let response = await this.$axios.post(
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoType/insert`,
+        {
+          title: body.title
+        }
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -30,7 +35,7 @@ export async function updateLottotype({ commit }, body) {
     try {
       // console.log(body);
       let response = await this.$axios.patch(
-        `/program/api/LottoType/update/${body.id}`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoType/update/${body.id}`,
         {
           title: body.title,
           status: body.status
@@ -48,7 +53,7 @@ export async function deleteLottotype({ commit }, param) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/LottoType/delete/${param.id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoType/delete/${param.id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -62,7 +67,7 @@ export async function closeLottotype({ commit }, param) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/LottoType/close/${param.id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoType/close/${param.id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -76,7 +81,7 @@ export async function getTypeCategoryByid({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/TypeCategory/id/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategory/id/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -90,7 +95,7 @@ export async function getTypeCategoryDetailByid({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/TypeCategoryDetail/id/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/id/${id}`
       );
       resolve(response);
     } catch (error) {
@@ -103,6 +108,7 @@ export async function getTypeCategoryDetailByid({ commit }, id) {
 export async function getTypeCategory(
   { commit },
   params = {
+    title: undefined,
     currentPage: undefined,
     limit: undefined,
     type_id: undefined
@@ -110,13 +116,17 @@ export async function getTypeCategory(
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/program/api/TypeCategory/get`, {
-        params: {
-          currentPage: params.currentPage,
-          limit: params.limit,
-          lottotype_id: params.type_id
+      let response = await this.$axios.get(
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategory/get`,
+        {
+          params: {
+            title: params.title,
+            currentPage: params.currentPage,
+            limit: params.limit,
+            lottotype_id: params.type_id
+          }
         }
-      });
+      );
       console.log(response, "++");
       resolve(response.data, "item");
     } catch (error) {
@@ -129,6 +139,7 @@ export async function getTypeCategory(
 export async function getTypeCategoryDetail(
   { commit },
   params = {
+    title: undefined,
     currentPage: undefined,
     limit: undefined
   }
@@ -136,9 +147,10 @@ export async function getTypeCategoryDetail(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/TypeCategoryDetail/get`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/get`,
         {
           params: {
+            title:params.title,
             currentPage: params.currentPage,
             limit: params.limit
           }
@@ -157,7 +169,7 @@ export async function orderByTypeCategory({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/TypeCategory/orderby`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategory/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -172,7 +184,7 @@ export async function orderByTypeCategoryDetail({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/TypeCategoryDetail/orderby`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -185,7 +197,7 @@ export async function createType({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `/program/api/TypeCategory/insert`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategory/insert`,
         body
       );
       console.log(response, "res");
@@ -201,7 +213,7 @@ export async function createTypeCategory({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `/program/api/TypeCategoryDetail/insert`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/insert`,
         body
       );
       console.log(response, "res");
@@ -215,7 +227,7 @@ export async function updateTypeCategoryDetail({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `/program/api/TypeCategoryDetail/update/${body.id}`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/update/${body.id}`,
         body
       );
       console.log(response, "res");
@@ -231,7 +243,7 @@ export async function createTypeCategoryDetail({ commit, body }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `/program/api/TypeCategoryDetail/insert`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/insert`,
         body
       );
       resolve(response.data);
@@ -246,7 +258,7 @@ export async function updateTypeCategory({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `/program/api/TypeCategory/update/${body.id}`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategory/update/${body.id}`,
         body
       );
       resolve(response.data);
@@ -261,7 +273,7 @@ export async function deleteTypeCategory({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/TypeCategory/delete/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategory/delete/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -275,7 +287,7 @@ export async function closeTypeCategory({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/TypeCategory/close/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategory/close/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -288,7 +300,7 @@ export async function deleteCategoryTypeDetail({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/TypeCategoryDetail/delete/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/delete/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -300,7 +312,7 @@ export async function closeCategoryTypeDetail({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/TypeCategoryDetail/close/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/close/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -313,7 +325,7 @@ export async function getProgramLottoById({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/ProgramLotto/id/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/id/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -334,14 +346,17 @@ export async function getProgramLotto(
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/program/api/ProgramLotto/get`, {
-        params: {
-          title: params.title,
-          currentPage: params.currentPage,
-          limit: params.limit,
-          LottoTypeId: params.type_id
+      let response = await this.$axios.get(
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/get`,
+        {
+          params: {
+            title: params.title,
+            currentPage: params.currentPage,
+            limit: params.limit,
+            LottoTypeId: params.type_id
+          }
         }
-      });
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -354,7 +369,7 @@ export async function orderByProgramLotto({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/ProgramLotto/orderby`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -369,7 +384,7 @@ export async function createProgramLotto({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `/program/api/ProgramLotto/insert`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/insert`,
         { body }
       );
       resolve(response.data);
@@ -384,7 +399,7 @@ export async function updateProgramLotto({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `/program/api/ProgramLotto/update/${body.id}`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/update/${body.id}`,
         {
           bet_open_time: body.bet_open_time,
           bet_close_time: body.bet_close_time,
@@ -410,7 +425,7 @@ export async function deleteProgramLotto({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/ProgramLotto/delete/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/delete/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -424,7 +439,7 @@ export async function closeProgramLotto({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/ProgramLotto/close/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/close/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -438,7 +453,7 @@ export async function checkProgramLotto({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/ProgramLotto/CheckLotto`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/CheckLotto`
       );
       resolve(response.data);
     } catch (error) {
@@ -452,7 +467,7 @@ export async function checkIdProgramLotto({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/ProgramLotto/CheckLottoById/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/CheckLottoById/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -466,7 +481,7 @@ export async function checkTitleProgramLotto({ commit, title }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/ProgramLotto/CheckLottoById/${title}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/CheckLottoById/${title}`
       );
       resolve(response.data);
     } catch (error) {
@@ -480,7 +495,7 @@ export async function genProgramLotto({ commit, num_of_month }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `/program/api/ProgramLotto/GenProgramLotto/${num_of_month}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/GenProgramLotto/${num_of_month}`
       );
       resolve(response.data);
     } catch (error) {
@@ -494,7 +509,7 @@ export async function getLottoNumberTypeByid({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/LottoNumberType/id/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoNumberType/id/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -517,16 +532,19 @@ export async function getLottoNumberType(
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/program/api/LottoNumberType/get`, {
-        params: {
-          name: params.name,
-          typecategory_title: params.typecategory_title,
-          number: params.number,
-          typecategory_id: params.typecategory_id,
-          currentPage: params.currentPage,
-          limit: params.limit
+      let response = await this.$axios.get(
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoNumberType/get`,
+        {
+          params: {
+            name: params.name,
+            typecategory_title: params.typecategory_title,
+            number: params.number,
+            typecategory_id: params.typecategory_id,
+            currentPage: params.currentPage,
+            limit: params.limit
+          }
         }
-      });
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -539,7 +557,7 @@ export async function getLottoNumberTypeSort({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/LottoNumberType/orderby`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoNumberType/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -554,7 +572,7 @@ export async function createLottoNumberType({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `/program/api/LottoNumberType/insert`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoNumberType/insert`,
         body
       );
       resolve(response.data);
@@ -569,7 +587,7 @@ export async function updateLottoNumberTypeByid({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `/program/api/LottoNumberType/update/${body.id}`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoNumberType/update/${body.id}`,
         {
           typecategory_id: body.typecategory_id,
           name: body.name,
@@ -590,7 +608,7 @@ export async function deleteLottoNumberType({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/LottoNumberType/delete/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoNumberType/delete/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -604,7 +622,7 @@ export async function closeLottoNumberType({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `/program/api/LottoNumberType/close/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoNumberType/close/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -617,7 +635,10 @@ export async function closeLottoNumberType({ commit }, id) {
 export async function getLottoPrizeByid({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/program/api/LottoPrize/id/`, id);
+      let response = await this.$axios.get(
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoPrize/id/`,
+        id
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -629,7 +650,9 @@ export async function getLottoPrizeByid({ commit, id }) {
 export async function getLottoPrize({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/program/api/LottoPrize/get`);
+      let response = await this.$axios.get(
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoPrize/get`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -642,7 +665,7 @@ export async function getLottoPrizeByOrder({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/LottoPrize/orderby`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoPrize/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -657,7 +680,7 @@ export async function createLottoPrize({ commit, body }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `/program/api/LottoPrize/insert`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoPrize/insert`,
         body
       );
       resolve(response.data);
@@ -672,7 +695,7 @@ export async function updateLottoPrize({ commit, id, body }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `/program/api/LottoPrize/update/${id}`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoPrize/update/${id}`,
         body
       );
       resolve(response.data);
@@ -686,7 +709,9 @@ export async function updateLottoPrize({ commit, id, body }) {
 export async function deleteLottoPrize({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.delete(`/program/api/LottoPrize/${id}`);
+      let response = await this.$axios.delete(
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoPrize/${id}`
+      );
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -706,7 +731,7 @@ export async function getawardlotto(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/ProgramLotto/get_award`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/ProgramLotto/get_award`,
         {
           params: {
             start_date: params.start_date,
@@ -727,7 +752,7 @@ export async function getlottobyprogram({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `/program/api/LottoPrize/get_by_program_id/${id}`
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoPrize/get_by_program_id/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -740,7 +765,7 @@ export async function savelottonumber({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `/program/api/LottoPrize/update_reward`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_price/api/LottoPrize/update_reward`,
         body
       );
       resolve(response.data);

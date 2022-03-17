@@ -14,28 +14,28 @@ export default {
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
-  proxy: {
-    "/apilogin/": {
-      target: "https://lotto-launchgame-service-ehhif4jpyq-as.a.run.app",
-      pathRewrite: { "^/apilogin/": "" }
-    },
-    "/program/": {
-      target: "https://lottoprize-ehhif4jpyq-as.a.run.app",
-      pathRewrite: { "^/program/": "" }
-    },
-    "/sellapi/": {
-      target: "https://lotto-setting-seller-ehhif4jpyq-as.a.run.app",
-      pathRewrite: { "^/sellapi/": "" }
-    },
-    "/settinglottoapi/": {
-      target: "https://lotto-setting-ehhif4jpyq-as.a.run.app",
-      pathRewrite: { "^/settinglottoapi/": "" }
-    },
-    "/setflexodd/": {
-      target: "https://lotto-setting-flex-odd-ehhif4jpyq-as.a.run.app",
-      pathRewrite: { "^/setflexodd/": "" }
-    }
-  },
+  // proxy: {
+  //   "/apilogin/": {
+  //     target: "https://lotto-launchgame-service-ehhif4jpyq-as.a.run.app",
+  //     pathRewrite: { "^/apilogin/": "" }
+  //   },
+  //   "/program/": {
+  //     target: "https://lottoprize-ehhif4jpyq-as.a.run.app",
+  //     pathRewrite: { "^/program/": "" }
+  //   },
+  //   "/sellapi/": {
+  //     target: "https://lotto-setting-seller-ehhif4jpyq-as.a.run.app",
+  //     pathRewrite: { "^/sellapi/": "" }
+  //   },
+  //   "/settinglottoapi/": {
+  //     target: "https://lotto-setting-ehhif4jpyq-as.a.run.app",
+  //     pathRewrite: { "^/settinglottoapi/": "" }
+  //   },
+  //   "/setflexodd/": {
+  //     target: "https://lotto-setting-flex-odd-ehhif4jpyq-as.a.run.app",
+  //     pathRewrite: { "^/setflexodd/": "" }
+  //   }
+  // },
   server: {
     port: 8030 // default: 3000
   },
@@ -71,5 +71,9 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {}
+  build: {},
+  router: {
+    // mode: "history"
+    base: "/backoffice/"
+  }
 };

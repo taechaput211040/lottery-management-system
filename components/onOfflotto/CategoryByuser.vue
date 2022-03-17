@@ -18,12 +18,12 @@
             ><v-icon small>mdi-pencil</v-icon> จัดการสถานะ</v-btn
           >
         </template>
-        <template #[`item.self_status`]="{item}">
+        <template #[`item.upline_status`]="{item}">
           <!-- {{item.upline_status}} -->
-          <v-chip color="success" small v-if="item.self_status == true"
+          <v-chip color="success" small v-if="item.upline_status == true"
             ><v-icon left>mdi-circle</v-icon> เปิดใช้งาน</v-chip
           >
-          <v-chip color="error" small v-else-if="item.self_status == false"
+          <v-chip color="error" small v-else-if="item.upline_status == false"
             ><v-icon left>mdi-circle</v-icon> ปิดใช้งาน</v-chip
           >
           <v-chip color="grey" small v-else
@@ -81,7 +81,7 @@ export default {
         },
         {
           text: "สถานะ",
-          value: "self_status",
+          value: "upline_status",
           class: "font-weight-bold",
           align: "center",
           width: "180px"
