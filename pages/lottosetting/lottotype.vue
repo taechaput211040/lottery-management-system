@@ -6,13 +6,7 @@
         <div class="white rounded-lg ma-2 py-2">
           <div class="d-flex ma-3">
             <v-spacer></v-spacer
-            ><v-btn
-              color="primary"
-              
-              rounded
-              dark
-              @click="modal_add = true"
-            >
+            ><v-btn color="primary" rounded dark @click="modal_add = true">
               <v-icon>mdi-plus</v-icon>เพิ่มประเภทหวย</v-btn
             >
           </div>

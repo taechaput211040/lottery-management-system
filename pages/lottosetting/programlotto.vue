@@ -44,7 +44,7 @@
                 dark
                 @click="modal_add = true"
               >
-                <v-icon>mdi-plus</v-icon>สร้างชนิดหวย</v-btn
+                <v-icon>mdi-plus</v-icon>สร้างโปรแกรมหวย</v-btn
               ></v-row
             >
             <v-card class="mx-auto  justify-center classtable">
@@ -214,7 +214,7 @@
                   placeholder="ชื่อหวย"
                   hide-details="auto"
                 ></v-select>
-                <div class="align-baseline align-center my-2">
+                <div class="align-baseline align-center my-4 pb-3">
                   <v-row class="ma-3">
                     <v-col cols="6" class="pa-0 align-baseline"
                       >วันที่เปิดรับ
@@ -758,32 +758,7 @@ export default {
     TabContent,
     ProgranlottoDetail
   },
-  watch: {
-    typeSelect: {
-      handler() {
-        this.getTypeCategoryList();
-      },
-      deep: true
-    },
-    typedate(newVal, oldVal) {
-      if (newVal) {
-        this.form = {
-          jan: false,
-          feb: false,
-          mar: false,
-          apr: false,
-          may: false,
-          jun: false,
-          jul: false,
-          aug: false,
-          sep: false,
-          oct: false,
-          nov: false,
-          dec: false
-        };
-      }
-    }
-  },
+
   data() {
     return {
       title_search: undefined,
@@ -792,12 +767,12 @@ export default {
       validForm: true,
       selecttype: "",
       formRules: {
-        selecttype: [v => !!v || "Item is required"],
-        title: [v => !!v || "Name is required"],
-        open_day: [v => !!v || "Name is required"],
-        close_day: [v => !!v || "Name is required"],
-        lotto_day: [v => !!v || "Name is required"],
-        lotto_round: [v => !!v || "Name is required"]
+        selecttype: [v => !!v || "กรุราเลือกประเภทการออกผล"],
+        title: [v => !!v || "กรุณากรอกชื่อ"],
+        open_day: [v => !!v || "กรุณากรอกวันเปิด"],
+        close_day: [v => !!v || "กรุณากรอกวันปิด"],
+        lotto_day: [v => !!v || "กรุณากรอกวันออกผล"],
+        lotto_round: [v => !!v || "กรุณากรอกชื่อรอบ"]
       },
       typeCateList: [],
       typedate: "0",
@@ -980,6 +955,36 @@ export default {
     this.getdataRender();
   },
   watch: {
+    modal_add(newVal, oldVal) {
+      if (newVal) {
+        console.log("hi");
+        this.form = {};
+      }
+    },
+    typeSelect: {
+      handler() {
+        this.getTypeCategoryList();
+      },
+      deep: true
+    },
+    typedate(newVal, oldVal) {
+      if (newVal) {
+        this.form = {
+          jan: false,
+          feb: false,
+          mar: false,
+          apr: false,
+          may: false,
+          jun: false,
+          jul: false,
+          aug: false,
+          sep: false,
+          oct: false,
+          nov: false,
+          dec: false
+        };
+      }
+    },
     options: {
       async handler() {
         await this.getdataRender();

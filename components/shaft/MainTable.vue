@@ -28,12 +28,7 @@
           {{ index + 1 }}
         </template>
         <template #[`item.action`]="{item}">
-          <v-btn
-            rounded
-            color="black"
-            dark
-            small
-            @click="getDetail(item.typecategory_id)"
+          <v-btn rounded color="black" dark small @click="getDetail(item)"
             ><v-icon left>mdi-cog</v-icon> ตั้งค่า
           </v-btn>
         </template>
@@ -97,8 +92,10 @@ export default {
   methods: {
     ...mapActions("shaft", ["getSellerAll"]),
     ...mapActions("flexodd", ["getTypelottoAll"]),
-    getDetail(id) {
-      this.$router.push(`${this.$route.path}?id=${id}`);
+    getDetail(item) {
+      this.$router.push(
+        `${this.$route.path}?id=${item.typecategory_id}&title=${item.typecategory_title}`
+      );
     },
     async selectCatebytype() {
       try {

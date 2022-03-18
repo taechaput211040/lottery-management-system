@@ -17,13 +17,13 @@ export async function login(context, { username, password }) {
   });
 }
 //Lotto get token//
-export async function gettoken(context, hash) {
+export async function gettoken(context, params) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_launchgame/api/auth/user/token/${hash}`,
+        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_launchgame/api/auth/user/token/${params.hash}`,
         {
-          ip: "192.168.1.1"
+          ip: params.ip
         }
       );
       if (response.status == 200) {

@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <v-app-bar :clipped-left="clipped" fixed app >
-      <v-app-bar-nav-icon large @click.stop="drawer = !drawer" color="black"/>
-      <v-toolbar-title v-text="title"  class="font-weight-bold"/>
+    <v-app-bar :clipped-left="clipped" fixed app>
+      <v-app-bar-nav-icon large @click.stop="drawer = !drawer" color="black" />
+      <v-toolbar-title v-text="title" class="font-weight-bold" />
       <v-spacer />
       <v-speed-dial
         absolute
@@ -11,7 +11,7 @@
         transition="slide-y-transition"
       >
         <template v-slot:activator>
-          <v-btn v-model="fab" color="blue darken-2"  dark fab>
+          <v-btn v-model="fab" color="blue darken-2" dark fab>
             <v-icon large center>mdi-account-circle </v-icon>
           </v-btn>
         </template>
@@ -24,7 +24,8 @@
       </v-speed-dial>
     </v-app-bar>
 
-    <v-navigation-drawer dark
+    <v-navigation-drawer
+      dark
       v-model="drawer"
       :clipped="clipped"
       app
@@ -41,7 +42,6 @@
       <v-list dense class="red_list">
         <div v-for="(link, i) in items" :key="i">
           <v-list-item
-           
             active-class="black--text active_list white"
             v-if="!link.subLinks"
             :to="link.to"
@@ -116,103 +116,124 @@ export default {
         {
           title: "Dashboard",
           to: "/",
-          icon: "mdi-view-dashboard"
+          icon: "mdi-chart-bar",
+          status: true
         },
         {
           title: "รายงาน",
           to: "/staff",
-          icon: "mdi-account",
+          icon: "mdi-clipboard-text",
+          status: true,
+
           subLinks: [
             {
-              icon: "mdi-view-dashboard",
+              icon: "mdi-medal",
               text: "รายงานผลรางวัล",
-              to: "/report/reportAward"
+              to: "/report/reportAward",
+              status: true
             },
             {
-              icon: "mdi-view-dashboard",
+              icon: "mdi-finance",
               text: "กำไร / ขาดทุน",
-              to: "/report/chanword"
+              to: "/report/chanword",
+              status: true
             },
             {
-              icon: "mdi-view-dashboard",
+              icon: "mdi-clipboard-text-off-outline",
               text: "ยกเลิกโพย / รายการแทง",
-              to: "/report/betReport"
+              to: "/report/betReport",
+              status: true
             }
           ]
         },
         {
-          title: "ผลรางวัล",
+          title: "คำนวณผลรางวัล",
           to: "/award",
-          icon: "mdi-view-dashboard"
+          icon: "mdi-certificate",
+          status: true
         },
         {
           title: "ตั้งค่าหวย",
           to: "/staff",
-          icon: "mdi-credit-card-check",
+          icon: "mdi-cog-sync",
+          status: true,
           subLinks: [
             {
-              icon: "mdi-view-dashboard",
+              icon: "mdi-typewriter",
               text: "ประเภทหวย",
-              to: "/lottosetting/lottotype"
+              to: "/lottosetting/lottotype",
+              status: true
             },
             {
-              icon: "mdi-view-dashboard",
+              icon: "mdi-dots-square",
               text: "โปรแกรมหวย",
-              to: "/lottosetting/programlotto"
+              to: "/lottosetting/programlotto",
+              status: true
             },
             {
-              icon: "mdi-view-dashboard",
+              icon: "mdi-clipboard-pulse",
               text: "ประเภทการแทง",
-              to: "/lottosetting/settingtype"
+              to: "/lottosetting/settingtype",
+              status: true
             }
           ]
         },
         {
           title: "ตั้งค่า",
           to: "/company",
-          icon: "mdi-credit-card-plus-outline",
+
+          icon: "mdi-cog",
+          status: true,
           subLinks: [
             {
-              icon: "mdi-view-dashboard",
+              icon: "mdi-timer-outline",
               text: "รอบหวย",
-              to: "/setting/lottoSchedule"
+              to: "/setting/lottoSchedule",
+              status: true
             },
             {
-              icon: "mdi-view-dashboard",
+              icon: "mdi-toggle-switch-off",
               text: "เปิดปิดหวย",
-              to: "/setting/onOff"
+              to: "/setting/onOff",
+              status: true
             },
             {
-              icon: "mdi-view-dashboard",
+              icon: "mdi-toggle-switch-off-outline",
               text: "เปิดปิดหวยลูก",
-              to: "/setting/onOffChild"
+              to: "/setting/onOffChild",
+              status: true
             }
           ]
         },
         {
           title: "เพลา",
           to: "/pay_rate/rate",
-          icon: "mdi-credit-card-plus-outline"
+          icon: "mdi-tune-variant",
+          status: true
         },
         {
           title: "น้ำไหล",
           to: "/flexodd",
-          icon: "mdi-credit-card-plus-outline"
+          icon: "mdi-tune-vertical",
+          status: true
         },
         {
           title: "Company Setting",
           to: "/company",
           icon: "mdi-credit-card-plus-outline",
+          status: true,
           subLinks: [
             {
               icon: "mdi-view-dashboard",
               text: "แบ่งหุ้น/ถือสู้",
-              to: "/account/profile"
+              to: "/account/profile",
+              status: true
             },
             {
               icon: "mdi-view-dashboard",
               text: "รายการ Agent",
-              to: "/account/chanword"
+              to: "/account/chanword",
+              status: true
             }
           ]
         },
@@ -220,23 +241,27 @@ export default {
           title: "Agent Setting",
           to: "/agent",
           icon: "mdi-credit-card-plus-outline",
+          status: true,
           subLinks: [
             {
               icon: "mdi-view-dashboard",
               text: "ส่วนแบ่งที่ได้รับ",
-              to: "/account/profile"
+              to: "/account/profile",
+              status: true
             },
             {
               icon: "mdi-view-dashboard",
               text: "อัตราจ่ายคอมมิชชั่น",
-              to: "/account/chanword"
+              to: "/account/chanword",
+              status: true
             }
           ]
         },
         {
           title: "Member Setting",
           to: "/member",
-          icon: "mdi-credit-card-plus-outline"
+          icon: "mdi-credit-card-plus-outline",
+          status: true
         }
       ],
       miniVariant: false,

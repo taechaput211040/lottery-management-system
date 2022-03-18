@@ -1,9 +1,15 @@
 <template>
   <div class="">
-    <v-btn color="red" class="ma-3" small dark @click="$router.go(-1)"
-      >ย้อนกลับ</v-btn
-    >
-    <h3 class="primary--text font-weight-bold my-4">หวยของตัวเอง</h3>
+    <div class="d-flex align-baseline">
+      <v-btn color="red" class="ma-3" small dark @click="$router.go(-1)"
+        >ย้อนกลับ</v-btn
+      >
+      <h3 class="primary--text font-weight-bold my-4">
+        หวยของตัวเอง :
+        <span class="purple--text "> {{ this.$route.query.title }}</span>
+      </h3>
+    </div>
+
     <div class="rounded-lg white">
       <v-data-table
         class="elevation-2"
@@ -47,7 +53,18 @@
     <v-dialog max-width="600px" v-model="updateDiaglog">
       <v-card class="pa-3">
         <v-card-title>แก้ไขชนิดหวย</v-card-title>
+
         <div>
+          <v-text-field
+            hide-details="auto"
+            v-model="form_edit.lottonumbertype_name"
+            label="ชื่อหวย"
+            outlined
+            disabled
+            filled
+            dense
+            class="my-2"
+          ></v-text-field>
           <v-text-field
             hide-details="auto"
             v-model="form_edit.maximum_out_come_rate"
@@ -59,7 +76,7 @@
           <v-text-field
             hide-details="auto"
             v-model="form_edit.minimum_bet_prize"
-            label="อัตราจ่ายต่ำสุด"
+            label="อัตราแทงขั้นต่ำ"
             dense
             outlined
             class="my-2"
@@ -67,7 +84,7 @@
           <v-text-field
             hide-details="auto"
             v-model="form_edit.maximum_bet_prize"
-            label="แทงสูงสุด"
+            label="อัตราแทงสูงสุด"
             dense
             outlined
             class="my-2"
@@ -75,7 +92,7 @@
           <v-text-field
             hide-details="auto"
             v-model="form_edit.self_receive_amount"
-            label="แทงต่ำสุด"
+            label="รับของ"
             dense
             class="my-2"
             outlined
@@ -133,7 +150,7 @@ export default {
         },
 
         {
-          text: "ยอดรวมแทง",
+          text: "รับของปัจจุบัน",
           value: "self_receive_balance",
           class: "font-weight-bold",
           align: "start"
@@ -178,9 +195,14 @@ export default {
           class: "font-weight-bold",
           align: "start"
         },
-
         {
-          text: "ยอดรวมแทง",
+          text: "รับของ",
+          value: "self_receive_amount",
+          class: "font-weight-bold",
+          align: "start"
+        },
+        {
+          text: "รับของปัจจุบัน",
           value: "self_receive_balance",
           class: "font-weight-bold",
           align: "start"
@@ -204,7 +226,7 @@ export default {
           align: "start"
         },
         {
-          text: "แก้ไขรายเลข",
+          text: "แก้ไขเลขอั้น",
           value: "unlimitedNumber",
           class: "font-weight-bold",
           align: "start"
@@ -233,7 +255,7 @@ export default {
     unlimitDetail(item) {
       console.log(item);
       this.$router.push(
-        `${this.$route.fullPath}&lottonumbertype_id=${item.lottonumbertype_id}`
+        `${this.$route.fullPath}&lottonumbertype_id=${item.lottonumbertype_id}&typename=${item.lottonumbertype_name}`
       );
     },
     ...mapActions("shaft", [
@@ -247,7 +269,6 @@ export default {
         let { data } = await this.getAllsettingseller(this.$route.query.id);
         this.datarender = data.result;
         this.isLoading = false;
- 
       } catch (error) {
         this.isLoading = false;
       }
@@ -258,7 +279,6 @@ export default {
         let { data } = await this.getAllsettingUpline(this.$route.query.id);
         this.uplinedItem = data.result;
         this.isLoading = false;
-      
       } catch (error) {
         this.isLoading = false;
       }
@@ -266,7 +286,6 @@ export default {
     openDialogupdate(item) {
       this.updateDiaglog = true;
       this.form_edit = item;
-    
     },
     async submitUpdate() {
       try {

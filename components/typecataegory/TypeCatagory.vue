@@ -2,7 +2,7 @@
   <div>
     <h1 class="mt-2">ชนิดของหวย : {{ $route.query.type }}</h1>
     <div class="ma-2  white rounded-lg">
-      <div class="d-flex ">
+      <div class="d-flex pa-2 align-center">
         <v-btn color="red" @click="$router.go(-1)" small dark>back</v-btn>
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded dark @click="openAdddialog()">

@@ -57,14 +57,21 @@ export default {
     return {
       username: "",
       password: "",
-      authendata: {}
+      authendata: {},
+      ip_address: ""
     };
   },
+  async fetch() {},
   async beforeMount() {
     this.checklogin();
+    this.getIp();
   },
   methods: {
     ...mapActions("auth", ["login", "gettoken"]),
+    async getIp() {
+      let { data } = await this.$axios.get(`https://ipinfo.io/ip`);
+      this.ip_address = data;
+    },
     async auth() {
       try {
         const { data: response } = await this.login({
@@ -73,7 +80,11 @@ export default {
         });
         console.log(response.hash);
         if (response.hash) {
-          this.gettoken(response.hash);
+          let params = {
+            hash: response.hash,
+            ip: this.ip_address
+          };
+          await this.gettoken(params);
           this.$router.push("/");
         }
       } catch (err) {
