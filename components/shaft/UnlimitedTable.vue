@@ -13,7 +13,6 @@
         ><v-icon>mdi-plus</v-icon>เพิ่มเลขอั้น</v-btn
       >
     </div>
-
     <div class="rounded-lg white">
       <v-data-table
         class="elevation-2"
@@ -32,123 +31,140 @@
         </template>
       </v-data-table>
     </div>
+
     <v-dialog v-model="addlimitedDialog" persistent max-width="600px">
-      <v-card class="pa-3">
-        <v-card-title>เพิ่มเลขอั้น</v-card-title>
-        <v-data-table
-          :headers="headersetlimited"
-          :items="inputformlimit"
-          hide-default-footer
-          class="elevation-1"
-        >
-          <template #[`item.lotto_number`]="{ item }">
-            <div class="pa-2">
-              <v-text-field
-                outlined
-                dense
-                hide-details="auto"
-                label="เลข"
-                v-model="item.lottonumber_name"
-                type="number"
-              />
-            </div>
-          </template>
-          <template #[`item.out_come_rate`]="{ item }">
-            <div class="pa-2">
-              <v-text-field
-                outlined
-                dense
-                hide-details="auto"
-                label="อัตราจ่าย"
-                v-model="item.out_come_rate"
-                type="number"
-              />
-            </div>
-          </template>
-          <template #[`item.self_receive_amount`]="{ item }">
-            <div class="pa-2">
-              <v-text-field
-                outlined
-                dense
-                hide-details="auto"
-                label="รับของ"
-                v-model="item.self_receive_amount"
-                type="number"
-              />
-            </div>
-          </template>
-        </v-data-table>
-        <v-card-actions>
-          <v-btn
-            small
-            @click="addField(inputformlimit)"
-            color="purple"
-            dark
-            rounded
-            ><v-icon>mdi-plus</v-icon>กรอกเพิ่มเติม
-          </v-btn>
-          <v-btn
-            small
-            v-show="inputformlimit.length > 1"
-            @click="removeField(inputformlimit)"
-            color="error"
-            rounded
-            ><v-icon>mdi-delete</v-icon>ลบ
-          </v-btn>
-        </v-card-actions>
-        <v-divider></v-divider>
-        <v-card-actions class="mt-3 justify-center">
-          <v-btn small rounded color="success" @click="submitForm()"
-            >เพิ่มเลขอั้น</v-btn
+      <v-form ref="formlimit" v-model="valid">
+        <v-card class="pa-3">
+          <v-card-title>เพิ่มเลขอั้น</v-card-title>
+
+          <v-data-table
+            :headers="headersetlimited"
+            :items="inputformlimit"
+            hide-default-footer
+            class="elevation-1"
           >
-          <v-btn small rounded color="error" @click="addlimitedDialog = false"
-            >ยกเลิก</v-btn
-          >
-        </v-card-actions>
-      </v-card>
+            <template #[`item.lotto_number`]="{ item }">
+              <div class="pa-2">
+                <v-text-field
+                  outlined
+                  :rules="[
+                    v => !!v || 'กรุณากรอกให้ครบถ้วน',
+                    v =>
+                      (v && v.length >= $route.query.number) ||
+                      `กรุณากรอกหมายเลช ${$route.query.number} ตัว`
+                  ]"
+                  dense
+                  label="เลข"
+                  @keydown="e => rangeInput(e, item.lottonumber_name)"
+                  :counter="$route.query.number"
+                  v-model="item.lottonumber_name"
+                  type="number"
+                />
+              </div>
+            </template>
+            <template #[`item.out_come_rate`]="{ item }">
+              <div class="pa-2">
+                <v-text-field
+                  outlined
+                  :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
+                  dense
+                  label="อัตราจ่าย"
+                  v-model="item.out_come_rate"
+                  type="number"
+                />
+              </div>
+            </template>
+            <template #[`item.self_receive_amount`]="{ item }">
+              <div class="pa-2">
+                <v-text-field
+                  :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
+                  outlined
+                  dense
+                  label="รับของ"
+                  v-model="item.self_receive_amount"
+                  type="number"
+                />
+              </div>
+            </template>
+          </v-data-table>
+          <v-card-actions>
+            <v-btn
+              small
+              @click="addField(inputformlimit)"
+              color="purple"
+              dark
+              rounded
+              ><v-icon>mdi-plus</v-icon>กรอกเพิ่มเติม
+            </v-btn>
+            <v-btn
+              small
+              v-show="inputformlimit.length > 1"
+              @click="removeField(inputformlimit)"
+              color="error"
+              rounded
+              ><v-icon>mdi-delete</v-icon>ลบ
+            </v-btn>
+          </v-card-actions>
+          <v-divider></v-divider>
+          <v-card-actions class="mt-3 justify-center">
+            <v-btn small rounded color="success" @click="submitForm()"
+              >เพิ่มเลขอั้น</v-btn
+            >
+            <v-btn small rounded color="error" @click="closeForm()"
+              >ยกเลิก</v-btn
+            >
+          </v-card-actions>
+        </v-card></v-form
+      >
     </v-dialog>
     <v-dialog v-model="editlimitedDialog" persistent max-width="600px">
-      <v-card class="pa-3">
-        <v-card-title>แก้ไขเลขอั้น</v-card-title>
+      <v-form ref="formlimitEdit" v-model="validEditform">
+        <v-card class="pa-3">
+          <v-card-title>แก้ไขเลขอั้น</v-card-title>
 
-        <div>
-          <v-text-field
-            outlined
-            label="เลข"
-            class="my-2"
-            type="number"
-            dense
-            v-model="form.lotto_number"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field
-            outlined
-            type="number"
-            class="my-2"
-            label="อัตราจ่าย"
-            dense
-            v-model="form.out_come_rate"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field
-            outlined
-            class="my-2"
-            label="รับของ"
-            type="number"
-            dense
-            v-model="form.self_receive_amount"
-            hide-details="auto"
-          ></v-text-field>
-        </div>
-        <v-card-actions>
-          <v-btn small rounded color="success" @click="submitUpdate()"
-            >แก้ไขเลขอั้น</v-btn
-          >
-          <v-btn small rounded color="error" @click="editlimitedDialog = false"
-            >ยกเลิก</v-btn
-          >
-        </v-card-actions>
-      </v-card>
+          <div>
+            <v-text-field
+              outlined
+              label="เลข"
+              type="number"
+              dense
+              @keydown="e => rangeInput(e, form.lotto_number)"
+              :counter="$route.query.number"
+              :rules="[
+                v => !!v || 'กรุณากรอกให้ครบถ้วน',
+                v =>
+                  (v && v.length >= $route.query.number) ||
+                  `กรุณากรอกหมายเลช ${$route.query.number} ตัว`
+              ]"
+              v-model="form.lotto_number"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              type="number"
+              :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
+              label="อัตราจ่าย"
+              dense
+              v-model="form.out_come_rate"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
+              label="รับของ"
+              type="number"
+              dense
+              v-model="form.self_receive_amount"
+            ></v-text-field>
+          </div>
+          <v-card-actions>
+            <v-btn small rounded color="success" @click="submitUpdate()"
+              >แก้ไขเลขอั้น</v-btn
+            >
+            <v-btn small rounded color="error" @click="closeEdit()"
+              >ยกเลิก</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-form>
     </v-dialog>
   </div>
 </template>
@@ -158,6 +174,8 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      validEditform: false,
+      valid: false,
       headersetlimited: [
         {
           text: "เลข",
@@ -248,7 +266,20 @@ export default {
   async fetch() {
     this.getSelfeData();
   },
+  watch: {
+    // addlimitedDialog(newVal, oldVal) {
+    //   if (newVal) {
+    //     this.inputformlimit = [
+    //       { lottonumber_name: "", out_come_rate: "", self_receive_amount: "" }
+    //     ];
+    //   }
+    // }
+  },
   methods: {
+    closeEdit() {
+      this.editlimitedDialog = false;
+      this.$fetch();
+    },
     addField(form) {
       form.push({
         lottonumber_name: "",
@@ -299,36 +330,65 @@ export default {
           }
         ]
       };
-      try {
-        await this.Addlimited(body);
-        this.editlimitedDialog = false;
-        this.$fetch();
-      } catch (error) {
-        this.editlimitedDialog = false;
-        console.log(error);
-        this.$fetch();
+      if (this.$refs.formlimitEdit.validate()) {
+        try {
+          await this.Addlimited(body);
+          this.editlimitedDialog = false;
+          this.$fetch();
+        } catch (error) {
+          this.editlimitedDialog = false;
+          console.log(error);
+          this.$fetch();
+        }
+      } else {
+        this.$swal("กรุณากรอกข้อมูลให้ครบถ้วน", "", "warning");
       }
     },
+
     async submitForm() {
       let body = {
         typecategory_id: this.$route.query.id,
         lottonumbertype_id: this.$route.query.lottonumbertype_id,
         lottonumbers: this.inputformlimit
       };
-      try {
-        await this.Addlimited(body);
-        this.addlimitedDialog = false;
-        this.$fetch();
-      } catch (error) {
-        this.addlimitedDialog = false;
-        console.log(error);
-        this.$fetch();
+
+      if (this.$refs.formlimit.validate()) {
+        try {
+          await this.Addlimited(body);
+          this.addlimitedDialog = false;
+          this.$fetch();
+        } catch (error) {
+          this.addlimitedDialog = false;
+          console.log(error);
+          this.$fetch();
+        }
+      } else {
+        this.$swal("กรุณากรอกข้อมูลให้ครบถ้วน", "", "warning");
       }
+    },
+    async closeForm() {
+      this.addlimitedDialog = false;
+      this.$refs.formlimit.reset();
+      this.$refs.formlimit.resetValidation();
+      this.inputformlimit = [
+        { lottonumber_name: "", out_come_rate: "", self_receive_amount: "" }
+      ];
     },
     openEdit(item) {
       console.log(item);
       this.form = item;
       this.editlimitedDialog = true;
+    },
+    rangeInput(self, itemmodel) {
+      // console.log(itemmodel);
+      if (itemmodel == undefined) {
+        itemmodel = "";
+      } else if (
+        /[0-9]/g.test(self.key) &&
+        itemmodel.length >= this.$route.query.number
+      ) {
+        self.preventDefault();
+      }
     }
   }
 };

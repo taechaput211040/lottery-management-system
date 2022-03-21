@@ -124,7 +124,6 @@ export default {
           to: "/staff",
           icon: "mdi-clipboard-text",
           status: true,
-
           subLinks: [
             {
               icon: "mdi-medal",
@@ -135,13 +134,19 @@ export default {
             {
               icon: "mdi-finance",
               text: "กำไร / ขาดทุน",
-              to: "/report/chanword",
+              to: "/report/prfit",
               status: true
             },
             {
-              icon: "mdi-clipboard-text-off-outline",
+              icon: "mdi-clipboard-edit-outline",
               text: "ยกเลิกโพย / รายการแทง",
               to: "/report/betReport",
+              status: true
+            },
+            {
+              icon: "mdi-clipboard",
+              text: "รายงานตัวเลข",
+              to: "/report/reportnumber",
               status: true
             }
           ]

@@ -69,6 +69,7 @@
       >
       <v-dialog v-model="updateDialog" max-width="290">
         <v-card class="pa-3">
+          
           <v-card-title>ตั้งค่าการใช้งาน</v-card-title>
           <div v-if="updateform.username == $store.state.auth.username">
             <v-switch
@@ -83,6 +84,7 @@
             ></v-switch>
           </div>
           <div v-else>
+            
             <v-switch
               label="น้ำไหล"
               v-model="updateform.upline_flex_odd"

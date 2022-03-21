@@ -446,7 +446,7 @@
                   </div>
                 </div>
                 <v-btn color="success" @click="submitForm()">สร้าง</v-btn>
-                <v-btn color="error" @click="modal_add = false">ยกเลิก</v-btn>
+                <v-btn color="error" @click="closeForm()">ยกเลิก</v-btn>
               </v-form>
 
               <!-- detail  -->
@@ -955,12 +955,6 @@ export default {
     this.getdataRender();
   },
   watch: {
-    modal_add(newVal, oldVal) {
-      if (newVal) {
-        console.log("hi");
-        this.form = {};
-      }
-    },
     typeSelect: {
       handler() {
         this.getTypeCategoryList();
@@ -1120,7 +1114,11 @@ export default {
         `${this.$route.path}?id=${item.TypeCategoryId}&title=${item.title}`
       );
     },
-    addstatus() {},
+    closeForm() {
+      this.modal_add = false;
+      this.$refs.form.reset();
+      this.$refs.form.resetValidation();
+    },
     openEdit(data) {
       this.dataEdit = data;
       this.modal_edit = true;

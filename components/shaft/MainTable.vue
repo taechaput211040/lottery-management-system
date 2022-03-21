@@ -58,7 +58,7 @@ export default {
         {
           text: "ชนิดหวย",
           value: "typecategory_title",
-          class: "font-weight-bold",
+          class: "font-weight-bold text-left",
           align: "start"
         },
         {
@@ -83,10 +83,8 @@ export default {
     try {
       const { data } = await this.getTypelottoAll();
       this.listtype = data.result;
-      this.isLoading = false;
     } catch (error) {
       console.log(error);
-      this.isLoading = false;
     }
   },
   methods: {

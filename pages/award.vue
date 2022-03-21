@@ -61,61 +61,72 @@
         </v-data-table>
       </div>
       <v-dialog max-width="600px" v-model="dlSavenumber">
-        <v-card class="pa-3">
-          <v-card-title class="justify-center primary--text font-weight-bold">
-            กรอกข้อมูลผลรางวัล
-          </v-card-title>
+        <v-form v-model="valid" ref="formnumber">
+          <v-card class="pa-3">
+            <v-card-title class="justify-center primary--text font-weight-bold">
+              กรอกข้อมูลผลรางวัล
+            </v-card-title>
 
-          <div v-for="(item, i) in this.itemNumber" :key="i">
-            <div class="row align-baseline">
-              <div class="col-3">{{ item.name }}</div>
+            <div v-for="(item, i) in this.itemNumber" :key="i">
+              <div class="row align-baseline">
+                <div class="col-3">{{ item.name }}</div>
 
-              <div
-                class="col-9 row my-1"
-                v-if="Array.isArray(item.lotto_number) == true"
-              >
-                <v-text-field
-                  class="col-2 mx-1 text-center"
-                  v-for="(j, n_key) in parseInt(item.amount_reward)"
-                  :key="n_key"
-                  outlined
-                  type="number"
-                  hide-details="auto"
-                  dense
-                  v-model="item.lotto_number[n_key]"
-                  @keydown="
-                    e =>
-                      rangeInput(
-                        e,
-                        parseInt(item.number),
-                        item.lotto_number[n_key]
-                      )
-                  "
-                  :counter="parseInt(item.number)"
-                  small
-                ></v-text-field>
-              </div>
-              <div class="col-9 row my-1" v-else>
-                <v-text-field
-                  class="col-2 mx-1 text-center"
-                  outlined
-                  type="number"
-                  v-model="item.lotto_number"
-                  @keydown="
-                    e => rangeInput(e, parseInt(item.number), item.lotto_number)
-                  "
-                  :counter="parseInt(item.number)"
-                  hide-details="auto"
-                  dense
-                ></v-text-field>
+                <div
+                  class="col-9 row my-1"
+                  v-if="Array.isArray(item.lotto_number) == true"
+                >
+                  <v-text-field
+                    class="col-2 mx-1 text-center"
+                    v-for="(j, n_key) in parseInt(item.amount_reward)"
+                    :key="n_key"
+                    outlined
+                    type="number"
+                    hide-details="auto"
+                    dense
+                    v-model="item.lotto_number[n_key]"
+                    @keydown="
+                      e =>
+                        rangeInput(
+                          e,
+                          parseInt(item.number),
+                          item.lotto_number[n_key]
+                        )
+                    "
+                    :counter="parseInt(item.number)"
+                    :rules="[
+                      v => !!v,
+                      v => v && v.length >= parseInt(item.number)
+                    ]"
+                    small
+                  ></v-text-field>
+                </div>
+                <div class="col-9 row my-1" v-else>
+                  <v-text-field
+                    class="col-2 mx-1 text-center"
+                    outlined
+                    type="number"
+                    v-model="item.lotto_number"
+                    @keydown="
+                      e =>
+                        rangeInput(e, parseInt(item.number), item.lotto_number)
+                    "
+                    :counter="parseInt(item.number)"
+                    :rules="[
+                      v => !!v,
+                      v => v && v.length >= parseInt(item.number)
+                    ]"
+                    hide-details="auto"
+                    dense
+                  ></v-text-field>
+                </div>
               </div>
             </div>
-          </div>
-          <v-card-actions class="justify-center">
-            <v-btn color="success" @click="submitnumber()">บันทึก</v-btn
-            ><v-btn color="error" @click="dlSavenumber = false">ปิด</v-btn>
-          </v-card-actions>
-        </v-card>
+            <v-card-actions class="justify-center">
+              <v-btn color="success" @click="submitnumber()">บันทึก</v-btn
+              ><v-btn color="error" @click="dlSavenumber = false">ปิด</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
       </v-dialog>
     </div>
     <div v-if="isLoading" class="text-center">
@@ -135,6 +146,7 @@ export default {
   components: { FilterSearch },
   data() {
     return {
+      valid: false,
       isArray: false,
       search: "",
       isLoading: false,
@@ -297,24 +309,28 @@ export default {
       }
       console.log(this.isArray, "array");
       console.log(body, "body");
-      try {
-        await this.savelottonumber(body);
+      if (this.$refs.formnumber.validate()) {
+        try {
+          await this.savelottonumber(body);
 
-        this.$swal({
-          icon: "success",
-          title: "บันทึกผลเรียบร้อย",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.dlSavenumber = false;
-      } catch (error) {
-        this.$swal({
-          icon: "error",
-          title: "บันทึกผลผิดพลาด",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        console.log(error);
+          this.$swal({
+            icon: "success",
+            title: "บันทึกผลเรียบร้อย",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.dlSavenumber = false;
+        } catch (error) {
+          this.$swal({
+            icon: "error",
+            title: "บันทึกผลผิดพลาด",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          console.log(error);
+        }
+      } else {
+        this.$swal("กรุณากรอกผลรางวัลให้ครบถ้วน", "", "warning");
       }
     },
     rangeInput(self, length, itemmodel) {

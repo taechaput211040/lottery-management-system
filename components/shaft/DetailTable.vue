@@ -140,38 +140,38 @@ export default {
           text: "ชนิดหวย",
           value: "lottonumbertype_name",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "อัตราจ่าย",
           value: "maximum_out_come_rate",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
 
         {
           text: "รับของปัจจุบัน",
           value: "self_receive_balance",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "ส่วนลด",
           value: "discount_amount",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "แทงต่ำสุด",
           value: "minimum_bet_prize",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "แทงสูงสุด",
           value: "maximum_bet_prize",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         }
       ],
       headersdatelotto: [
@@ -187,49 +187,49 @@ export default {
           text: "ชนิดหวย",
           value: "lottonumbertype_name",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "อัตราจ่าย",
           value: "maximum_out_come_rate",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "รับของ",
           value: "self_receive_amount",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "รับของปัจจุบัน",
           value: "self_receive_balance",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "ส่วนลด",
           value: "discount_amount",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "แทงต่ำสุด",
           value: "minimum_bet_prize",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "แทงสูงสุด",
           value: "maximum_bet_prize",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
         {
           text: "แก้ไขเลขอั้น",
           value: "unlimitedNumber",
           class: "font-weight-bold",
-          align: "start"
+          align: "center"
         },
 
         {
@@ -255,7 +255,7 @@ export default {
     unlimitDetail(item) {
       console.log(item);
       this.$router.push(
-        `${this.$route.fullPath}&lottonumbertype_id=${item.lottonumbertype_id}&typename=${item.lottonumbertype_name}`
+        `${this.$route.fullPath}&lottonumbertype_id=${item.lottonumbertype_id}&typename=${item.lottonumbertype_name}&number=${item.lottonumbertype_number}`
       );
     },
     ...mapActions("shaft", [
@@ -263,6 +263,7 @@ export default {
       "getAllsettingUpline",
       "updateSettingseller"
     ]),
+    
     async getSelfeData() {
       this.isLoading = true;
       try {
