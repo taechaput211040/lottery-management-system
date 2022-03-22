@@ -3,7 +3,7 @@ export async function login(context, { username, password }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_launchgame/api/auth/user/hash`,
+        `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/auth/user/hash`,
         {
           username,
           password
@@ -21,7 +21,7 @@ export async function gettoken(context, params) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://kong-api-kdz5uqbpia-as.a.run.app/v1alpha/lotto/lotto_launchgame/api/auth/user/token/${params.hash}`,
+        `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/auth/user/token/${params.hash}`,
         {
           ip: params.ip
         }

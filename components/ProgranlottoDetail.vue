@@ -12,7 +12,7 @@
           class="ma-3"
           medium
           rounded
-          @click="modaladdType = true"
+          @click="opencreatetype()"
           ><v-icon left small>mdi-plus</v-icon>สร้างตัวเลข</v-btn
         >
       </div>
@@ -61,98 +61,110 @@
         </template>
       </v-data-table>
       <v-dialog full-width v-model="modaladdType" max-width="600">
-        <v-card class="pa-5">
-          <v-card-actions class="justify-center">
-            <h3 class="primary--text">สร้างตัวเลข</h3>
-          </v-card-actions>
-          <v-text-field
-            dense
-            outlined
-            class="my-2"
-            required
-            v-model="formNumber.name"
-            label="กรอกชื่อตัวเลข"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field
-            dense
-            outlined
-            v-model="formNumber.number"
-            required
-            class="my-2"
-            label="จำนวนตัวเลข"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field
-            dense
-            v-model="formNumber.amount_reward"
-            required
-            outlined
-            class="my-2"
-            label="จำนวนรางวัล"
-            hide-details="auto"
-          ></v-text-field
-          ><v-card-actions class="justify-center">
-            <v-btn color="success" @click="confirmCreate()" small
-              >สร้างตัวเลข</v-btn
-            ><v-btn color="error" small @click="modaladdType = false"
-              >ปิด</v-btn
-            >
-          </v-card-actions>
-        </v-card>
+        <v-form v-model="valid" ref="formnumber">
+          <v-card class="pa-5">
+            <v-card-actions class="justify-center">
+              <h3 class="primary--text">สร้างตัวเลข</h3>
+            </v-card-actions>
+            <v-select
+              dense
+              outlined
+              :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
+              class="my-2"
+              required
+              :items="itemSelecttype"
+              v-model="formNumber.name"
+              label="กรอกชื่อตัวเลข"
+              hide-details="auto"
+            ></v-select>
+            <v-text-field
+              dense
+              outlined
+              v-model="formNumber.number"
+              required
+              class="my-2"
+              :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
+              label="จำนวนตัวเลข"
+              hide-details="auto"
+            ></v-text-field>
+            <v-text-field
+              dense
+              v-model="formNumber.amount_reward"
+              required
+              outlined
+              :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
+              class="my-2"
+              label="จำนวนรางวัล"
+              hide-details="auto"
+            ></v-text-field
+            ><v-card-actions class="justify-center">
+              <v-btn color="success" @click="confirmCreate()" small
+                >สร้างตัวเลข</v-btn
+              ><v-btn color="error" small @click="closeCreate()">ปิด</v-btn>
+            </v-card-actions>
+          </v-card></v-form
+        >
       </v-dialog>
       <v-dialog full-width v-model="modlEdit" max-width="600">
-        <v-card class="pa-5">
-          <v-card-actions class="justify-center">
-            <h3 class="primary--text">แก้ไขตัวเลข</h3>
-          </v-card-actions>
-          <v-text-field
-            dense
-            outlined
-            class="my-2"
-            required
-            v-model="editform.name"
-            label="กรอกชื่อตัวเลข"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field
-            dense
-            outlined
-            v-model="editform.number"
-            required
-            class="my-2"
-            label="จำนวนตัวเลข"
-            hide-details="auto"
-          ></v-text-field>
-          <v-text-field
-            dense
-            v-model="editform.amount_reward"
-            required
-            outlined
-            class="my-2"
-            label="จำนวนรางวัล"
-            hide-details="auto"
-          ></v-text-field>
-          <div>
-            สถานะ:
-            <span
-              class="success--text font-weight-bold"
-              v-if="editform.status == 1"
-              >เปิดใช้งาน</span
-            ><span class="error--text font-weight-bold" v-else>ปิดใช้งาน</span>
-            <v-switch
-              v-model="editform.status"
-              :true-value="1"
-              :false-value="0"
-            ></v-switch>
-          </div>
+        <v-form v-model="validform" ref="formedit">
+          <v-card class="pa-5">
+            <v-card-actions class="justify-center">
+              <h3 class="primary--text">แก้ไขตัวเลข</h3>
+            </v-card-actions>
+            <v-text-field
+              dense
+              disabled
+              filled
+              outlined
+              class="my-2"
+              required
+              v-model="editform.name"
+              label="กรอกชื่อตัวเลข"
+              hide-details="auto"
+            ></v-text-field>
+            <v-text-field
+              dense
+              outlined
+              v-model="editform.number"
+              required
+              :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
+              class="my-2"
+              label="จำนวนตัวเลข"
+              hide-details="auto"
+            ></v-text-field>
+            <v-text-field
+              dense
+              v-model="editform.amount_reward"
+              required
+              :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
+              outlined
+              class="my-2"
+              label="จำนวนรางวัล"
+              hide-details="auto"
+            ></v-text-field>
+            <div>
+              สถานะ:
+              <span
+                class="success--text font-weight-bold"
+                v-if="editform.status == 1"
+                >เปิดใช้งาน</span
+              ><span class="error--text font-weight-bold" v-else
+                >ปิดใช้งาน</span
+              >
+              <v-switch
+                v-model="editform.status"
+                :true-value="1"
+                :false-value="0"
+              ></v-switch>
+            </div>
 
-          <v-card-actions class="justify-center">
-            <v-btn color="success" @click="confirmEdit(editform)" small
-              >แก้ไขตัวเลข</v-btn
-            ><v-btn color="error" small @click="modlEdit = false">ปิด</v-btn>
-          </v-card-actions>
-        </v-card>
+            <v-card-actions class="justify-center">
+              <v-btn color="success" @click="confirmEdit(editform)" small
+                >แก้ไขตัวเลข</v-btn
+              ><v-btn color="error" small @click="modlEdit = false">ปิด</v-btn>
+            </v-card-actions>
+          </v-card></v-form
+        >
       </v-dialog>
     </div>
   </div>
@@ -163,6 +175,18 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      validform: false,
+      valid: false,
+      itemSelecttype: [
+        "3 ตัวบน",
+        "3 ตัวหน้า",
+        "3 ตัวล่าง",
+        "3 ตัวโต๊ด",
+        "2 ตัวบน",
+        "2 ตัวล่าง",
+        "วิ่งล่าง",
+        "วิ่งบน"
+      ],
       formNumber: {
         name: "",
         number: "",
@@ -262,6 +286,14 @@ export default {
       "deleteLottoNumberType",
       "closeLottoNumberType"
     ]),
+    closeCreate() {
+      this.$refs.formnumber.reset();
+      this.modaladdType = false;
+    },
+    opencreatetype() {
+      this.modaladdType = true;
+    },
+
     dateformat(date) {
       return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
     },
@@ -270,39 +302,50 @@ export default {
       this.editform = item;
     },
     async confirmCreate() {
-      try {
-        let body = {
-          typecategory_id: this.$route.query.id,
-          lottonumbertype: [
-            {
-              name: this.formNumber.name,
-              number: this.formNumber.number,
-              amount_reward: this.formNumber.amount_reward
-            }
-          ]
-        };
-        await this.createLottoNumberType(body);
-      } catch (error) {
-        console.log(error);
+      if (this.$refs.formnumber.validate()) {
+        try {
+          let body = {
+            typecategory_id: this.$route.query.id,
+            lottonumbertype: [
+              {
+                name: this.formNumber.name,
+                number: this.formNumber.number,
+                amount_reward: this.formNumber.amount_reward
+              }
+            ]
+          };
+          await this.createLottoNumberType(body);
+          this.modaladdType = false;
+          this.$fetch();
+        } catch (error) {
+          console.log(error);
+          this.$fetch();
+        }
+      } else {
+        this.$swal("กรุณากรอกรายละเอียดให้ครบถ้วน", "", "warning");
       }
     },
     async confirmEdit(item) {
-      try {
-        let body = {
-          id: item.id,
-          typecategory_id: this.$route.query.id,
-          name: item.name,
-          number: item.number,
-          status: item.status,
-          amount_reward: item.amount_reward
-        };
-        await this.updateLottoNumberTypeByid(body);
-        this.modlEdit = false;
-        this.$fetch();
-      } catch (error) {
-        this.modlEdit = false;
-        this.$fetch();
-        console.log(error);
+      if (this.$refs.formedit.validate()) {
+        try {
+          let body = {
+            id: item.id,
+            typecategory_id: this.$route.query.id,
+            name: item.name,
+            number: item.number,
+            status: item.status,
+            amount_reward: item.amount_reward
+          };
+          await this.updateLottoNumberTypeByid(body);
+          this.modlEdit = false;
+          this.$fetch();
+        } catch (error) {
+          this.modlEdit = false;
+          this.$fetch();
+          console.log(error);
+        }
+      } else {
+        this.$swal("กรุณากรอกรายละเอียดให้ครบถ้วน", "", "warning");
       }
     },
     async deleteNumber(item) {
