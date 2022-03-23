@@ -103,6 +103,23 @@
 // import { mapActions } from "vuex";
 export default {
   middleware: "auth",
+  head: {
+    title: process.env.TITLE,
+    meta: [
+      {
+        hid: "description",
+        name: "description",
+        content: "SMARTLOTTO"
+      }
+    ],
+    link: [
+      {
+        rel: "icon",
+        type: "image/x-icon",
+        href: require("@/assets/image/" + process.env.LOGOTITLE)
+      }
+    ]
+  },
   data() {
     return {
       fab: false,
@@ -284,9 +301,9 @@ export default {
     // }),
     async logout() {
       try {
-        let token = localStorage.getItem("token");
+        let token = sessionStorage.getItem("token");
         if (token) {
-          localStorage.clear();
+          sessionStorage.clear();
           this.$router.push("/login");
         }
       } catch (err) {

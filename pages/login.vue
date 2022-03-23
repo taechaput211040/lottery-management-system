@@ -1,47 +1,49 @@
 <template>
   <div class="bg-page">
-    <v-form class="login font-weight-bold">
-      <div class="my-3 text-center  header-login">
-        <img
-          src="https://image.smart-ai-api.com/public/lotto/smart-lotto-final-01%201.png"
-        />
+    <div class="login">
+      <v-form class=" font-weight-bold">
+        <div class="my-3 text-center  header-login">
+          <img
+            src="https://image.smart-ai-api.com/public/lotto/smart-lotto-final-01%201.png"
+          />
 
-        <h4>กรอกข้อมูลเพื่อเข้าสู่ระบบ</h4>
-      </div>
-      <label>Username</label>
-      <input
-        label="Enter your username"
-        required
-        prepend-inner-icon="mdi-account"
-        type="text"
-        class="username mb-3"
-        placeholder="Username"
-        v-model="username"
-      />
-      <label>Password</label>
-      <input
-        label="Enter your password"
-        required
-        v-model="password"
-        prepend-inner-icon="mdi-lock"
-        type="password"
-        placeholder="Password"
-        class="password  mb-3"
-      />
-      <div class="action_login">
-        <v-btn
-          class="btn_login mx-auto"
-          width="230px"
-          rounded
-          dark
-          @click.prevent="auth()"
-          >Login</v-btn
-        >
-      </div>
-      <v-card-actions class="text--secondary">
-        <v-spacer></v-spacer>
-      </v-card-actions>
-    </v-form>
+          <h4>กรอกข้อมูลเพื่อเข้าสู่ระบบ</h4>
+        </div>
+        <label>Username</label>
+        <input
+          label="Enter your username"
+          required
+          prepend-inner-icon="mdi-account"
+          type="text"
+          class="username mb-3"
+          placeholder="Username"
+          v-model="username"
+        />
+        <label>Password</label>
+        <input
+          label="Enter your password"
+          required
+          v-model="password"
+          prepend-inner-icon="mdi-lock"
+          type="password"
+          placeholder="Password"
+          class="password  mb-3"
+        />
+        <div class="action_login">
+          <v-btn
+            class="btn_login mx-auto"
+            width="230px"
+            rounded
+            dark
+            @click.prevent="auth()"
+            >Login</v-btn
+          >
+        </div>
+        <v-card-actions class="text--secondary">
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-form>
+    </div>
   </div>
 </template>
 
@@ -88,7 +90,7 @@ export default {
       }
     },
     checklogin() {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       if (token) {
         this.$router.push("/");
       }
@@ -98,6 +100,10 @@ export default {
 </script>
 
 <style lang="scss">
+.bg-page {
+  display: flex;
+  align-items: center;
+}
 .header-login {
   img {
     width: 211px;
@@ -113,6 +119,7 @@ export default {
 
 // Fonts
 .login {
+  margin: auto;
   button:hover {
     background-color: #ffffff;
   }
@@ -170,20 +177,17 @@ export default {
 @media only screen and (max-width: 600px) {
   .login {
     width: 90%;
-    transform: translate(0, 0);
   }
 }
 @media only screen and (min-width: 600px) {
   .login {
     width: 95%;
-    transform: translate(0, 0);
   }
 }
 @media only screen and (min-width: 1023px) {
   .login {
     width: 95%;
     padding: 30px 140px 43px 140px !important;
-    transform: translate(0, 0);
   }
   .img-mockup {
     display: inherit !important;
@@ -223,8 +227,7 @@ export default {
   /* left: 50%; */
   margin: auto;
   max-width: 800px;
-  transform: translate(0, 250px);
-  transition: transform 300ms, box-shadow 300ms;
+
   font-weight: bold !important;
   box-shadow: 0px 4px 20px 16px rgb(0 0 0 / 18%), 0 10px 10px rgb(0 0 0 / 11%);
 }
@@ -276,7 +279,6 @@ export default {
     text-align: center;
   }
   .login {
-    margin-top: 30px;
     width: 95%;
     padding: 30px 30px 30px 30px !important;
   }
@@ -298,8 +300,6 @@ export default {
     bottom: -15px;
   }
   .login {
-    margin-top: 30px;
-    transform: translate(0, 100px);
     padding: 30px 30px 30px 30px !important;
   }
 }

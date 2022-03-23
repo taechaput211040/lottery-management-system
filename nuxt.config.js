@@ -41,7 +41,7 @@ export default {
   },
   mode: "spa",
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ["@/assets/main.scss"],
+  css: ["@/assets/css/main.scss"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: ["~/plugins/axios"],
@@ -57,7 +57,11 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ["@nuxtjs/axios", "nuxt-element-ui"],
-
+  env: {
+    TITLE: process.env.TITLE,
+    LOGO: process.env.LOGO,
+    LOGOTITLE: process.env.LOGOTITLE
+  },
   axios: {
     proxy: true,
     // baseURL: "https://agent.bet-kub.com",

@@ -1,7 +1,7 @@
 export default function() {
   return {
-    username: localStorage.getItem("username") || null,
-    hash: localStorage.getItem("hash") || null,
-    key: localStorage.getItem("token") || null
+    username: sessionStorage.getItem("username") || null,
+    hash: sessionStorage.getItem("hash") || null,
+    key: sessionStorage.getItem("token") || null
   };
 }
