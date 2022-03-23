@@ -6,7 +6,7 @@
         :loading="isLoading"
         :headers="headers"
         :items="itemrender"
-        hide-default-footer
+        
       >
         <template #[`item.self_flex`]="{item}">
           <v-badge left color="primary" v-if="item.self_flex == true">

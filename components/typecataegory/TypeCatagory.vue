@@ -3,7 +3,9 @@
     <h1 class="mt-2">ชนิดของหวย : {{ $route.query.type }}</h1>
     <div class="ma-2  white rounded-lg">
       <div class="d-flex pa-2 align-center">
-        <v-btn color="red" @click="$router.go(-1)" small dark>back</v-btn>
+        <v-btn color="red" @click="$router.go(-1)" small dark
+          ><v-icon left>mdi-code-less-than</v-icon> ย้อนกลับ</v-btn
+        >
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded dark @click="openAdddialog()">
           <v-icon>mdi-plus</v-icon>เพิ่มชนิดของหวย</v-btn
@@ -24,60 +26,62 @@
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
           <template #[`item.action`]="{item}">
-            <v-tooltip bottom color="warning">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  class="mx-1"
-                  fab
-                  dark
-                  x-small
-                  color="warning"
-                  @click="openEdit(item)"
-                  ><v-icon dark>
-                    mdi-pencil
-                  </v-icon>
-                </v-btn></template
-              >
-              <span>แก้ไขหวย</span>
-            </v-tooltip>
-            <v-tooltip bottom color="red">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  class="mx-1"
-                  fab
-                  dark
-                  x-small
-                  color="red"
-                  @click="deleteConfig(item)"
-                  ><v-icon dark>
-                    mdi-delete
-                  </v-icon>
-                </v-btn></template
-              >
-              <span>ลบหวย</span>
-            </v-tooltip>
-            <v-tooltip bottom color="black">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  color="black"
-                  class="mx-1"
-                  fab
-                  dark
-                  x-small
-                  @click="closeConfig(item)"
-                  ><v-icon dark>
-                    mdi-lock
-                  </v-icon>
-                </v-btn></template
-              >
-              <span>ปิดหวย</span>
-            </v-tooltip>
+            <div class="d-flex justify-center">
+              <v-tooltip bottom color="warning">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    class="mx-1"
+                    fab
+                    dark
+                    x-small
+                    color="warning"
+                    @click="openEdit(item)"
+                    ><v-icon dark>
+                      mdi-pencil
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>แก้ไขหวย</span>
+              </v-tooltip>
+              <v-tooltip bottom color="red">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    class="mx-1"
+                    fab
+                    dark
+                    x-small
+                    color="red"
+                    @click="deleteConfig(item)"
+                    ><v-icon dark>
+                      mdi-delete
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ลบหวย</span>
+              </v-tooltip>
+              <v-tooltip bottom color="black">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    color="black"
+                    class="mx-1"
+                    fab
+                    dark
+                    x-small
+                    @click="closeConfig(item)"
+                    ><v-icon dark>
+                      mdi-lock
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ปิดหวย</span>
+              </v-tooltip>
+            </div>
           </template>
 
           <template #[`item.status`]="{item}">
@@ -107,25 +111,26 @@
             <v-card class="pa-4 ma-3">
               <v-form>
                 <v-text-field
-                  label="ชื่อหวย"
+                  label="ชื่อชนิดหวย"
                   v-model="formCreate.title"
                   dense
                   outlined
                 ></v-text-field>
-                <v-text-field
-                  label="กฏกติกา"
+                <v-textarea
+                  label="กฎกติกา"
                   v-model="formCreate.rule_play"
                   dense
+                  required
                   outlined
-                ></v-text-field>
+                ></v-textarea>
               </v-form>
             </v-card>
             <v-row class="pa-2">
               <v-spacer></v-spacer>
               <v-btn color="success" small class="mx-2" @click="addCategpry()"
-                >ADD</v-btn
+                >เพิ่ม</v-btn
               ><v-btn color="error" small @click="modal_add = false"
-                >CANCLE</v-btn
+                >ยกเลิก</v-btn
               >
               <v-spacer></v-spacer>
             </v-row>
@@ -169,9 +174,9 @@
             <v-row class="pa-2">
               <v-spacer></v-spacer>
               <v-btn color="success" small class="mx-2" @click="confirmEdit()"
-                >SAVE</v-btn
+                >เพิ่ม</v-btn
               ><v-btn color="error" small @click="modal_edit = false"
-                >CANCLE</v-btn
+                >ยกเลิก</v-btn
               >
               <v-spacer></v-spacer>
             </v-row>
@@ -182,10 +187,13 @@
       <v-row align="baseline" class="ma-3 ">
         <v-col cols="12" sm="2" lg="1">
           <v-select
+            outlined
+            hide-details="auto "
+            dense
             v-model="pagination.rowsPerPage"
             :items="pageSizes"
             @change="handlePageSizeChange"
-            label="Items per Page"
+            label="รายการต่อนหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="11">

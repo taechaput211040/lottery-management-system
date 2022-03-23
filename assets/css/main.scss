@@ -57,7 +57,7 @@ span {
   width: 70px;
 }
 .icon-table {
-  width:50px;
+  width: 50px;
 }
 .img_section {
   display: flex;
@@ -167,4 +167,10 @@ table.v-table thead th:not(:first-child) {
 .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td,
 .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
   padding: 5px !important;
+}
+.v-list-item--dense .v-list-item__title,
+.v-list-item--dense .v-list-item__subtitle,
+.v-list--dense .v-list-item .v-list-item__title,
+.v-list--dense .v-list-item .v-list-item__subtitle {
+  line-height: 1.5rem !important;
 }

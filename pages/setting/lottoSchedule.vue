@@ -119,10 +119,13 @@
         <v-row align="baseline" class="ma-3 ">
           <v-col cols="12" sm="2" lg="1">
             <v-select
+              outlined
+              dense
+              hide-details="auto"
               v-model="pagination.rowsPerPage"
               :items="pageSizes"
               @change="handlePageSizeChange"
-              label="Items per Page"
+              label="รายการต่อหน้า"
             ></v-select>
           </v-col>
           <v-col cols="12" sm="10" lg="11">

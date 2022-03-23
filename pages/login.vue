@@ -86,6 +86,13 @@ export default {
           this.$router.push("/");
         }
       } catch (err) {
+        this.$swal({
+          icon: "error",
+          title: "กรุณากรอก Username และ Password ให้ถูกต้อง",
+          showConfirmButton: false,
+          timer: 1000
+        });
+        this.password = "";
         console.log(err);
       }
     },

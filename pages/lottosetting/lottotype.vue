@@ -1,207 +1,198 @@
 <template>
   <v-flex>
-    <div v-if="!isLoading">
-      <div v-if="!this.$route.query.id">
-        <h1 class="mt-2">ประเภทของหวย</h1>
-        <div class="white rounded-lg ma-2 py-2">
-          <div class="d-flex ma-3">
-            <v-spacer></v-spacer
-            ><v-btn color="primary" rounded dark @click="modal_add = true">
-              <v-icon>mdi-plus</v-icon>เพิ่มประเภทหวย</v-btn
-            >
-          </div>
-
-          <v-card class="mx-auto  justify-center classtable">
-            <v-data-table
-              :headers="headers"
-              :items="dataRender"
-              :loading="isLoading"
-              hide-default-footer
-            >
-              <template #[`item.no`]="{index}">
-                {{ index + 1 }}
-              </template>
-              <template #[`item.typcategory`]="{item}">
-                <v-btn
-                  color="grey darken-4 "
-                  dark
-                  small
-                  @click="showdetail(item.id, item.title)"
-                  >ดูรายชื่อหวยใน{{ item.title }}</v-btn
-                >
-              </template>
-              <template #[`item.status`]="{item}">
-                <v-chip
-                  v-if="item.status == '1'"
-                  class="ma-2"
-                  color="success"
-                  small
-                >
-                  <v-icon left>
-                    mdi-circle
-                  </v-icon>
-                  เปิดใช้งาน
-                </v-chip>
-                <v-chip
-                  v-if="item.status == '0'"
-                  class="ma-2"
-                  color="error"
-                  small
-                >
-                  <v-icon left>
-                    mdi-circle
-                  </v-icon>
-                  ปิดใช้งาน
-                </v-chip>
-              </template>
-              <template #[`item.action`]="{item}">
-                <v-tooltip bottom color="warning">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      class="mx-1"
-                      fab
-                      dark
-                      x-small
-                      color="warning"
-                      @click="openEdit(item)"
-                    >
-                      <v-icon dark>
-                        mdi-pencil
-                      </v-icon>
-                    </v-btn></template
-                  >
-                  <span>แก้ไขหวย</span>
-                </v-tooltip>
-
-                <v-tooltip bottom color="black">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      class="mx-1"
-                      fab
-                      dark
-                      x-small
-                      color="black"
-                      @click="closeConfig(item)"
-                    >
-                      <v-icon dark>
-                        mdi-lock
-                      </v-icon>
-                    </v-btn></template
-                  >
-                  <span>ปิดหวย</span>
-                </v-tooltip>
-                <v-tooltip bottom color="error">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      class="mx-1"
-                      fab
-                      dark
-                      x-small
-                      color="error"
-                      @click="deleteConfig(item)"
-                    >
-                      <v-icon dark>
-                        mdi-delete
-                      </v-icon>
-                    </v-btn></template
-                  >
-                  <span>ลบหวย</span>
-                </v-tooltip>
-              </template>
-            </v-data-table>
-          </v-card>
-
-          <!-- add -->
-          <v-dialog v-model="modal_add" max-width="400">
-            <v-card class="pa-4">
-              <v-card-title class="text-h5">
-                List Lotto - ADD
-              </v-card-title>
-              <v-card class="pa-4 ma-3">
-                <v-form ref="formcreate" v-model="valid">
-                  <v-text-field
-                    label="Lotto Type"
-                    dense
-                    :rules="titleRules"
-                    v-model="formCreate.title"
-                    required
-                    outlined
-                  ></v-text-field> </v-form
-              ></v-card>
-              <v-row class="pa-2">
-                <v-spacer></v-spacer>
-                <v-btn color="success" small class="mx-2" @click="addConfig()"
-                  >ADD</v-btn
-                ><v-btn color="error" small @click="closeCreateconfig()"
-                  >CANCLE</v-btn
-                >
-                <v-spacer></v-spacer>
-              </v-row>
-            </v-card>
-          </v-dialog>
-          <!-- add -->
-          <!-- edit -->
-          <v-dialog v-model="modal_edit" max-width="400">
-            <v-card class="pa-4">
-              <v-card-title class="text-h5">
-                List Lotto - EDIT
-              </v-card-title>
-              <v-card class="pa-4 ma-3">
-                <v-form>
-                  <v-text-field
-                    filled
-                    label="Lotto Type"
-                    v-model="dataEdit.title"
-                    dense
-                    outlined
-                  ></v-text-field>
-                  <div class="d-flex align-center">
-                    <v-switch
-                      hide-details="auto"
-                      v-model="dataEdit.status"
-                      :false-value="0"
-                      :true-value="1"
-                      flat
-                    ></v-switch>
-                    STATUS :
-                    <span v-if="dataEdit.status == 1">เปิด</span>
-                    <span v-else>ปิด</span>
-                  </div>
-                </v-form></v-card
-              >
-              <v-row class="pa-2">
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="success"
-                  small
-                  class="mx-2"
-                  @click="editConfig(dataEdit)"
-                  >SAVE</v-btn
-                ><v-btn color="error" small @click="closeEditconfig"
-                  >CANCLE</v-btn
-                >
-                <v-spacer></v-spacer>
-              </v-row>
-            </v-card>
-          </v-dialog>
-          <!-- edit -->
+    <div v-if="!this.$route.query.id">
+      <h1 class="mt-2">ประเภทของหวย</h1>
+      <div class="white rounded-lg ma-2 py-2">
+        <div class="d-flex ma-3">
+          <v-spacer></v-spacer
+          ><v-btn color="primary" rounded dark @click="modal_add = true">
+            <v-icon>mdi-plus</v-icon>เพิ่มประเภทหวย</v-btn
+          >
         </div>
+
+        <v-card class="mx-auto  justify-center classtable">
+          <v-data-table
+            :headers="headers"
+            :items="dataRender"
+            :loading="isLoading"
+            hide-default-footer
+          >
+            <template #[`item.no`]="{index}">
+              {{ index + 1 }}
+            </template>
+            <template #[`item.typcategory`]="{item}">
+              <v-btn
+                color="grey darken-4 "
+                dark
+                small
+                @click="showdetail(item.id, item.title)"
+                >ดูรายชื่อหวยใน{{ item.title }}</v-btn
+              >
+            </template>
+            <template #[`item.status`]="{item}">
+              <v-chip
+                v-if="item.status == '1'"
+                class="ma-2"
+                color="success"
+                small
+              >
+                <v-icon left>
+                  mdi-circle
+                </v-icon>
+                เปิดใช้งาน
+              </v-chip>
+              <v-chip
+                v-if="item.status == '0'"
+                class="ma-2"
+                color="error"
+                small
+              >
+                <v-icon left>
+                  mdi-circle
+                </v-icon>
+                ปิดใช้งาน
+              </v-chip>
+            </template>
+            <template #[`item.action`]="{item}">
+              <v-tooltip bottom color="warning">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    class="mx-1"
+                    fab
+                    dark
+                    x-small
+                    color="warning"
+                    @click="openEdit(item)"
+                  >
+                    <v-icon dark>
+                      mdi-pencil
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>แก้ไขประเภทหวย</span>
+              </v-tooltip>
+
+              <v-tooltip bottom color="black">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    class="mx-1"
+                    fab
+                    dark
+                    x-small
+                    color="black"
+                    @click="closeConfig(item)"
+                  >
+                    <v-icon dark>
+                      mdi-lock
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ปิดประเภทหวย</span>
+              </v-tooltip>
+              <v-tooltip bottom color="error">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    class="mx-1"
+                    fab
+                    dark
+                    x-small
+                    color="error"
+                    @click="deleteConfig(item)"
+                  >
+                    <v-icon dark>
+                      mdi-delete
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ลบประเภทหวย</span>
+              </v-tooltip>
+            </template>
+          </v-data-table>
+        </v-card>
+
+        <!-- add -->
+        <v-dialog v-model="modal_add" max-width="400">
+          <v-card class="pa-4">
+            <v-card-title>
+              <h3>ประเภทของหวย - เพิ่ม</h3>
+            </v-card-title>
+            <v-card class="pa-4 ma-3">
+              <v-form ref="formcreate" v-model="valid">
+                <v-text-field
+                  label="ประเภทหวย"
+                  dense
+                  :rules="titleRules"
+                  v-model="formCreate.title"
+                  required
+                  outlined
+                ></v-text-field> </v-form
+            ></v-card>
+            <v-row class="pa-2">
+              <v-spacer></v-spacer>
+              <v-btn color="success" small class="mx-2" @click="addConfig()"
+                >เพิ่ม</v-btn
+              ><v-btn color="error" small @click="closeCreateconfig()"
+                >ยกเลิก</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-row>
+          </v-card>
+        </v-dialog>
+        <!-- add -->
+        <!-- edit -->
+        <v-dialog v-model="modal_edit" max-width="400">
+          <v-card class="pa-4">
+            <v-card-title>
+              <h3>ประเภทของหวย - แก้ไข</h3>
+            </v-card-title>
+            <v-card class="pa-4 ma-3">
+              <v-form>
+                <v-text-field
+                  filled
+                  label="ประเภทหวย"
+                  v-model="dataEdit.title"
+                  dense
+                  outlined
+                ></v-text-field>
+                <div class="d-flex align-center">
+                  <v-switch
+                    hide-details="auto"
+                    v-model="dataEdit.status"
+                    :false-value="0"
+                    :true-value="1"
+                    flat
+                  ></v-switch>
+                  สถานะ :
+                  <span v-if="dataEdit.status == 1">เปิด</span>
+                  <span v-else>ปิด</span>
+                </div>
+              </v-form></v-card
+            >
+            <v-row class="pa-2">
+              <v-spacer></v-spacer>
+              <v-btn
+                color="success"
+                small
+                class="mx-2"
+                @click="editConfig(dataEdit)"
+                >แก้ไข</v-btn
+              ><v-btn color="error" small @click="closeEditconfig"
+                >ยกเลิก</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-row>
+          </v-card>
+        </v-dialog>
+        <!-- edit -->
       </div>
-      <type-catagory v-else></type-catagory>
     </div>
-    <div v-if="isLoading" class="text-center">
-      <v-progress-circular
-        :size="50"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
-    </div>
+    <type-catagory v-else></type-catagory>
   </v-flex>
 </template>
 
@@ -307,7 +298,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ปิดหวย"
+          confirmButtonText: "ปิดหวย",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.closeLottotype(item);
@@ -334,7 +326,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ลบ"
+          confirmButtonText: "ลบ",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteLottotype(item);

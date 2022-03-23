@@ -6,29 +6,30 @@
           <h1 class="mt-2">รายชื่อโปรแกรมหวย</h1>
           <div class="ma-2  white rounded-lg">
             <v-row class="select-item pa-3 ">
-              <v-text-field
-                dense
-                solo-inverted
-                v-model="title_search"
-                label="Title"
-                hide-details="auto"
-                @keyup.enter="searchlotto()"
-                required
-                class="col-6 col-md-3 mx-2"
-                ><v-btn
-                  slot="append"
-                  color="success"
-                  @click="searchlotto()"
-                  fab
-                  dark
-                  x-small
+              <div class="col-12">
+                <v-text-field
+                  dense
+                  solo-inverted
+                  v-model="title_search"
+                  label="กรอกชื่อโปรเเกรมหวย"
+                  hide-details="auto"
+                  @keyup.enter="searchlotto()"
+                  required
+                  class="col-12 col-md-6 "
+                  ><v-btn
+                    slot="append"
+                    color="success"
+                    @click="searchlotto()"
+                    fab
+                    dark
+                    x-small
+                  >
+                    <v-icon>mdi-magnify</v-icon></v-btn
+                  ></v-text-field
                 >
-                  <v-icon>mdi-magnify</v-icon></v-btn
-                ></v-text-field
-              >
+              </div>
 
-              <v-spacer></v-spacer>
-              <div class="col-12 col-sm-6 col-lg-2">
+              <div class="col-12 col-sm-6 ">
                 <h4>
                   จำนวนทั้งหมด
                   <span class="purple--text font-weight-bold">{{
@@ -37,16 +38,18 @@
                   โปรเเกรมหวย
                 </h4>
               </div>
-              <v-btn
-                color="primary"
-                class="mx-2 px-2"
-                rounded
-                dark
-                @click="modal_add = true"
-              >
-                <v-icon>mdi-plus</v-icon>สร้างโปรแกรมหวย</v-btn
-              ></v-row
-            >
+              <div class="col-12 col-sm-6 text-sm-right  ">
+                <v-btn
+                  color="primary"
+                  class="mx-2 px-2"
+                  rounded
+                  dark
+                  @click="modal_add = true"
+                >
+                  <v-icon>mdi-plus</v-icon>สร้างโปรแกรมหวย</v-btn
+                >
+              </div>
+            </v-row>
             <v-card class="mx-auto  justify-center classtable">
               <v-data-table
                 :server-items-length="pagination.rowsNumber"
@@ -158,10 +161,12 @@
             <v-row align="baseline" class="ma-3 ">
               <v-col cols="12" sm="2" lg="1">
                 <v-select
+                  dense
+                  outlined
                   v-model="pagination.rowsPerPage"
                   :items="pageSizes"
                   @change="handlePageSizeChange"
-                  label="Items per Page"
+                  label="รายการต่อหน้า"
                 ></v-select>
               </v-col>
               <v-col cols="12" sm="10" lg="11">
@@ -1154,7 +1159,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ลบ"
+          confirmButtonText: "ลบ",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteCategoryTypeDetail(item.id);
@@ -1189,7 +1195,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ปิดหวย"
+          confirmButtonText: "ปิดหวย",
+          ancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.closeCategoryTypeDetail(item.id);
