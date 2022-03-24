@@ -13,6 +13,8 @@
     <div class="rounded-lg white">
       <v-data-table
         class="elevation-2"
+        hide-default-footer
+        :options.sync="option"
         :headers="headersdatelotto"
         :loading="isLoading"
         :items="datarender"
@@ -36,19 +38,59 @@
           </v-btn>
         </template>
       </v-data-table>
+      <v-row align="baseline" class="ma-3 ">
+        <v-col cols="12" sm="2" lg="1">
+          <v-select
+            outlined
+            hide-details="auto "
+            dense
+            v-model="option.itemsPerPage"
+            :items="pageSizes"
+            label="รายการต่อนหน้า"
+          ></v-select>
+        </v-col>
+        <v-col cols="12" sm="10" lg="11">
+          <v-pagination
+            v-model="option.page"
+            :total-visible="7"
+            :length="Math.ceil(datarender.length / option.itemsPerPage)"
+          ></v-pagination>
+        </v-col>
+      </v-row>
     </div>
     <h3 class="primary--text font-weight-bold my-4">หวย upline</h3>
     <div class="rounded-lg white ">
       <v-data-table
         class="elevation-2"
+        hide-default-footer
         :headers="headersUpline"
         :items="uplinedItem"
         :loading="isLoading"
+        :options.sync="optionupline"
       >
         <template #[`item.no`]="{index}">
           {{ index + 1 }}
         </template>
       </v-data-table>
+      <v-row align="baseline" class="ma-3 ">
+        <v-col cols="12" sm="2" lg="1">
+          <v-select
+            outlined
+            hide-details="auto "
+            dense
+            v-model="optionupline.itemsPerPage"
+            :items="pageSizes"
+            label="รายการต่อนหน้า"
+          ></v-select>
+        </v-col>
+        <v-col cols="12" sm="10" lg="11">
+          <v-pagination
+            v-model="optionupline.page"
+            :total-visible="7"
+            :length="Math.ceil(uplinedItem.length / optionupline.itemsPerPage)"
+          ></v-pagination>
+        </v-col>
+      </v-row>
     </div>
     <v-dialog max-width="600px" v-model="updateDiaglog">
       <v-card class="pa-3">
@@ -120,6 +162,10 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      optionupline: {},
+      option: {},
+      pageSizes: [5, 10, 15, 25],
+      pageSizesupline: [5, 10, 15, 25],
       updateDiaglog: false,
       form_edit: {},
       uplinedItem: [],
@@ -263,7 +309,7 @@ export default {
       "getAllsettingUpline",
       "updateSettingseller"
     ]),
-    
+
     async getSelfeData() {
       this.isLoading = true;
       try {

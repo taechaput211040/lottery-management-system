@@ -83,7 +83,9 @@
               </v-tooltip>
             </div>
           </template>
-
+          <template #[`item.permaxbet`]="{item}">
+            {{ item.permaxbet }} %
+          </template>
           <template #[`item.status`]="{item}">
             <v-chip small v-if="item.status == 1" class="ma-2" color="success">
               <v-icon left>
@@ -98,10 +100,13 @@
               ปิดใช้งาน
             </v-chip>
           </template>
-          <template #[`item.permaxbet`]="{item}">
-            {{ item.permaxbet }} %
-          </template></v-data-table
-        >
+          <template #[`item.created_at`]="{item}">
+            {{ dateformat(item.created_at) }}
+          </template>
+          <template #[`item.updated_at`]="{item}">
+            {{ dateformat(item.updated_at) }}
+          </template>
+        </v-data-table>
         <!-- add -->
         <v-dialog full-width v-model="modal_add" max-width="600">
           <v-card class="pa-4">
@@ -116,6 +121,7 @@
                   dense
                   outlined
                 ></v-text-field>
+                
                 <v-textarea
                   label="กฎกติกา"
                   v-model="formCreate.rule_play"
@@ -160,8 +166,6 @@
                   required
                   outlined
                 ></v-textarea>
-
-                <v-text-field v-model="dataEdit.lotto_flag"></v-text-field>
                 สถานะการใช้งาน
                 <v-switch
                   v-model="dataEdit.status"
@@ -277,6 +281,9 @@ export default {
   },
 
   methods: {
+    dateformat(date) {
+      return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
+    },
     ...mapActions("lottosetting", [
       "getTypeCategory",
       "createType",
@@ -284,6 +291,26 @@ export default {
       "deleteTypeCategory",
       "closeTypeCategory"
     ]),
+    selectFile(event) {
+      if (
+        event.target.files[0].type != "image/jpeg" &&
+        event.target.files[0].type != "image/png" &&
+        event.target.files[0].type != "image/svg+xml"
+      ) {
+        this.showErrorAlert("โปรดใฃ้ไฟล์รูปภาพเท่านั้น");
+        this.file = "";
+
+        this.filecheck = false;
+        event.files = null;
+        this.url = "";
+        return;
+      }
+
+      this.file = event.target.files[0];
+      this.url = URL.createObjectURL(this.file);
+
+      this.loading = false;
+    },
     async addCategpry() {
       try {
         let body = {

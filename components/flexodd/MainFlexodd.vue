@@ -80,6 +80,8 @@
 
       <v-data-table
         class="elevation-2"
+        hide-default-footer
+        :options.sync="option"
         :headers="headersdatelotto"
         :loading="isLoading"
         :items="dataOutcome"
@@ -98,6 +100,25 @@
           </v-btn>
         </template>
       </v-data-table>
+      <v-row align="baseline" class="ma-3 ">
+        <v-col cols="12" sm="2" lg="1">
+          <v-select
+            outlined
+            hide-details="auto "
+            dense
+            v-model="option.itemsPerPage"
+            :items="pageSizes"
+            label="รายการต่อนหน้า"
+          ></v-select>
+        </v-col>
+        <v-col cols="12" sm="10" lg="11">
+          <v-pagination
+            v-model="option.page"
+            :total-visible="7"
+            :length="Math.ceil(dataOutcome.length / option.itemsPerPage)"
+          ></v-pagination>
+        </v-col>
+      </v-row>
     </div>
 
     <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
@@ -107,8 +128,29 @@
         :headers="headersUpline"
         :loading="isLoading"
         :items="dataUpline"
+        hide-default-footer
+        :options.sync="optionupline"
       >
       </v-data-table>
+      <v-row align="baseline" class="ma-3 ">
+        <v-col cols="12" sm="2" lg="1">
+          <v-select
+            outlined
+            hide-details="auto "
+            dense
+            v-model="optionupline.itemsPerPage"
+            :items="pageSizesupline"
+            label="รายการต่อนหน้า"
+          ></v-select>
+        </v-col>
+        <v-col cols="12" sm="10" lg="11">
+          <v-pagination
+            v-model="optionupline.page"
+            :total-visible="7"
+            :length="Math.ceil(dataUpline.length / optionupline.itemsPerPage)"
+          ></v-pagination>
+        </v-col>
+      </v-row>
     </div>
 
     <v-dialog max-width="300px" v-model="dlupdate">
@@ -175,6 +217,10 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      option: {},
+      pageSizes: [5, 10, 15, 25],
+      optionupline: {},
+      pageSizesupline: [5, 10, 15, 25],
       formset: {
         profit: 0,
         flexodd: 0

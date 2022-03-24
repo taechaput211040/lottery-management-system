@@ -3,10 +3,11 @@
     <h1 class="mt-2">ประเภทการแทง</h1>
     <div class="ma-2 white rounded-lg classtable">
       <v-data-table
+        hide-default-footer
+        :options.sync="option"
         :loading="isLoading"
         :headers="headers"
         :items="itemrender"
-        
       >
         <template #[`item.self_flex`]="{item}">
           <v-badge left color="primary" v-if="item.self_flex == true">
@@ -67,9 +68,27 @@
           </v-btn>
         </template></v-data-table
       >
+      <v-row align="baseline" class="ma-3 ">
+        <v-col cols="12" sm="2" lg="1">
+          <v-select
+            outlined
+            hide-details="auto "
+            dense
+            v-model="option.itemsPerPage"
+            :items="pageSizes"
+            label="รายการต่อนหน้า"
+          ></v-select>
+        </v-col>
+        <v-col cols="12" sm="10" lg="11">
+          <v-pagination
+            v-model="option.page"
+            :total-visible="7"
+            :length="Math.ceil(itemrender.length / option.itemsPerPage)"
+          ></v-pagination>
+        </v-col>
+      </v-row>
       <v-dialog v-model="updateDialog" max-width="290">
         <v-card class="pa-3">
-          
           <v-card-title>ตั้งค่าการใช้งาน</v-card-title>
           <div v-if="updateform.username == $store.state.auth.username">
             <v-switch
@@ -84,7 +103,6 @@
             ></v-switch>
           </div>
           <div v-else>
-            
             <v-switch
               label="น้ำไหล"
               v-model="updateform.upline_flex_odd"
@@ -112,6 +130,16 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      option: {},
+      pageSizes: [5, 10, 15, 25],
+      pagination: {
+        sortBy: "desc",
+        descending: false,
+        page: 1,
+        rowsPerPage: 15,
+        rowsNumber: 0
+      },
+      option: {},
       updateDialog: false,
       updateform: {},
       isLoading: true,
@@ -142,6 +170,7 @@ export default {
       try {
         let { data: listData } = await this.gettypeByalluser();
         this.itemrender = listData;
+        this.pagination.rowsNumber = this.itemrender.length;
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;

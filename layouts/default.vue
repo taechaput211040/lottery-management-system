@@ -4,12 +4,11 @@
       <v-app-bar-nav-icon large @click.stop="drawer = !drawer" color="black" />
       <v-toolbar-title v-text="title" class="font-weight-bold" />
       <v-spacer />
-      <v-speed-dial
-        absolute
-        right
-        direction="bottom"
-        transition="slide-y-transition"
+      <v-chip outlined color="success"  class="mx-3 font-weight-bold"
+        ><v-icon left>mdi-account-circle</v-icon
+        >{{ $store.state.auth.username }}</v-chip
       >
+      <v-speed-dial direction="bottom" transition="slide-y-transition">
         <template v-slot:activator>
           <v-btn v-model="fab" color="blue darken-2" dark fab>
             <v-icon large center>mdi-account-circle </v-icon>

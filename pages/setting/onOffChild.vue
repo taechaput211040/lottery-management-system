@@ -4,6 +4,8 @@
     <div class="white rounded-lg mt-2" v-if="!this.$route.query.username">
       <div class="rounded-lg white">
         <v-data-table
+          hide-default-footer
+          :options.sync="option"
           :headers="headerOnOff"
           :items="itemtypeaward"
           :loading="isLoading"
@@ -18,6 +20,25 @@
             >
           </template>
         </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="1">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="option.itemsPerPage"
+              :items="pageSizes"
+              label="รายการต่อนหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="11">
+            <v-pagination
+              v-model="option.page"
+              :total-visible="7"
+              :length="Math.ceil(itemtypeaward.length / option.itemsPerPage)"
+            ></v-pagination>
+          </v-col>
+        </v-row>
       </div>
     </div>
     <div class="white rounded-lg" v-else>
@@ -62,6 +83,8 @@ export default {
   components: { CategoryByuser },
   data() {
     return {
+      option: {},
+      pageSizes: [5, 10, 15, 25],
       itemdetail: [],
       isLoading: false,
       dataDetail: [],
