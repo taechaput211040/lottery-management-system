@@ -172,5 +172,8 @@ table.v-table thead th:not(:first-child) {
 .v-list-item--dense .v-list-item__subtitle,
 .v-list--dense .v-list-item .v-list-item__title,
 .v-list--dense .v-list-item .v-list-item__subtitle {
-  line-height: 1.5rem !important;
+  line-height: 1.8rem !important;
+}
+.v-list-item--dense .v-list-item__content, .v-list--dense .v-list-item .v-list-item__content{
+  padding: 0px !important;
 }

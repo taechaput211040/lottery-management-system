@@ -33,7 +33,7 @@ export async function createLottotype({ commit }, body) {
 export async function updateLottotype({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      // console.log(body);
+     
       let response = await this.$axios.patch(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoType/update/${body.id}`,
         {
@@ -127,7 +127,6 @@ export async function getTypeCategory(
           }
         }
       );
-      console.log(response, "++");
       resolve(response.data, "item");
     } catch (error) {
       reject(error);
@@ -200,7 +199,7 @@ export async function createType({ commit }, body) {
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategory/insert`,
         body
       );
-      console.log(response, "res");
+
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -216,7 +215,7 @@ export async function createTypeCategory({ commit }, body) {
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/insert`,
         body
       );
-      console.log(response, "res");
+
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -230,7 +229,7 @@ export async function updateTypeCategoryDetail({ commit }, body) {
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/update/${body.id}`,
         body
       );
-      console.log(response, "res");
+  
       resolve(response.data);
     } catch (error) {
       reject(error);

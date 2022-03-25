@@ -5,6 +5,7 @@
       <div class="row py-3">
         <div class="col-12 col-sm-6 col-md-3">
           เลือกประเภทหวย
+          <v-divider></v-divider>
           <v-select
             :items="listtype"
             item-text="title"

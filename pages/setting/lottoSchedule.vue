@@ -237,7 +237,7 @@
         <v-card-actions class="mx-2"
           ><v-btn color="success" @click="editRoundlotto()">แก้ไข</v-btn>
           <v-btn color="error" @click="dialogdetail = false"
-            >ปิด</v-btn
+            >ยกเลิก</v-btn
           ></v-card-actions
         >
       </v-card>
@@ -401,21 +401,6 @@ export default {
       }
     },
 
-    check2DateSelect() {
-      if (this.filter.startDate) {
-        console.log("filter.startDate");
-        console.log(this.filter);
-      }
-      if (this.filter.endDate) {
-        console.log("filter.endDate");
-        console.log(this.filter.endDate);
-      }
-      if (this.filter.startDate && this.filter.endDate) {
-        this.select2Date = true;
-      } else {
-        this.select2Date = false;
-      }
-    },
     async handlePageSizeChange(size) {
       this.pagination.page = 1;
       this.pagination.rowsPerPage = size;
@@ -426,7 +411,7 @@ export default {
     },
     openEdit(obj) {
       this.editing = obj;
-      console.log(this.editing);
+
       this.dialogdetail = true;
     },
     async editRoundlotto() {

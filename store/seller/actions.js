@@ -5,7 +5,7 @@ export async function getAllsetting({ commit }) {
       let response = await this.$axios.get(
         `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/get_typecategory_self`
       );
-      console.log(response);
+
       resolve(response);
     } catch (error) {
       reject(error);
@@ -23,7 +23,7 @@ export async function changeStaussetting({ commit }, body) {
           status: body.self_status
         }
       );
-      console.log(response);
+
       resolve(response);
     } catch (error) {
       reject(error);
@@ -37,7 +37,7 @@ export async function changeStausDownline({ commit }, body) {
         `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/update_lotto_dowline`,
         body
       );
-      console.log(response);
+    
       resolve(response);
     } catch (error) {
       reject(error);
@@ -51,7 +51,7 @@ export async function getLottoDownline({ commit }) {
       let response = await this.$axios.get(
         `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/get_member`
       );
-      console.log(response);
+  
       resolve(response);
     } catch (error) {
       reject(error);
@@ -64,7 +64,7 @@ export async function getTypeByUser({ commit }, username) {
       let response = await this.$axios.get(
         `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/get_typecategory_by_user/${username}`
       );
-      console.log(response);
+    
       resolve(response);
     } catch (error) {
       reject(error);
@@ -96,7 +96,7 @@ export async function changeStausType({ commit }, body) {
           seller: body.seller
         }
       );
-      console.log(response);
+      
       resolve(response);
     } catch (error) {
       reject(error);

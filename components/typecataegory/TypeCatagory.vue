@@ -121,7 +121,7 @@
                   dense
                   outlined
                 ></v-text-field>
-                
+
                 <v-textarea
                   label="กฎกติกา"
                   v-model="formCreate.rule_play"
@@ -415,7 +415,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ปิดหวย"
+          confirmButtonText: "ปิดหวย",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.closeTypeCategory(item.id);

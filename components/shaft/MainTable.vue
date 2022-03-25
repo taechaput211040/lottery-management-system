@@ -2,6 +2,7 @@
   <div>
     <div class="pa-1 rounded-lg white my-3 pa-2">
       เลือกประเภทหวย
+     
       <v-radio-group
         hide-details="auto"
         class="my-3"
@@ -27,7 +28,7 @@
         :items="datarender"
       >
         <template #[`item.no`]="{index}">
-          {{ index + 1 }}
+          {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
         <template #[`item.action`]="{item}">
           <v-btn rounded color="black" dark small @click="getDetail(item)"

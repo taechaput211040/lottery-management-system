@@ -3,72 +3,84 @@
     <div class=" my-3 pa-3" v-if="!isLoading">
       <v-row class="pa-1 ">
         <v-col cols="12" sm="6">
-          <div class="rounded-lg white pa-2" style="height:100%">
-            <span class="primary--text font-weight-bold">เลือกประเภทหวย</span>
-            <v-radio-group
-              hide-details="auto"
-              class="my-3"
-              v-model="selectType"
-              row
-              @change="selectCatebytype"
-            >
-              <v-radio
-                v-for="(item, i) in this.listtype"
-                :key="i"
-                :label="item.title"
-                :value="item.id"
-              ></v-radio>
-            </v-radio-group>
-            <v-select
-              :items="itemcategory"
-              item-text="typecategory_title"
-              item-value="typecategory_id"
-              class="col-12"
-              :disabled="selectType == null"
-              outlined
-              v-model="selectCate"
-              @change="selectFlexodd"
-              label="เลือกชนิดหวย"
-              dense
-              placeholder="กรุณาเลือกชนิดของหวย"
-            ></v-select>
+          <div class="rounded-lg white " style="height:100%">
+            <div class="primary--text font-weight-bold pa-2">
+              เลือกประเภทหวย
+            </div>
+            <v-divider></v-divider>
+            <div class="pa-2">
+              <v-radio-group
+                hide-details="auto"
+                class="my-3"
+                v-model="selectType"
+                row
+                @change="selectCatebytype"
+              >
+                <v-radio
+                  v-for="(item, i) in this.listtype"
+                  :key="i"
+                  :label="item.title"
+                  :value="item.id"
+                ></v-radio>
+              </v-radio-group>
+              <v-select
+                :items="itemcategory"
+                item-text="typecategory_title"
+                item-value="typecategory_id"
+                class="col-12"
+                :disabled="selectType == null"
+                outlined
+                v-model="selectCate"
+                @change="selectFlexodd"
+                label="เลือกชนิดหวย"
+                dense
+                placeholder="กรุณาเลือกชนิดของหวย"
+              ></v-select>
+            </div>
           </div>
         </v-col>
-        <v-col cols="12" sm="6">
-          <div class="rounded-lg white pa-2">
-            <span class="success--text font-weight-bold"
-              >ตั้งค่ากำไรและอัตราน้ำไหล
-            </span>
-            <div class="row mt-2">
-              <div class="col-6">
-                กำไรขั้นต่ำ(%)
-                <v-text-field
-                  dense
-                  v-model="formset.profit"
-                  hide-details="auto"
-                  class="mb-2"
-                  type="number"
-                  outlined
-                  placeholder="กรอกกำไรขั้นต่ำ"
-                ></v-text-field>
-              </div>
-              <div class="col-6">
-                อัตราน้ำไหลขั้นต่ำ(%)
-                <v-text-field
-                  dense
-                  type="number"
-                  v-model="formset.flexodd"
-                  placeholder="กรอกอัตราน้ำไหลขั้นต่ำ"
-                  hide-details="auto"
-                  outlined
-                ></v-text-field>
-              </div>
-              <div class="text-right col-12 pb-3">
-                <v-btn color="success" @click="setprofit(formset)"
-                  >บันทึก</v-btn
-                >
-              </div>
+        <v-col cols="12" sm="6" v-if="$store.state.auth.role == 'LOTTO'">
+          <div class="rounded-lg white">
+            <div class="success--text font-weight-bold pa-2">
+              ตั้งค่ากำไรและอัตราน้ำไหล
             </div>
+            <v-divider v-model="valid" ref="formprofit"></v-divider>
+            <v-form
+              ><div class="row pa-2">
+                <div class="col-6">
+                  กำไรขั้นต่ำ(%)
+                  <v-text-field
+                    dense
+                    v-model="formset.profit"
+                    hide-details="auto"
+                    class="mb-2"
+                    type="number"
+                    :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
+                    outlined
+                    required
+                    placeholder="กรอกกำไรขั้นต่ำ"
+                  ></v-text-field>
+                </div>
+                <div class="col-6">
+                  อัตราน้ำไหลขั้นต่ำ(%)
+                  <v-text-field
+                    dense
+                    type="number"
+                    v-model="formset.flexodd"
+                    placeholder="กรอกอัตราน้ำไหลขั้นต่ำ"
+                    outlined
+                    hide-details="auto"
+                    required
+                    :rules="[v => !!v || 'กรุณากรอกอัตราน้ำไหลขั้นต่ำ']"
+                  ></v-text-field>
+                </div>
+                <div class="text-right col-12 pb-3">
+                  <v-btn color="success" @click="setprofit(formset)"
+                    >บันทึก</v-btn
+                  >
+                </div>
+              </div>
+            </v-form>
           </div>
         </v-col>
       </v-row>
@@ -131,6 +143,9 @@
         hide-default-footer
         :options.sync="optionupline"
       >
+        <template #[`item.no`]="{index}">
+          {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
+        </template>
       </v-data-table>
       <v-row align="baseline" class="ma-3 ">
         <v-col cols="12" sm="2" lg="1">
@@ -154,53 +169,61 @@
     </div>
 
     <v-dialog max-width="300px" v-model="dlupdate">
-      <v-card class="pa-3">
-        <v-card-title primary-title>
-          แก้ไขอัตราน้ำไหลหวย
-        </v-card-title>
-        <div>
-          <v-text-field
-            filled
-            label="ชื่อชนิดหวย"
-            dense
-            hide-details="auto"
-            class="my-2"
-            disabled
-            v-model="formupdate.lottonumbertype_name"
-          ></v-text-field>
-          <v-text-field
-            outlined
-            label="อัตราจ่ายสูงสุด"
-            dense
-            class="my-2"
-            placeholder="กรุณากรอกอัตราการจ่ายสูงสุด"
-            hide-details="auto"
-            v-model="formupdate.maximum_out_come_rate"
-          ></v-text-field>
-          <v-text-field
-            outlined
-            label="แทงต่ำสุด"
-            placeholder="กรุณากรอกยอดแทงต่ำสุด"
-            dense
-            class="my-2"
-            hide-details="auto"
-            v-model="formupdate.minimum_bet_prize"
-          ></v-text-field>
-          <v-text-field
-            outlined
-            placeholder="กรุณากรอกยอดแทงสูงสุด"
-            label="แทงสูงสุด"
-            class="my-2"
-            dense
-            hide-details="auto"
-            v-model="formupdate.maximum_bet_prize"
-          ></v-text-field>
-        </div>
-        <v-card-actions>
-          <v-btn color="success" @click="submitEdit()">ตั้งค่า</v-btn>
-          <v-btn color="error" @click="dlupdate = false">ปิด</v-btn>
-        </v-card-actions>
-      </v-card>
+      <v-form ref="edtform">
+        <v-card class="pa-3">
+          <v-card-title primary-title>
+            แก้ไขอัตราน้ำไหลหวย
+          </v-card-title>
+          <div>
+            <v-text-field
+              filled
+              label="ชื่อชนิดหวย"
+              dense
+              hide-details="auto"
+              class="my-2"
+              disabled
+              v-model="formupdate.lottonumbertype_name"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              label="อัตราจ่ายสูงสุด"
+              dense
+              type="number"
+              class="my-2"
+              placeholder="กรุณากรอกอัตราการจ่ายสูงสุด"
+              @keypress="e => checkpositive(e)"
+              hide-details="auto"
+              v-model="formupdate.maximum_out_come_rate"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              label="แทงต่ำสุด"
+              type="number"
+              @keypress="e => checkpositive(e)"
+              placeholder="กรุณากรอกยอดแทงต่ำสุด"
+              dense
+              class="my-2"
+              hide-details="auto"
+              v-model="formupdate.minimum_bet_prize"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              @keypress="e => checkpositive(e)"
+              placeholder="กรุณากรอกยอดแทงสูงสุด"
+              label="แทงสูงสุด"
+              class="my-2"
+              type="number"
+              dense
+              hide-details="auto"
+              v-model="formupdate.maximum_bet_prize"
+            ></v-text-field>
+          </div>
+          <v-card-actions>
+            <v-btn color="success" @click="submitEdit()">ตั้งค่า</v-btn>
+            <v-btn color="error" @click="closeEdit()">ยกเลิก</v-btn>
+          </v-card-actions>
+        </v-card></v-form
+      >
     </v-dialog>
     <div v-if="isLoading" class="text-center">
       <v-progress-circular
@@ -345,7 +368,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ตั้งค่า"
+          confirmButtonText: "ตั้งค่า",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.setflexoddProfit(this.formset);
@@ -369,6 +393,9 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    closeEdit() {
+      this.dlupdate = false;
     },
     async getPercent() {
       let { data: perflex } = await this.getPerflex();
@@ -398,6 +425,19 @@ export default {
     openupdateComerate(item) {
       this.dlupdate = true;
       this.formupdate = item;
+    },
+    checkpositive(evt) {
+      evt = evt ? evt : window.event;
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
     },
     async submitEdit() {
       try {

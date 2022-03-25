@@ -20,7 +20,7 @@
         :items="datarender"
       >
         <template #[`item.no`]="{index}">
-          {{ index + 1 }}
+              {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
         <template #[`item.unlimitedNumber`]="{item}">
           <v-btn rounded color="primary" dark small @click="unlimitDetail(item)"
@@ -68,8 +68,8 @@
         :loading="isLoading"
         :options.sync="optionupline"
       >
-        <template #[`item.no`]="{index}">
-          {{ index + 1 }}
+       <template #[`item.no`]="{index}">
+          {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
       </v-data-table>
       <v-row align="baseline" class="ma-3 ">
@@ -113,12 +113,14 @@
             label="อัตราจ่ายสูงสุด"
             outlined
             dense
+            @keypress="e => checkpositive(e)"
             class="my-2"
           ></v-text-field>
           <v-text-field
             hide-details="auto"
             v-model="form_edit.minimum_bet_prize"
             label="อัตราแทงขั้นต่ำ"
+            @keypress="e => checkpositive(e)"
             dense
             outlined
             class="my-2"
@@ -126,6 +128,7 @@
           <v-text-field
             hide-details="auto"
             v-model="form_edit.maximum_bet_prize"
+            @keypress="e => checkpositive(e)"
             label="อัตราแทงสูงสุด"
             dense
             outlined
@@ -134,6 +137,7 @@
           <v-text-field
             hide-details="auto"
             v-model="form_edit.self_receive_amount"
+            @keypress="e => checkpositive(e)"
             label="รับของ"
             dense
             class="my-2"
@@ -143,6 +147,7 @@
             hide-details="auto"
             v-model="form_edit.discount_amount"
             label="ยอดส่วนลด"
+            @keypress="e => checkpositive(e)"
             outlined
             class="my-2"
             dense
@@ -150,7 +155,7 @@
         </div>
         <v-card-actions>
           <v-btn class="success" @click="submitUpdate()">เเก้ไข</v-btn>
-          <v-btn class="error" @click="updateDiaglog = false">ปิด</v-btn>
+          <v-btn class="error" @click="updateDiaglog = false">ยกเลิก</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -333,6 +338,19 @@ export default {
     openDialogupdate(item) {
       this.updateDiaglog = true;
       this.form_edit = item;
+    },
+    checkpositive(evt) {
+      evt = evt ? evt : window.event;
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
     },
     async submitUpdate() {
       try {

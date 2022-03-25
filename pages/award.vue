@@ -19,7 +19,7 @@
           v-model="search"
           class="col-md-4 col-6 pa-2"
           append-icon="mdi-magnify"
-          label="Search"
+          label="ค้นหาชื่อหวย"
           outlined
           single-line
           dense
@@ -78,7 +78,7 @@
                 <div class="col-3">{{ item.name }}</div>
 
                 <div
-                  class="col-9 row my-1"
+                  class="col-9 row "
                   v-if="Array.isArray(item.lotto_number) == true"
                 >
                   <v-text-field

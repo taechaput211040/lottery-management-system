@@ -117,7 +117,7 @@
           <v-card-actions>
             <v-btn color="success" @click="submitsetting(updateform.username)"
               >ยืนยัน</v-btn
-            ><v-btn color="error" @click="updateDialog = false">ปิด</v-btn>
+            ><v-btn color="error" @click="updateDialog = false">ยกเลิก</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

@@ -61,7 +61,7 @@
 
         <v-data-table :headers="headerDetail" hide-default-footer> </v-data-table>
         <v-card-actions class="justify-end">
-          <v-btn color="error" @click="dialogdetail = false">ปิด</v-btn>
+          <v-btn color="error" @click="dialogdetail = false">ยกเลิก</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

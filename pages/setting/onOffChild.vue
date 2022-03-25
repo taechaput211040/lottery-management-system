@@ -11,8 +11,7 @@
           :loading="isLoading"
         >
           <template #[`item.no`]="{index}">
-            <!-- {{item.upline_status}} -->
-            {{ index + 1 }}
+            {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
           </template>
           <template #[`item.actions`]="{item}">
             <v-btn color="warning" rounded small @click="showdetial(item)"
@@ -69,7 +68,7 @@
         <!-- button -->
         <v-card-actions class="justify-center">
           <v-btn color="success" @click="updatesatatus(editItem)">แก้ไข</v-btn>
-          <v-btn color="error" @click="dialogConfig = false">ปิด</v-btn>
+          <v-btn color="error" @click="dialogConfig = false">ยกเลิก</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

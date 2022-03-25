@@ -39,6 +39,14 @@
             >Login</v-btn
           >
         </div>
+        <div class="d-flex align-center justify-center mt-4">
+          <v-checkbox
+            type="checkbox"
+            hide-details="auto"
+            v-model="checkonline"
+          /><span>อยู่ในสถานะล็อกอินตลอด</span>
+        </div>
+
         <v-card-actions class="text--secondary">
           <v-spacer></v-spacer>
         </v-card-actions>
@@ -53,6 +61,7 @@ export default {
   layout: "session",
   data() {
     return {
+      checkonline: false,
       username: "",
       password: "",
       authendata: {},
@@ -82,7 +91,13 @@ export default {
             hash: response.hash,
             ip: this.ip_address
           };
-          await this.gettoken(params);
+          let { data: datatoken } = await this.gettoken(params);
+          if (this.checkonline) {
+            localStorage.setItem("hash", response.hash);
+            localStorage.setItem("username", datatoken.username);
+            localStorage.setItem("token", datatoken.token);
+            localStorage.setItem("role", datatoken.position);
+          }
           this.$router.push("/");
         }
       } catch (err) {
@@ -211,14 +226,14 @@ export default {
   .username {
     background: url("https://image.smart-ai-api.com/public/Rico-main-resite/round-account-button-with-user-inside.png")
       no-repeat left;
-    background-position: 8px 3px;
-    background-size: 32px;
+    background-position: 8px 6px;
+    background-size: 26px;
   }
   .password {
     background: url("https://image.smart-ai-api.com/public/Rico-main-resite/padlock.png")
       no-repeat left;
-    background-position: 8px 3px;
-    background-size: 32px;
+    background-position: 8px 6px;
+    background-size: 26px;
   }
   .agentkey {
     background: url("https://image.smart-ai-api.com/public/Rico-main-resite/key.png")

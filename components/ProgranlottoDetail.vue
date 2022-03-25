@@ -161,7 +161,9 @@
             <v-card-actions class="justify-center">
               <v-btn color="success" @click="confirmEdit(editform)" small
                 >แก้ไขตัวเลข</v-btn
-              ><v-btn color="error" small @click="modlEdit = false">ปิด</v-btn>
+              ><v-btn color="error" small @click="modlEdit = false"
+                >ยกเลิก</v-btn
+              >
             </v-card-actions>
           </v-card></v-form
         >
@@ -382,7 +384,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ปิดหวย"
+          confirmButtonText: "ปิดหวย",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.closeLottoNumberType(item.id);

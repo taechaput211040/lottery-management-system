@@ -4,9 +4,8 @@
       <v-app-bar-nav-icon large @click.stop="drawer = !drawer" color="black" />
       <v-toolbar-title v-text="title" class="font-weight-bold" />
       <v-spacer />
-      <v-chip outlined color="success"  class="mx-3 font-weight-bold"
-        ><v-icon left>mdi-account-circle</v-icon
-        >{{ $store.state.auth.username }}</v-chip
+      <v-chip outlined color="success" class="mx-3 font-weight-bold"
+        ><v-icon left>mdi-account-circle</v-icon>{{ this.showUser }}</v-chip
       >
       <v-speed-dial direction="bottom" transition="slide-y-transition">
         <template v-slot:activator>
@@ -39,7 +38,7 @@
         ></v-img>
       </v-toolbar-title>
       <v-list dense class="red_list">
-        <div v-for="(link, i) in items" :key="i">
+        <div v-for="(link, i) in menurender" :key="i">
           <v-list-item
             active-class="black--text active_list white"
             v-if="!link.subLinks"
@@ -119,8 +118,149 @@ export default {
       }
     ]
   },
+  computed: {
+    menurender() {
+      if (this.$store.state.auth.role === "LOTTO") {
+        return this.items;
+      } else {
+        let menu = [
+          {
+            title: "Dashboard",
+            to: "/",
+            icon: "mdi-chart-bar",
+            status: true
+          },
+          {
+            title: "รายงาน",
+            to: "/staff",
+            icon: "mdi-clipboard-text",
+            status: true,
+            subLinks: [
+              {
+                icon: "mdi-medal",
+                text: "รายงานผลรางวัล",
+                to: "/report/reportAward",
+                status: true
+              },
+              {
+                icon: "mdi-finance",
+                text: "กำไร / ขาดทุน",
+                to: "/report/prfit",
+                status: true
+              },
+              {
+                icon: "mdi-clipboard-edit-outline",
+                text: "ยกเลิกโพย / รายการแทง",
+                to: "/report/betReport",
+                status: true
+              },
+              {
+                icon: "mdi-clipboard",
+                text: "รายงานตัวเลข",
+                to: "/report/reportnumber",
+                status: true
+              }
+            ]
+          },
+          {
+            title: "คำนวณผลรางวัล",
+            to: "/award",
+            icon: "mdi-certificate",
+            status: true
+          },
+          {
+            title: "ตั้งค่า",
+            to: "/company",
+
+            icon: "mdi-cog",
+            status: true,
+            subLinks: [
+              {
+                icon: "mdi-timer-outline",
+                text: "รอบหวย",
+                to: "/setting/lottoSchedule",
+                status: true
+              },
+              {
+                icon: "mdi-toggle-switch-off",
+                text: "เปิดปิดหวย",
+                to: "/setting/onOff",
+                status: true
+              },
+              {
+                icon: "mdi-toggle-switch-off-outline",
+                text: "เปิดปิดหวยลูก",
+                to: "/setting/onOffChild",
+                status: true
+              }
+            ]
+          },
+          {
+            title: "เพลา",
+            to: "/pay_rate/rate",
+            icon: "mdi-tune-variant",
+            status: true
+          },
+          {
+            title: "น้ำไหล",
+            to: "/flexodd",
+            icon: "mdi-tune-vertical",
+            status: true
+          },
+          {
+            title: "Company Setting",
+            to: "/company",
+            icon: "mdi-credit-card-plus-outline",
+            status: true,
+            subLinks: [
+              {
+                icon: "mdi-view-dashboard",
+                text: "แบ่งหุ้น/ถือสู้",
+                to: "/account/profile",
+                status: true
+              },
+              {
+                icon: "mdi-view-dashboard",
+                text: "รายการ Agent",
+                to: "/account/chanword",
+                status: true
+              }
+            ]
+          },
+          {
+            title: "Agent Setting",
+            to: "/agent",
+            icon: "mdi-credit-card-plus-outline",
+            status: true,
+            subLinks: [
+              {
+                icon: "mdi-view-dashboard",
+                text: "ส่วนแบ่งที่ได้รับ",
+                to: "/account/profile",
+                status: true
+              },
+              {
+                icon: "mdi-view-dashboard",
+                text: "อัตราจ่ายคอมมิชชั่น",
+                to: "/account/chanword",
+                status: true
+              }
+            ]
+          },
+          {
+            title: "Member Setting",
+            to: "/member",
+            icon: "mdi-credit-card-plus-outline",
+            status: true
+          }
+        ];
+        return menu;
+      }
+    }
+  },
   data() {
     return {
+      showUser: "",
       fab: false,
       dialogOutside: false,
       dialogInside: false,
@@ -291,7 +431,12 @@ export default {
       title: "SMART LOTTO"
     };
   },
+  async fetch() {
+    this.showUser =
+      localStorage.getItem("username") || sessionStorage.getItem("username");
+  },
   async created() {
+    console.log(this.$store.state.auth.role);
     // await this.checkauthen();
   },
   methods: {
@@ -300,11 +445,9 @@ export default {
     // }),
     async logout() {
       try {
-        let token = sessionStorage.getItem("token");
-        if (token) {
-          sessionStorage.clear();
-          this.$router.push("/login");
-        }
+        localStorage.clear();
+        sessionStorage.clear();
+        this.$router.push("/login");
       } catch (err) {
         console.log(err);
       }

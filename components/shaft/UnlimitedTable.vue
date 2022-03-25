@@ -22,8 +22,8 @@
         :loading="isLoading"
         :items="datarender"
       >
-        <template #[`item.no`]="{index}">
-          {{ index + 1 }}
+       <template #[`item.no`]="{index}">
+          {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
 
         <template #[`item.action`]="{item}">
@@ -78,6 +78,7 @@
                   label="เลข"
                   @keydown="e => rangeInput(e, item.lottonumber_name)"
                   :counter="$route.query.number"
+                  @keypress="e => checkpositive(e)"
                   v-model="item.lottonumber_name"
                   type="number"
                 />
@@ -89,6 +90,7 @@
                   outlined
                   :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
                   dense
+                  @keypress="e => checkpositive(e)"
                   label="อัตราจ่าย"
                   v-model="item.out_come_rate"
                   type="number"
@@ -100,6 +102,7 @@
                 <v-text-field
                   :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
                   outlined
+                  @keypress="e => checkpositive(e)"
                   dense
                   label="รับของ"
                   v-model="item.self_receive_amount"
@@ -150,6 +153,7 @@
               type="number"
               dense
               @keydown="e => rangeInput(e, form.lotto_number)"
+              @keypress="e => checkpositive(e)"
               :counter="$route.query.number"
               :rules="[
                 v => !!v || 'กรุณากรอกให้ครบถ้วน',
@@ -161,6 +165,7 @@
             ></v-text-field>
             <v-text-field
               outlined
+              @keypress="e => checkpositive(e)"
               type="number"
               :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
               label="อัตราจ่าย"
@@ -169,6 +174,7 @@
             ></v-text-field>
             <v-text-field
               outlined
+              @keypress="e => checkpositive(e)"
               :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
               label="รับของ"
               type="number"
@@ -411,6 +417,19 @@ export default {
         itemmodel.length >= this.$route.query.number
       ) {
         self.preventDefault();
+      }
+    },
+    checkpositive(evt) {
+      evt = evt ? evt : window.event;
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
       }
     }
   }

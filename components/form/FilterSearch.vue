@@ -18,24 +18,104 @@
         <v-col cols="12" sm="9" v-if="selecttype == 'findate'">
           <div class="px-2 font-weight-bold row">
             <div class="col-12  col-sm-6 col-lg-auto col-xl-auto">
-              วันที่ :
-              <el-date-picker
+              <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="filter.startDate"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    dense
+                    v-model="filter.startDate"
+                    label="จากวันที่ :"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    hide-details="auto"
+                    outlined
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model.trim="filter.startDate"
+                  no-title
+                  scrollable
+                  locale="th"
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="menu = false">
+                    ยกเลิก
+                  </v-btn>
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.menu.save(filter.startDate)"
+                  >
+                    ยืนยัน
+                  </v-btn>
+                </v-date-picker>
+              </v-menu>
+              <!-- <el-date-picker
                 class="full-width"
                 v-model.trim="filter.startDate"
                 arrow-control
                 placeholder="เลือกวันที่ต้องการค้นหา"
               >
-              </el-date-picker>
+              </el-date-picker> -->
             </div>
             <div class="col-12 col-sm-6 col-lg-auto col-xl-auto">
-              ถึงวันที่ :
-              <el-date-picker
+              <v-menu
+                ref="menu2"
+                v-model="menu2"
+                :close-on-content-click="false"
+                :return-value.sync="filter.endDate"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="filter.endDate"
+                    label="ถึงวันที่"
+                    dense
+                    outlined
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    hide-details="auto"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model.trim="filter.endDate"
+                  no-title
+                  scrollable
+                  locale="th"
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="menu2 = false">
+                    ยกเลิก
+                  </v-btn>
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.menu2.save(filter.endDate)"
+                  >
+                    ยืนยัน
+                  </v-btn>
+                </v-date-picker>
+              </v-menu>
+              <!-- <el-date-picker
                 class="full-width"
                 v-model.trim="filter.endDate"
                 arrow-control
                 placeholder="เลือกวันที่ต้องการค้นหา"
               >
-              </el-date-picker>
+              </el-date-picker> -->
             </div>
           </div>
         </v-col>
@@ -51,6 +131,8 @@
 export default {
   data() {
     return {
+      menu: false,
+      menu2: false,
       itemdate: [
         { text: "เดือนนี้", value: "thismounth" },
         { text: "สัปดาห์นี้", value: "week" },
