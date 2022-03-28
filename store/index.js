@@ -12,6 +12,7 @@ import seller from "./seller";
 import moment from "moment";
 import shaft from "./shaft";
 import flexodd from "./flexodd";
+import report from "./report";
 Vue.prototype.$moment = moment;
 Vue.use(VueSweetalert2);
 Vue.use(Vuex);
@@ -24,7 +25,8 @@ export default function(/* { ssrContext } */) {
       auth,
       seller,
       shaft,
-      flexodd
+      flexodd,
+      report
     },
 
     // enable strict mode (adds overhead!)

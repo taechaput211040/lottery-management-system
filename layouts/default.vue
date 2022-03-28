@@ -43,6 +43,7 @@
             active-class="black--text active_list white"
             v-if="!link.subLinks"
             :to="link.to"
+            :disabled="link.status == false"
             class="v-list-item font-weight-bold "
           >
             <v-list-item-icon>
@@ -50,6 +51,9 @@
             </v-list-item-icon>
 
             <v-list-item-title class="" v-text="link.title" />
+            <div v-if="link.status == false" class="commingsoon">
+              comingsoon
+            </div>
           </v-list-item>
 
           <v-list-group
@@ -58,18 +62,23 @@
             :key="link.title"
             class="white--text"
             :prepend-icon="link.icon"
+            :disabled="link.status == false"
             :value="false"
           >
             <template v-slot:activator>
               <v-list-item-title class=" h1">{{
                 link.title
               }}</v-list-item-title>
+              <div v-if="link.status == false" class="commingsoon">
+                comingsoon
+              </div>
             </template>
 
             <v-list-item
               dark
               active-class="black--text active_list white"
               style="padding-left: 30px !important;"
+              :disabled="link.status == false"
               v-for="sublink in link.subLinks"
               :to="sublink.to"
               :key="sublink.text"
@@ -78,6 +87,9 @@
                 <v-icon>{{ sublink.icon }}</v-icon>
               </v-list-item-icon>
               <v-list-item-title v-text="sublink.text" />
+              <div v-if="link.status == false" class="commingsoon">
+                comingsoon
+              </div>
             </v-list-item>
           </v-list-group>
         </div>
@@ -145,7 +157,7 @@ export default {
               {
                 icon: "mdi-finance",
                 text: "กำไร / ขาดทุน",
-                to: "/report/prfit",
+                to: "/report/profitReport",
                 status: true
               },
               {
@@ -211,7 +223,7 @@ export default {
             title: "Company Setting",
             to: "/company",
             icon: "mdi-credit-card-plus-outline",
-            status: true,
+            status: false,
             subLinks: [
               {
                 icon: "mdi-view-dashboard",
@@ -231,19 +243,19 @@ export default {
             title: "Agent Setting",
             to: "/agent",
             icon: "mdi-credit-card-plus-outline",
-            status: true,
+            status: false,
             subLinks: [
               {
                 icon: "mdi-view-dashboard",
                 text: "ส่วนแบ่งที่ได้รับ",
                 to: "/account/profile",
-                status: true
+                status: false
               },
               {
                 icon: "mdi-view-dashboard",
                 text: "อัตราจ่ายคอมมิชชั่น",
                 to: "/account/chanword",
-                status: true
+                status: false
               }
             ]
           },
@@ -251,7 +263,7 @@ export default {
             title: "Member Setting",
             to: "/member",
             icon: "mdi-credit-card-plus-outline",
-            status: true
+            status: false
           }
         ];
         return menu;
@@ -290,7 +302,7 @@ export default {
             {
               icon: "mdi-finance",
               text: "กำไร / ขาดทุน",
-              to: "/report/prfit",
+              to: "/report/profitReport",
               status: true
             },
             {
@@ -382,7 +394,7 @@ export default {
           title: "Company Setting",
           to: "/company",
           icon: "mdi-credit-card-plus-outline",
-          status: true,
+          status: false,
           subLinks: [
             {
               icon: "mdi-view-dashboard",
@@ -402,7 +414,7 @@ export default {
           title: "Agent Setting",
           to: "/agent",
           icon: "mdi-credit-card-plus-outline",
-          status: true,
+          status: false,
           subLinks: [
             {
               icon: "mdi-view-dashboard",
@@ -422,7 +434,7 @@ export default {
           title: "Member Setting",
           to: "/member",
           icon: "mdi-credit-card-plus-outline",
-          status: true
+          status: false
         }
       ],
       miniVariant: false,

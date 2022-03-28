@@ -43,60 +43,62 @@
             }}</template
           >
           <template #[`item.action`]="{item}">
-            <v-tooltip bottom color="warning">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  class="mx-1"
-                  fab
-                  dark
-                  x-small
-                  color="warning"
-                  @click="openEdit(item)"
-                  ><v-icon dark>
-                    mdi-pencil
-                  </v-icon>
-                </v-btn></template
-              >
-              <span>แก้ไขหวย</span>
-            </v-tooltip>
-            <v-tooltip bottom color="red">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  class="mx-1"
-                  fab
-                  dark
-                  x-small
-                  color="red"
-                  @click="deleteConfig(item)"
-                  ><v-icon dark>
-                    mdi-delete
-                  </v-icon>
-                </v-btn></template
-              >
-              <span>ลบหวย</span>
-            </v-tooltip>
-            <v-tooltip bottom color="black">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  color="black"
-                  class="mx-1"
-                  fab
-                  dark
-                  x-small
-                  @click="closeConfig(item)"
-                  ><v-icon dark>
-                    mdi-lock
-                  </v-icon>
-                </v-btn></template
-              >
-              <span>ปิดหวย</span>
-            </v-tooltip>
+            <div class="d-flex justify-center">
+              <v-tooltip bottom color="warning">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    class="mx-1"
+                    fab
+                    dark
+                    x-small
+                    color="warning"
+                    @click="openEdit(item)"
+                    ><v-icon dark>
+                      mdi-pencil
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>แก้ไขหวย</span>
+              </v-tooltip>
+              <v-tooltip bottom color="red">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    class="mx-1"
+                    fab
+                    dark
+                    x-small
+                    color="red"
+                    @click="deleteConfig(item)"
+                    ><v-icon dark>
+                      mdi-delete
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ลบหวย</span>
+              </v-tooltip>
+              <v-tooltip bottom color="black">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    color="black"
+                    class="mx-1"
+                    fab
+                    dark
+                    x-small
+                    @click="closeConfig(item)"
+                    ><v-icon dark>
+                      mdi-lock
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ปิดหวย</span>
+              </v-tooltip>
+            </div>
           </template>
           <template #[`item.bet_open_time`]="{item}">
             {{ dateformat(item.bet_open_time) }}

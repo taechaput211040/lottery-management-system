@@ -174,6 +174,18 @@ table.v-table thead th:not(:first-child) {
 .v-list--dense .v-list-item .v-list-item__subtitle {
   line-height: 1.8rem !important;
 }
-.v-list-item--dense .v-list-item__content, .v-list--dense .v-list-item .v-list-item__content{
+.v-list-item--dense .v-list-item__content,
+.v-list--dense .v-list-item .v-list-item__content {
   padding: 0px !important;
+}
+.commingsoon {
+  border-radius: 20px;
+  font-size: 10px;
+  color: white;
+  background: linear-gradient(45deg, #fb0000, rgba(79, 79, 79, 0.83922));
+  position: absolute;
+  padding: 5px;
+  top: 9px;
+  z-index: 1;
+  left: 213px;
 }
