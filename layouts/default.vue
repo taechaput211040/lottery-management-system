@@ -201,7 +201,7 @@ export default {
               },
               {
                 icon: "mdi-toggle-switch-off-outline",
-                text: "เปิดปิดหวยลูก",
+                text: "เปิดปิดหวยในสายงาน",
                 to: "/setting/onOffChild",
                 status: true
               }
@@ -372,7 +372,7 @@ export default {
             },
             {
               icon: "mdi-toggle-switch-off-outline",
-              text: "เปิดปิดหวยลูก",
+              text: "เปิดปิดหวยในสายงาน",
               to: "/setting/onOffChild",
               status: true
             }

@@ -185,8 +185,8 @@
     <!-- modaladd  -->
     <v-dialog full-width v-model="modal_add" max-width="800" persistent>
       <v-card class="pa-4">
-        <v-card-title><h3>เพิ่มโปรเเกรมหวย</h3></v-card-title>
-        <v-card class="pa-2">
+        <v-card-title class="justify-center"><h3>เพิ่มโปรเเกรมหวย</h3></v-card-title>
+        <v-card class="pa-2 elevation-3">
           <v-form ref="form" v-model="validForm">
             <div class="col-12 col-md-6 col-lg-4 pa-1">
               <v-select
@@ -1189,7 +1189,7 @@ export default {
             await this.deleteCategoryTypeDetail(item.id);
             this.$swal(
               "ลบเรียบร้อย!",
-              "Your file has been deleted.",
+              "ดำเนิการเสร็จสิ้น",
               "success"
             );
             this.$fetch();

@@ -7,7 +7,7 @@
       </h4>
     </div>
     <div class="my-3 rounded-lg white">
-      <h3 class="pa-3">กรอกชื่อหวยที่ต้องการ</h3>
+      <h3 class="pa-3">รายละเอียดการค้นหา</h3>
       <v-divider></v-divider>
       <div class="pa-3 d-flex align-center">
         <div class="pa-0 my-2 col-12 col-sm-6 col-lg-4">
@@ -25,7 +25,7 @@
         >
       </div>
     </div>
-    <div><h2>รายชื่อโปรแกรมรอบหวย</h2></div>
+    <div><h2>รายการรอบหวย</h2></div>
     <div class="white rounded-lg">
       <div class="rounded-lg white">
         <v-data-table
@@ -61,7 +61,7 @@
                     </v-icon>
                   </v-btn></template
                 >
-                <span>แก้ไขหวย</span>
+                <span>แก้ไขรอบหวย</span>
               </v-tooltip>
               <v-tooltip bottom color="red">
                 <template v-slot:activator="{ on, attrs }">
@@ -79,7 +79,7 @@
                     </v-icon>
                   </v-btn></template
                 >
-                <span>ลบหวย</span>
+                <span>ลบรอบหวย</span>
               </v-tooltip>
               <v-tooltip bottom color="black">
                 <template v-slot:activator="{ on, attrs }">
@@ -97,7 +97,7 @@
                     </v-icon>
                   </v-btn></template
                 >
-                <span>ปิดหวย</span>
+                <span>ปิดรอบหวย</span>
               </v-tooltip>
             </div>
           </template>
@@ -149,10 +149,10 @@
     <!-- TODO : change and cancel button -->
     <v-dialog v-model="dialogdetail" max-width="800">
       <v-card class="pa-3">
-        <v-card-title>
+        <v-card-title class="justify-center">
           <h3>แก้ไขรอบหวย</h3>
         </v-card-title>
-        <v-container fluid>
+        <v-container fluid class="elevation-3 rounded-lg pa-3">
           <v-row>
             <v-col cols="4">
               ชื่อหวย
@@ -163,6 +163,7 @@
                 placeholder="กรอกชื่อ"
                 hide-details="auto"
                 dense
+                disabled
                 outlined
                 :value="editing.title"
               ></v-text-field>
@@ -243,7 +244,7 @@
             </v-col>
           </v-row>
         </v-container>
-        <v-card-actions class="mx-2"
+        <v-card-actions class="justify-center "
           ><v-btn color="success" @click="editRoundlotto()">แก้ไข</v-btn>
           <v-btn color="error" @click="dialogdetail = false"
             >ยกเลิก</v-btn
@@ -282,7 +283,7 @@ export default {
         {
           text: "ลำดับ",
           value: "no",
-          align: "left",
+          align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
@@ -303,22 +304,19 @@ export default {
           text: "วันที่เปิดแทง",
           value: "bet_open_time",
           align: "center",
-          class: "font-weight-bold",
-          cellClass: "font-weight-bold "
+          class: "font-weight-bold"
         },
         {
           text: "วันที่ปิดแทง",
           value: "bet_close_time",
           align: "center",
-          class: "font-weight-bold",
-          cellClass: "font-weight-bold "
+          class: "font-weight-bold"
         },
         {
           text: "วันที่ออกผล",
           value: "bet_lotto_time",
           align: "center",
-          class: "font-weight-bold",
-          cellClass: "font-weight-bold "
+          class: "font-weight-bold"
         },
         {
           text: "สถานะ",
@@ -422,8 +420,7 @@ export default {
       return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
     },
     openEdit(obj) {
-      this.editing = obj;
-
+      this.editing = Object.assign({}, obj);
       this.dialogdetail = true;
     },
     async editRoundlotto() {
@@ -459,21 +456,12 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ลบ"
+          confirmButtonText: "ลบ",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteProgramLotto(item.id);
-            this.$swal(
-              "ลบเรียบร้อย!",
-              "Your file has been deleted.",
-              "success"
-            );
-            if (this.title_lotto) {
-              this.searchlotto();
-            } else {
-              this.$fetch();
-            }
-          } else {
+            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
             if (this.title_lotto) {
               this.searchlotto();
             } else {
@@ -493,7 +481,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ปิดหวย"
+          confirmButtonText: "ปิดหวย",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.closeProgramLotto(item.id);
@@ -503,12 +492,6 @@ export default {
               showConfirmButton: false,
               timer: 1500
             });
-            if (this.title_lotto) {
-              this.searchlotto();
-            } else {
-              this.$fetch();
-            }
-          } else {
             if (this.title_lotto) {
               this.searchlotto();
             } else {

@@ -109,12 +109,12 @@
         </v-data-table>
         <!-- add -->
         <v-dialog full-width v-model="modal_add" max-width="600">
-          <v-card class="pa-4">
-            <v-card-title>
-              <h3>เพิ่มชนิดของหวย</h3>
-            </v-card-title>
-            <v-card class="pa-4 ma-3">
-              <v-form>
+          <v-form ref="formcreate" v-model="valid">
+            <v-card class="pa-4">
+              <v-card-title>
+                <h3>เพิ่มชนิดของหวย</h3>
+              </v-card-title>
+              <v-card class="pa-4 ma-3">
                 <v-text-field
                   label="ชื่อชนิดหวย"
                   v-model="formCreate.title"
@@ -129,18 +129,16 @@
                   required
                   outlined
                 ></v-textarea>
-              </v-form>
+              </v-card>
+              <v-row class="pa-2">
+                <v-spacer></v-spacer>
+                <v-btn color="success" small class="mx-2" @click="addCategpry()"
+                  >เพิ่ม</v-btn
+                ><v-btn color="error" small @click="closeadddl()">ยกเลิก</v-btn>
+                <v-spacer></v-spacer>
+              </v-row>
             </v-card>
-            <v-row class="pa-2">
-              <v-spacer></v-spacer>
-              <v-btn color="success" small class="mx-2" @click="addCategpry()"
-                >เพิ่ม</v-btn
-              ><v-btn color="error" small @click="modal_add = false"
-                >ยกเลิก</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-row>
-          </v-card>
+          </v-form>
         </v-dialog>
         <!-- addd -->
         <!-- edit  -->
@@ -178,7 +176,7 @@
             <v-row class="pa-2">
               <v-spacer></v-spacer>
               <v-btn color="success" small class="mx-2" @click="confirmEdit()"
-                >เพิ่ม</v-btn
+                >แก้ไขชนิดของหวย</v-btn
               ><v-btn color="error" small @click="modal_edit = false"
                 >ยกเลิก</v-btn
               >
@@ -217,6 +215,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      valid: false,
       formCreate: {
         title: "",
         lotto_flag: "",
@@ -291,6 +290,11 @@ export default {
       "deleteTypeCategory",
       "closeTypeCategory"
     ]),
+    closeadddl() {
+      this.modal_add = false;
+      this.$refs.formcreate.reset();
+      this.$refs.formcreate.resetValidation();
+    },
     selectFile(event) {
       if (
         event.target.files[0].type != "image/jpeg" &&
@@ -351,7 +355,7 @@ export default {
     },
     addstatus() {},
     openEdit(data) {
-      this.dataEdit = data;
+      this.dataEdit = Object.assign({}, data);
       this.modal_edit = true;
     },
     async handlePageSizeChange(size) {
@@ -394,11 +398,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteTypeCategory(item.id);
-            this.$swal(
-              "ลบเรียบร้อย!",
-              "Your file has been deleted.",
-              "success"
-            );
+            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
             this.$fetch();
           }
         });

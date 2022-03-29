@@ -119,11 +119,11 @@
         <!-- add -->
         <v-dialog v-model="modal_add" max-width="400">
           <v-card class="pa-4">
-            <v-card-title>
-              <h3>ประเภทของหวย - เพิ่ม</h3>
-            </v-card-title>
-            <v-card class="pa-4 ma-3">
-              <v-form ref="formcreate" v-model="valid">
+            <v-form ref="formcreate" v-model="valid">
+              <v-card-title>
+                <h3>ประเภทของหวย - เพิ่ม</h3>
+              </v-card-title>
+              <v-card class="pa-4 ma-3">
                 <v-text-field
                   label="ประเภทหวย"
                   dense
@@ -131,17 +131,17 @@
                   v-model="formCreate.title"
                   required
                   outlined
-                ></v-text-field> </v-form
-            ></v-card>
-            <v-row class="pa-2">
-              <v-spacer></v-spacer>
-              <v-btn color="success" small class="mx-2" @click="addConfig()"
-                >เพิ่ม</v-btn
-              ><v-btn color="error" small @click="closeCreateconfig()"
-                >ยกเลิก</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-row>
+                ></v-text-field
+              ></v-card>
+              <v-row class="pa-2">
+                <v-spacer></v-spacer>
+                <v-btn color="success" small class="mx-2" @click="addConfig()"
+                  >เพิ่ม</v-btn
+                ><v-btn color="error" small @click="closeCreateconfig()"
+                  >ยกเลิก</v-btn
+                >
+                <v-spacer></v-spacer> </v-row
+            ></v-form>
           </v-card>
         </v-dialog>
         <!-- add -->
@@ -267,7 +267,7 @@ export default {
       "closeLottotype"
     ]),
     openEdit(data) {
-      this.dataEdit = data;
+      this.dataEdit = Object.assign({}, data);
       this.modal_edit = true;
     },
     async editConfig(item) {
@@ -288,7 +288,6 @@ export default {
     },
     closeEditconfig() {
       this.modal_edit = false;
-      this.$fetch();
     },
     async closeConfig(item) {
       try {
@@ -329,11 +328,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteLottotype(item);
-            this.$swal(
-              "ลบเรียบร้อย!",
-              "Your file has been deleted.",
-              "success"
-            );
+            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
             this.$fetch();
           }
         });
@@ -374,7 +369,8 @@ export default {
     },
     closeCreateconfig() {
       this.modal_add = false;
-      this.$fetch();
+      this.$refs.formcreate.reset();
+      this.$refs.formcreate.resetValidation();
     },
     showdetail(id, title) {
       this.$router.push(`${this.$route.path}?id=${id}&type=${title}`);

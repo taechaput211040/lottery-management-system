@@ -1,6 +1,11 @@
 <template>
   <div>
-    <h2>เปิดปิดหวยในสายงาน</h2>
+    <h2>
+      เปิดปิดหวยในสายงาน
+      <span class="purple--text" v-show="$route.query.username">
+        - {{ $route.query.username }}</span
+      >
+    </h2>
     <div class="white rounded-lg mt-2" v-if="!this.$route.query.username">
       <div class="rounded-lg white">
         <v-data-table
@@ -50,20 +55,21 @@
     <v-dialog v-model="dialogConfig" max-width="600">
       <v-card class="pa-3">
         <v-card-title class="justify-center">จัดการสถานะ</v-card-title>
-        <v-text-field
-          :value="editItem.title"
-          disabled
-          filled
-          dense
-          class="ma-3"
-          label="ชื่อหวย"
-        ></v-text-field>
-        <div class="ma-3 d-column">
-          self_status
-          <v-switch
-            v-model="editItem.self_status"
-            hide-details="auto"
-          ></v-switch>
+        <div class="elevation-3 rounded-lg pa-3">
+          <v-text-field
+            :value="editItem.title"
+            disabled
+            filled
+            dense
+            label="ชื่อหวย"
+          ></v-text-field>
+          <div class="mt-2 d-column">
+            self_status
+            <v-switch
+              v-model="editItem.self_status"
+              hide-details="auto"
+            ></v-switch>
+          </div>
         </div>
         <!-- button -->
         <v-card-actions class="justify-center">

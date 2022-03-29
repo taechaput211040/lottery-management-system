@@ -94,9 +94,9 @@
     </div>
     <v-dialog max-width="600px" v-model="updateDiaglog">
       <v-card class="pa-3">
-        <v-card-title>แก้ไขชนิดหวย</v-card-title>
+        <v-card-title class="justify-center font-weight-bold">แก้ไขชนิดหวย</v-card-title>
 
-        <div>
+        <div class="elevation-3 rounded-lg pa-3">
           <v-text-field
             hide-details="auto"
             v-model="form_edit.lottonumbertype_name"
@@ -153,7 +153,7 @@
             dense
           ></v-text-field>
         </div>
-        <v-card-actions>
+        <v-card-actions class="justify-center">
           <v-btn class="success" @click="submitUpdate()">เเก้ไข</v-btn>
           <v-btn class="error" @click="clostupdate()">ยกเลิก</v-btn>
         </v-card-actions>

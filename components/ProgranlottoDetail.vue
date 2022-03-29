@@ -396,7 +396,7 @@ export default {
             await this.deleteLottoNumberType(item.id);
             this.$swal(
               "ลบเรียบร้อย!",
-              "Your file has been deleted.",
+              "ดำเนิการเสร็จสิ้น",
               "success"
             );
             this.$fetch();

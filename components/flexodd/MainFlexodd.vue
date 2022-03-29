@@ -53,6 +53,7 @@
                     dense
                     v-model="formset.profit"
                     hide-details="auto"
+                    @keypress="e => checkpositive(e)"
                     class="mb-2"
                     type="number"
                     :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
@@ -67,6 +68,7 @@
                     dense
                     type="number"
                     v-model="formset.flexodd"
+                    @keypress="e => checkpositive(e)"
                     placeholder="กรอกอัตราน้ำไหลขั้นต่ำ"
                     outlined
                     hide-details="auto"
@@ -168,13 +170,13 @@
       </v-row>
     </div>
 
-    <v-dialog max-width="300px" v-model="dlupdate">
+    <v-dialog max-width="400px" v-model="dlupdate">
       <v-form ref="edtform">
         <v-card class="pa-3">
-          <v-card-title primary-title>
+          <v-card-title primary-title class="justify-center font-weight-bold">
             แก้ไขอัตราน้ำไหลหวย
           </v-card-title>
-          <div>
+          <div class="rounded-lg pa-2 elevation-3">
             <v-text-field
               filled
               label="ชื่อชนิดหวย"
@@ -218,11 +220,11 @@
               v-model="formupdate.maximum_bet_prize"
             ></v-text-field>
           </div>
-          <v-card-actions>
-            <v-btn color="success" @click="submitEdit(formupdate)"
+          <v-card-actions class="justify-center">
+            <v-btn color="success"  @click="submitEdit(formupdate)"
               >ตั้งค่า</v-btn
             >
-            <v-btn color="error" @click="closeEdit()">ยกเลิก</v-btn>
+            <v-btn color="error"  @click="closeEdit()">ยกเลิก</v-btn>
           </v-card-actions>
         </v-card></v-form
       >

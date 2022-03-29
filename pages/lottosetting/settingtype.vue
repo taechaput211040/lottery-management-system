@@ -87,10 +87,10 @@
           ></v-pagination>
         </v-col>
       </v-row>
-      <v-dialog v-model="updateDialog" max-width="290">
-        <v-card class="pa-3">
-          <v-card-title>ตั้งค่าการใช้งาน</v-card-title>
-          <div v-if="updateform.username == $store.state.auth.username">
+      <v-dialog v-model="updateDialog" max-width="300">
+        <v-card class="pa-4">
+          <v-card-title class="justify-center">ตั้งค่าการใช้งาน</v-card-title>
+          <div class="elevation-3 pa-2 rounded-lg" v-if="updateform.username == $store.state.auth.username">
             <v-switch
               label="น้ำไหล"
               v-model="updateform.self_flex"
@@ -102,7 +102,7 @@
               hide-details="auto"
             ></v-switch>
           </div>
-          <div v-else>
+          <div v-else class="elevation-3 pa-2 rounded-lg" >
             <v-switch
               label="น้ำไหล"
               v-model="updateform.upline_flex_odd"
@@ -114,7 +114,7 @@
               hide-details="auto"
             ></v-switch>
           </div>
-          <v-card-actions>
+          <v-card-actions class="justify-center">
             <v-btn color="success" @click="submitsetting(updateform.username)"
               >ยืนยัน</v-btn
             ><v-btn color="error" @click="updateDialog = false">ยกเลิก</v-btn>
@@ -178,7 +178,7 @@ export default {
       }
     },
     openDlupdate(item) {
-      this.updateform = item;
+      this.updateform = Object.assign({}, item);;
       this.updateDialog = true;
     },
     async submitsetting() {

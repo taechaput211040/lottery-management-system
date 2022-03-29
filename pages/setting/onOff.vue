@@ -58,23 +58,26 @@
     <!-- edit modal card-->
     <!-- TODO : change after edit -->
     <!-- TODO : change and cancel button -->
-    <v-dialog v-model="dialogConfig" max-width="600">
+    <v-dialog v-model="dialogConfig" max-width="300">
       <v-card class="pa-3">
-        <v-card-title class="justify-center">จัดการสถานะ</v-card-title>
-        <v-text-field
-          :value="editItem.title"
-          disabled
-          filled
-          dense
-          class="ma-3"
-          label="ชื่อหวย"
-        ></v-text-field>
-        <div class="ma-3 d-column">
-          สถานะ
-          <v-switch
-            v-model="editItem.self_status"
+        <v-card-title class="justify-center font-weight-bold">จัดการสถานะ</v-card-title>
+        <div class="elevation-3 rounded-lg pa-3">
+          <v-text-field
+            :value="editItem.title"
+            disabled
+            filled
             hide-details="auto"
-          ></v-switch>
+            dense
+            
+            label="ชื่อหวย"
+          ></v-text-field>
+          <div class="d-column mt-2">
+            สถานะ
+            <v-switch
+              v-model="editItem.self_status"
+              hide-details="auto"
+            ></v-switch>
+          </div>
         </div>
 
         <!-- button -->
@@ -152,7 +155,7 @@ export default {
   methods: {
     ...mapActions("seller", ["getAllsetting", "changeStaussetting"]),
     async configStatus(item) {
-      this.editItem = item;
+      this.editItem = Object.assign({}, item);
       this.dialogConfig = true;
     },
     async updatesatatus(item) {

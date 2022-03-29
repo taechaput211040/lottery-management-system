@@ -52,15 +52,27 @@
           ></v-pagination>
         </v-col>
       </v-row>
-      <v-dialog v-model="dialogEdit" max-width="290">
+      <v-dialog v-model="dialogEdit" max-width="300">
         <v-card class="pa-3">
-          <v-card-title primary-title>
+          <v-card-title class="justify-center font-weight-bold">
             <h3>จัดการสถานะ</h3>
           </v-card-title>
-          <div class="pa-4 ">
-            สถานะการใช้งาน
-            <v-switch v-model="edititem.status"></v-switch>
+          <div class="elevation-3 rounded-lg pa-3">
+            <v-text-field
+              label="ชื่อชนิดหวย"
+              v-model="edititem.title"
+              disabled
+              dense
+              hide-details="auto"
+              filled
+              outlined
+            ></v-text-field>
+            <div class="mt-3 d-column">
+              สถานะการใช้งาน
+              <v-switch v-model="edititem.status" hide-details="auto"></v-switch>
+            </div>
           </div>
+
           <v-card-actions class="justify-center">
             <v-btn color="success" small @click="confirmToEdit()">ยืนยัน</v-btn>
             <v-btn color="red" dark small @click="dialogEdit = false"
@@ -136,6 +148,7 @@ export default {
       }
     },
     openEdit(item) {
+      this.edititem.title = item.title;
       if (item.self_status == true && item.upline_status == true) {
         this.edititem.status = true;
       } else {
