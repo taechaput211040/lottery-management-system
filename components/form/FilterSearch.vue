@@ -138,7 +138,7 @@ export default {
         { text: "สัปดาห์นี้", value: "week" },
         { text: "วันที่", value: "findate" }
       ],
-      selecttype: "findate",
+      selecttype: "thismounth",
       filter: {
         startDate: undefined,
         endDate: undefined
