@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <div v-if="!isLoading">
       <v-row>
         <v-container>
@@ -178,7 +178,7 @@
         indeterminate
       ></v-progress-circular>
     </div>
-  </v-flex>
+  </div>
 </template>
 
 <script>

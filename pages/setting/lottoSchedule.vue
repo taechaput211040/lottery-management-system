@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <div><h2>รอบหวย</h2></div>
     <div class="d-flex justify-end">
       <h4 v-if="select2Date" class="pr-2 red--text">
@@ -10,16 +10,17 @@
       <h3 class="pa-3">กรอกชื่อหวยที่ต้องการ</h3>
       <v-divider></v-divider>
       <div class="pa-3 d-flex align-center">
-        <v-text-field
-          outlined
-          dense
-          @keyup.enter="searchlotto()"
-          placeholder="กรอกชื่อหวยที่ต้องการจะค้นหา"
-          v-model="title_lotto"
-          class="my-2 col-12 col-sm-6 col-lg-4"
-          hide-details="auto"
-        ></v-text-field
-        ><v-btn color="primary" class="mx-2" @click="searchlotto()"
+        <div class="pa-0 my-2 col-12 col-sm-6 col-lg-4">
+          <v-text-field
+            outlined
+            dense
+            @keyup.enter="searchlotto()"
+            placeholder="กรอกชื่อหวยที่ต้องการจะค้นหา"
+            v-model="title_lotto"
+            hide-details="auto"
+          ></v-text-field>
+        </div>
+        <v-btn color="primary" class="mx-2" @click="searchlotto()"
           ><v-icon left>mdi-magnify</v-icon> ค้นหา</v-btn
         >
       </div>
@@ -160,6 +161,9 @@
               <v-text-field
                 label="ชื่อ"
                 placeholder="กรอกชื่อ"
+                hide-details="auto"
+                dense
+                outlined
                 :value="editing.title"
               ></v-text-field>
             </v-col>
@@ -172,6 +176,9 @@
             <v-col cols="8">
               <v-text-field
                 label="จำนวนรอบ"
+                dense
+                outlined
+                hide-details="auto"
                 :value="editing.lotto_round"
               ></v-text-field>
             </v-col>
@@ -184,10 +191,10 @@
             </v-col>
             <v-col cols="8">
               <el-date-picker
-                style="width:100%"
                 v-model="editing.bet_open_time"
-                type="เวลาที่เปิดแทง"
-                placeholder="Select date and time"
+                type="datetime"
+                placeholder="วัน และ เวลาที่เปิดแทง"
+                style="width:100%"
               >
               </el-date-picker>
             </v-col>
@@ -199,10 +206,10 @@
             </v-col>
             <v-col cols="8">
               <el-date-picker
+                type="datetime"
                 style="width:100%"
                 v-model="editing.bet_close_time"
-                type="เวลาที่ปิดแทง"
-                placeholder="Select date and time"
+                placeholder="เลือกวัน และ เวลาที่ปิดแทง"
               >
               </el-date-picker>
             </v-col>
@@ -214,10 +221,10 @@
             </v-col>
             <v-col cols="8">
               <el-date-picker
+                type="datetime"
                 style="width:100%"
                 v-model="editing.bet_lotto_time"
-                type="เวลาที่หวยออก"
-                placeholder="Select date and time"
+                placeholder="เลือก วัน และ เวลาที่หวยออก"
               >
               </el-date-picker>
             </v-col>
@@ -246,7 +253,7 @@
 
       <!-- button -->
     </v-dialog>
-  </v-flex>
+  </div>
 </template>
 
 <script>
@@ -254,6 +261,9 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      menu: false,
+      menu2: false,
+      menu3: false,
       title_lotto: undefined,
       isLoading: true,
       pageSizes: [5, 10, 15, 25],

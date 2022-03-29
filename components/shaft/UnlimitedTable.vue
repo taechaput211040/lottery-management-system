@@ -5,7 +5,7 @@
         >ย้อนกลับ</v-btn
       >
       <h3 class="font-weight-bold my-4">
-        <span class="purple--text "> {{ this.$route.query.title }}</span> :
+        <span class="purple--text ">{{ this.$route.query.title }}</span> :
         <span class="error--text ">{{ this.$route.query.typename }}</span>
       </h3>
       <v-spacer></v-spacer>
@@ -22,14 +22,31 @@
         :loading="isLoading"
         :items="datarender"
       >
-       <template #[`item.no`]="{index}">
+        <template #[`item.no`]="{index}">
           {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
 
         <template #[`item.action`]="{item}">
-          <v-btn rounded color="black" dark small @click="openEdit(item)"
-            ><v-icon left>mdi-cog</v-icon> ตั้งค่า
-          </v-btn>
+          <div class="d-flex justify-center">
+            <v-btn
+              rounded
+              color="black"
+              class="mx-1"
+              dark
+              small
+              @click="openEdit(item)"
+              ><v-icon left>mdi-cog</v-icon> ตั้งค่า
+            </v-btn>
+            <v-btn
+              rounded
+              color="error"
+              class="mx-1"
+              dark
+              small
+              @click="deletenumber(item)"
+              ><v-icon left>mdi-delete</v-icon> ลบ
+            </v-btn>
+          </div>
         </template>
       </v-data-table>
       <v-row align="baseline" class="ma-3 ">
@@ -186,7 +203,11 @@
             <v-btn small rounded color="success" @click="submitUpdate()"
               >แก้ไขเลขอั้น</v-btn
             >
-            <v-btn small rounded color="error" @click="closeEdit()"
+            <v-btn
+              small
+              rounded
+              color="error"
+              @click="editlimitedDialog = false"
               >ยกเลิก</v-btn
             >
           </v-card-actions>
@@ -281,7 +302,8 @@ export default {
           text: "ดำเนินการ",
           value: "action",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
+          width: "200"
         }
       ],
       datarender: [],
@@ -295,16 +317,43 @@ export default {
   async fetch() {
     this.getSelfeData();
   },
-  watch: {
-    // addlimitedDialog(newVal, oldVal) {
-    //   if (newVal) {
-    //     this.inputformlimit = [
-    //       { lottonumber_name: "", out_come_rate: "", self_receive_amount: "" }
-    //     ];
-    //   }
-    // }
-  },
   methods: {
+    async deletenumber(item) {
+      console.log(item);
+
+      try {
+        this.$swal({
+          title: "แน่ใจหรือไม่ว่าต้องการลบ?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ลบ",
+          cancelButtonText: "ยกเลิก"
+        }).then(async result => {
+          if (result.isConfirmed) {
+            await this.$axios.delete(
+              "https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/delete_limited_number/",
+              {
+                data: {
+                  typecategory_id: this.$route.query.id,
+                  lottonumbertype_id: this.$route.query.lottonumbertype_id,
+                  lotto_number: item.lotto_number
+                }
+              }
+            );
+            this.$swal(
+              "ลบเรียบร้อย!",
+              "Your file has been deleted.",
+              "success"
+            );
+            this.$fetch();
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     closeEdit() {
       this.editlimitedDialog = false;
       this.$fetch();
@@ -322,7 +371,8 @@ export default {
     ...mapActions("shaft", [
       "getAllsettingseller",
       "getAllunlimited",
-      "Addlimited"
+      "Addlimited",
+      "deleteLimitnumber"
     ]),
     async getSelfeData() {
       this.isLoading = true;
@@ -405,7 +455,7 @@ export default {
     },
     openEdit(item) {
       console.log(item);
-      this.form = item;
+      this.form = Object.assign({}, item);
       this.editlimitedDialog = true;
     },
     rangeInput(self, itemmodel) {

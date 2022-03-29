@@ -17,7 +17,12 @@
         >
       </div>
 
-      <v-data-table :headers="headers" :items="itemDetail">
+      <v-data-table
+        :headers="headers"
+        :items="itemDetail"
+        :options.sync="option"
+        hide-default-footer
+      >
         <template #[`item.created_at`]="{item}">
           {{ dateformat(item.created_at) }}
         </template>
@@ -60,6 +65,25 @@
           </v-btn>
         </template>
       </v-data-table>
+      <v-row align="baseline" class="ma-3 ">
+        <v-col cols="12" sm="2" lg="1">
+          <v-select
+            outlined
+            hide-details="auto "
+            dense
+            v-model="option.itemsPerPage"
+            :items="pageSizes"
+            label="รายการต่อนหน้า"
+          ></v-select>
+        </v-col>
+        <v-col cols="12" sm="10" lg="11">
+          <v-pagination
+            v-model="option.page"
+            :total-visible="7"
+            :length="Math.ceil(itemDetail.length / option.itemsPerPage)"
+          ></v-pagination>
+        </v-col>
+      </v-row>
       <v-dialog full-width v-model="modaladdType" max-width="600">
         <v-form v-model="valid" ref="formnumber">
           <v-card class="pa-5">
@@ -72,25 +96,21 @@
               :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
               class="my-2"
               required
+              text
+              item-text="name"
+              item-value="id"
               :items="itemSelecttype"
-              v-model="formNumber.name"
+              v-model="formNumber.id"
               label="กรอกชื่อตัวเลข"
               hide-details="auto"
             ></v-select>
             <v-text-field
               dense
-              outlined
-              v-model="formNumber.number"
-              required
-              class="my-2"
-              :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
-              label="จำนวนตัวเลข"
-              hide-details="auto"
-            ></v-text-field>
-            <v-text-field
-              dense
+              :disabled="!formNumber.id"
               v-model="formNumber.amount_reward"
               required
+              type="number"
+              @keypress="e => checkpositive(e)"
               outlined
               :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
               class="my-2"
@@ -122,16 +142,7 @@
               label="กรอกชื่อตัวเลข"
               hide-details="auto"
             ></v-text-field>
-            <v-text-field
-              dense
-              outlined
-              v-model="editform.number"
-              required
-              :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
-              class="my-2"
-              label="จำนวนตัวเลข"
-              hide-details="auto"
-            ></v-text-field>
+
             <v-text-field
               dense
               v-model="editform.amount_reward"
@@ -139,6 +150,8 @@
               :rules="[v => !!v || 'กรุณากรอกรายละเอียดให้ครบถ้วน']"
               outlined
               class="my-2"
+              @keypress="e => checkpositive(e)"
+              type="number"
               label="จำนวนรางวัล"
               hide-details="auto"
             ></v-text-field>
@@ -161,9 +174,7 @@
             <v-card-actions class="justify-center">
               <v-btn color="success" @click="confirmEdit(editform)" small
                 >แก้ไขตัวเลข</v-btn
-              ><v-btn color="error" small @click="modlEdit = false"
-                >ยกเลิก</v-btn
-              >
+              ><v-btn color="error" small @click="closeEdit()">ยกเลิก</v-btn>
             </v-card-actions>
           </v-card></v-form
         >
@@ -177,21 +188,13 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      option: {},
+      pageSizes: [5, 10, 15, 25],
       validform: false,
       valid: false,
-      itemSelecttype: [
-        "3 ตัวบน",
-        "3 ตัวหน้า",
-        "3 ตัวล่าง",
-        "3 ตัวโต๊ด",
-        "2 ตัวบน",
-        "2 ตัวล่าง",
-        "วิ่งล่าง",
-        "วิ่งบน"
-      ],
+      itemSelecttype: null,
       formNumber: {
-        name: "",
-        number: "",
+        id: "",
         amount_reward: ""
       },
       editform: {
@@ -207,7 +210,7 @@ export default {
         sortBy: "desc",
         descending: false,
         page: 1,
-        rowsPerPage: 15,
+        rowsPerPage: 50,
         rowsNumber: 0
       },
       itemDetail: [],
@@ -274,8 +277,12 @@ export default {
       };
       const response = await this.getLottoNumberType(params);
       this.itemDetail = response.result[0].typecategory_id.data;
+      if (!this.itemDetail) {
+        this.itemDetail = [];
+      }
       this.modaladdType = false;
     } catch (error) {
+      this.itemDetail = [];
       console.log(error);
       this.modaladdType = false;
     }
@@ -286,13 +293,22 @@ export default {
       "createLottoNumberType",
       "updateLottoNumberTypeByid",
       "deleteLottoNumberType",
-      "closeLottoNumberType"
+      "closeLottoNumberType",
+      "getTypeDefult"
     ]),
     closeCreate() {
       this.$refs.formnumber.reset();
       this.modaladdType = false;
     },
-    opencreatetype() {
+    async opencreatetype() {
+      try {
+        this.formNumber = {};
+        let { result } = await this.getTypeDefult();
+        console.log(result);
+        this.itemSelecttype = result;
+      } catch (error) {
+        console.log(error);
+      }
       this.modaladdType = true;
     },
 
@@ -301,7 +317,23 @@ export default {
     },
     edititem(item) {
       this.modlEdit = true;
-      this.editform = item;
+      this.editform = Object.assign({}, item);
+    },
+    checkpositive(evt) {
+      evt = evt ? evt : window.event;
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    closeEdit() {
+      this.modlEdit = false;
     },
     async confirmCreate() {
       if (this.$refs.formnumber.validate()) {
@@ -310,8 +342,7 @@ export default {
             typecategory_id: this.$route.query.id,
             lottonumbertype: [
               {
-                name: this.formNumber.name,
-                number: this.formNumber.number,
+                lottonumbertype_default_id: this.formNumber.id,
                 amount_reward: this.formNumber.amount_reward
               }
             ]
@@ -332,9 +363,9 @@ export default {
         try {
           let body = {
             id: item.id,
+            lottonumbertype_default_id: item.lottonumbertype_default_id,
             typecategory_id: this.$route.query.id,
-            name: item.name,
-            number: item.number,
+
             status: item.status,
             amount_reward: item.amount_reward
           };
@@ -358,7 +389,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ลบ"
+          confirmButtonText: "ลบ",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteLottoNumberType(item.id);
@@ -367,8 +399,6 @@ export default {
               "Your file has been deleted.",
               "success"
             );
-            this.$fetch();
-          } else {
             this.$fetch();
           }
         });
@@ -396,9 +426,7 @@ export default {
               timer: 1500
             });
             this.$fetch();
-          } else {
-            this.$fetch();
-          }
+          } 
         });
       } catch (error) {
         console.log(error);

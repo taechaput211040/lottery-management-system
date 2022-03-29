@@ -1,755 +1,775 @@
 <template>
-  <v-flex>
-    <v-row>
-      <v-container>
-        <div v-if="!this.$route.query.id">
-          <h1 class="mt-2">รายชื่อโปรแกรมหวย</h1>
-          <div class="ma-2  white rounded-lg">
-            <v-row class="select-item pa-3 ">
-              <div class="col-12">
-                <v-text-field
-                  dense
-                  solo-inverted
-                  v-model="title_search"
-                  label="กรอกชื่อโปรเเกรมหวย"
-                  hide-details="auto"
-                  @keyup.enter="searchlotto()"
-                  required
-                  class="col-12 col-md-6 "
-                  ><v-btn
-                    slot="append"
-                    color="success"
-                    @click="searchlotto()"
-                    fab
-                    dark
-                    x-small
-                  >
-                    <v-icon>mdi-magnify</v-icon></v-btn
-                  ></v-text-field
-                >
-              </div>
-
-              <div class="col-12 col-sm-6 ">
-                <h4>
-                  จำนวนทั้งหมด
-                  <span class="purple--text font-weight-bold">{{
-                    pagination.rowsNumber
-                  }}</span>
-                  โปรเเกรมหวย
-                </h4>
-              </div>
-              <div class="col-12 col-sm-6 text-sm-right  ">
-                <v-btn
-                  color="primary"
-                  class="mx-2 px-2"
-                  rounded
+  <div>
+    <div v-if="!this.$route.query.id">
+      <h1 class="mt-2">รายชื่อโปรแกรมหวย</h1>
+      <div class="ma-2  white rounded-lg">
+        <v-row class="select-item pa-3 ">
+          <div class="col-12">
+            <div class="col-12 col-md-6 col-lg-4  pa-0">
+              <v-text-field
+                dense
+                solo-inverted
+                v-model="title_search"
+                label="กรอกชื่อโปรเเกรมหวย"
+                hide-details="auto"
+                @keyup.enter="searchlotto()"
+                required
+                ><v-btn
+                  slot="append"
+                  color="success"
+                  @click="searchlotto()"
+                  fab
                   dark
-                  @click="modal_add = true"
+                  x-small
                 >
-                  <v-icon>mdi-plus</v-icon>สร้างโปรแกรมหวย</v-btn
-                >
-              </div>
-            </v-row>
-            <v-card class="mx-auto  justify-center classtable">
-              <v-data-table
-                :server-items-length="pagination.rowsNumber"
-                :items-per-page.sync="pagination.rowsPerPage"
-                :page.sync="pagination.page"
-                :headers="headers"
-                :items="itemexample"
-                :options.sync="options"
-                hide-default-footer
-                :loading="isLoading"
-              >
-                <template #[`item.no`]="{index}">
-                  {{
-                    pagination.rowsPerPage * (pagination.page - 1) + (index + 1)
-                  }}
-                </template>
-                <template #[`item.action`]="{item}">
-                  <v-tooltip bottom color="black">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        @click="showdetail(item)"
-                        v-bind="attrs"
-                        v-on="on"
-                        color="black"
-                        x-small
-                        outlined
-                        icon
-                        fab
-                        ><v-icon dark>
-                          mdi-dots-horizontal
-                        </v-icon>
-                      </v-btn></template
-                    >
-                    <span>ดูชนิดของหวย</span>
-                  </v-tooltip>
-                  <v-tooltip bottom color="warning">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        v-bind="attrs"
-                        v-on="on"
-                        color="warning"
-                        x-small
-                        outlined
-                        @click="editProgramlotto(item)"
-                        icon
-                        fab
-                        ><v-icon dark>
-                          mdi-pencil
-                        </v-icon>
-                      </v-btn></template
-                    >
-                    <span>แก้ไขโปรเเกรมหวย</span>
-                  </v-tooltip>
-                  <v-tooltip bottom color="red">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        v-bind="attrs"
-                        v-on="on"
-                        color="red"
-                        x-small
-                        outlined
-                        icon
-                        fab
-                        @click="deleteProgramlotto(item)"
-                        ><v-icon dark>
-                          mdi-delete
-                        </v-icon>
-                      </v-btn></template
-                    >
-                    <span>ลบโปรเเกรมหวย</span>
-                  </v-tooltip>
-                  <v-tooltip bottom color="black">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        v-bind="attrs"
-                        v-on="on"
-                        color="black"
-                        x-small
-                        outlined
-                        icon
-                        fab
-                        @click="closeNumbertype(item)"
-                        ><v-icon dark>
-                          mdi-lock
-                        </v-icon>
-                      </v-btn></template
-                    >
-                    <span>ปิดโปรเเกรมหวย</span>
-                  </v-tooltip>
-                </template>
-                <template #[`item.type`]="{item}">
-                  <span v-if="item.TypeCategory_Id">{{
-                    item.TypeCategory_Id.LottoType_Id.title
-                  }}</span>
-                </template>
-                <template #[`item.status`]="{item}">
-                  <v-chip color="success" v-if="item.status == 1" dark small>
-                    <v-icon left small>mdi-circle-medium</v-icon>เปิดใช้งาน
-                  </v-chip>
-                  <v-chip v-else color="error" dark small>
-                    <v-icon left small>mdi-circle-medium</v-icon>ปิดใช้งาน
-                  </v-chip>
-                </template>
-                <template #[`item.permaxbet`]="{item}">
-                  {{ item.permaxbet }} %
-                </template></v-data-table
-              >
-            </v-card>
-            <v-row align="baseline" class="ma-3 ">
-              <v-col cols="12" sm="2" lg="1">
-                <v-select
-                  dense
-                  outlined
-                  v-model="pagination.rowsPerPage"
-                  :items="pageSizes"
-                  @change="handlePageSizeChange"
-                  label="รายการต่อหน้า"
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="10" lg="11">
-                <v-pagination
-                  v-model="pagination.page"
-                  :total-visible="7"
-                  :length="
-                    Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
-                  "
-                ></v-pagination>
-              </v-col>
-            </v-row>
-          </div>
-        </div>
-
-        <div v-else>
-          <progranlotto-detail></progranlotto-detail>
-        </div>
-        <!-- modaladd  -->
-        <v-dialog full-width v-model="modal_add" max-width="800" persistent>
-          <v-card class="pa-4">
-            <v-card-title><h3>เพิ่มโปรเเกรมหวย</h3></v-card-title>
-            <v-card class="pa-2">
-              <v-form ref="form" v-model="validForm">
-                <v-select
-                  v-model="selecttype"
-                  :items="typeList"
-                  item-text="title"
-                  item-value="id"
-                  :rules="formRules.selecttype"
-                  @change="rendertypecate"
-                  label="ประเภทหวย"
-                  outlined
-                  class="col-12 col-md-6 col-lg-4"
-                  dense
-                  hide-details="auto"
-                ></v-select>
-                <v-select
-                  @change="selectTitle(typeCateList, form.title)"
-                  v-model="form.title"
-                  :disabled="form.selecttype == ''"
-                  :items="typeCateList"
-                  :rules="formRules.title"
-                  item-text="title"
-                  item-value="title"
-                  label=""
-                  outlined
-                  class="col-12 col-md-6 col-lg-4 my-1"
-                  dense
-                  placeholder="ชื่อหวย"
-                  hide-details="auto"
-                ></v-select>
-                <div class="align-baseline align-center my-4 pb-3">
-                  <v-row class="ma-3">
-                    <v-col cols="6" class="pa-0 align-baseline"
-                      >วันที่เปิดรับ
-                      <v-text-field
-                        dense
-                        :rules="formRules.open_day"
-                        placeholder="กรุณากรอกวันที่เปิดรับ"
-                        hide-details="auto"
-                        outlined
-                        required
-                        type="number"
-                        class=" col-12 col-sm-6"
-                        v-model="form.open_day"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="6" class="pa-0"
-                      ><div>เวลาเปิดรับ</div>
-                      <el-time-select
-                        :picker-options="{
-                          start: '00:00',
-                          step: '00:15',
-                          end: '23:59'
-                        }"
-                        class=""
-                        :rules="formRules.open_time"
-                        format="HH:mm"
-                        arrow-control
-                        placeholder="เวลาเปิดรับ"
-                        v-model="form.open_time"
-                      >
-                      </el-time-select>
-                    </v-col>
-                    <v-col cols="6" class="pa-0  align-baseline"
-                      >วันที่ปิดรับ
-                      <v-text-field
-                        dense
-                        required
-                        outlined
-                        :rules="formRules.close_day"
-                        placeholder="กรุณากรอกวันที่ปิดรับ"
-                        hide-details="auto"
-                        class=" col-12 col-sm-6"
-                        type="number"
-                        v-model="form.close_day"
-                      ></v-text-field
-                    ></v-col>
-                    <v-col cols="6" class="pa-0"
-                      ><div>เวลาปิดรับ</div>
-                      <el-time-select
-                        class=""
-                        :rules="formRules.close_time"
-                        format="HH:mm"
-                        :picker-options="{
-                          start: '00:00',
-                          step: '00:15',
-                          end: '23:59'
-                        }"
-                        arrow-control
-                        placeholder="เวลาปิดรับ"
-                        v-model="form.close_time"
-                      >
-                      </el-time-select>
-                    </v-col>
-                    <v-col cols="6" class="pa-0  align-baseline"
-                      >วันที่ออกผล
-                      <v-text-field
-                        dense
-                        outlined
-                        required
-                        :rules="formRules.lotto_day"
-                        placeholder="กรุณากรอกวันที่ออกผล"
-                        hide-details="auto"
-                        class=" col-12 col-sm-6"
-                        type="number"
-                        v-model="form.lotto_day"
-                      ></v-text-field
-                    ></v-col>
-                    <v-col cols="6" class="pa-0"
-                      ><div>เวลาออกผล</div>
-                      <el-time-select
-                        :picker-options="{
-                          start: '00:00',
-                          step: '00:15',
-                          end: '23:59'
-                        }"
-                        class=""
-                        format="HH:mm"
-                        :rules="formRules.lotto_time"
-                        arrow-control
-                        placeholder="เวลาออกผล"
-                        v-model="form.lotto_time"
-                      >
-                      </el-time-select>
-                    </v-col>
-                  </v-row>
-                  <div class="d-flex align-baseline">
-                    รอบที่ออกผล :
-                    <v-text-field
-                      class="col-auto col-md-6 col-lg-4 mx-2"
-                      dense
-                      label="รอบที่ออกผล"
-                      outlined
-                      :rules="formRules.lotto_round"
-                      v-model="form.lotto_round"
-                    ></v-text-field>
-                  </div>
-                  <span class="font-weight-bold primary--text">ออกผลเเบบ</span>
-                  <v-radio-group
-                    row
-                    hide-details="auto"
-                    class="mb-2"
-                    v-model="form.plan_type"
-                  >
-                    <v-radio label="รายเดือน" :value="0"></v-radio>
-                    <v-radio label="รายวัน" :value="1"></v-radio>
-                  </v-radio-group>
-                  <div class="row">
-                    <div class="col-12 col-md-8" v-if="form.plan_type == 0">
-                      <span class="primary--text font-weight-bold"
-                        >เดือนที่ออกผล</span
-                      >
-                      <div class="row">
-                        <div class="col-6">
-                          <v-checkbox
-                            hide-details="auto"
-                            v-model="form.jan"
-                            label="มกราคม"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="กุมภาพันธ์"
-                            v-model="form.feb"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="มีนาคม"
-                            v-model="form.mar"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="เมษายน"
-                            v-model="form.apr"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="พฤษภาคม"
-                            v-model="form.may"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="มิถุนายน"
-                            v-model="form.jun"
-                            hide-details="auto"
-                          ></v-checkbox>
-                        </div>
-                        <div class="col-6">
-                          <v-checkbox
-                            label="กรกฎาคม"
-                            v-model="form.jul"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="สิงหาคม"
-                            v-model="form.aug"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="กันยายน"
-                            v-model="form.sep"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="ตุลาคม"
-                            v-model="form.oct"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="พฤศจิกายน"
-                            v-model="form.nov"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="ธันวาคม"
-                            v-model="form.dec"
-                            hide-details="auto"
-                          ></v-checkbox>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-12 col-md-6" v-if="form.plan_type == 1">
-                      <span class="purple--text font-weight-bold"
-                        >วันที่ออกผล</span
-                      >
-                      <v-checkbox
-                        hide-details="auto"
-                        v-model="form.monday"
-                        label="วันจันทร์"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="form.tuesday"
-                        label="วันอังคาร"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="form.wednesday"
-                        label="วันพุธ"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="form.thursday"
-                        label="วันพฤหัสบดี"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="form.friday"
-                        label="วันศุกร์"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="form.saturday"
-                        label="วันเสาร์"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="form.sunday"
-                        label="วันอาทิตย์"
-                        hide-details="auto"
-                      ></v-checkbox>
-                    </div>
-                  </div>
-                </div>
-                <v-btn color="success" @click="submitForm()">สร้าง</v-btn>
-                <v-btn color="error" @click="closeForm()">ยกเลิก</v-btn>
-              </v-form>
-
-              <!-- detail  -->
-            </v-card>
-          </v-card>
-        </v-dialog>
-        <!-- modaladd  -->
-        <!-- modaledit  -->
-        <v-dialog full-width v-model="modaledit" max-width="800" persistent>
-          <v-card class="pa-4">
-            <v-card-title><h3>แก้ไขโปรเเกรมหวย</h3></v-card-title>
-            <v-card class="pa-2">
-              <v-form>
-                <v-text-field
-                  v-model="Editform.title"
-                  label=""
-                  outlined
-                  class="col-12 col-md-6 col-lg-4 my-1"
-                  dense
-                  placeholder="ชื่อหวย"
-                  hide-details="auto"
-                ></v-text-field>
-                <div
-                  class=" d-flex align-baseline mt-3 white rounded-lg elevation-3 col-12 col-md-4 col-lg-4 text-center"
-                >
-                  <v-switch
-                    v-model="Editform.status"
-                    :true-value="1"
-                    :false-value="0"
-                  ></v-switch>
-                  สถานะ:
-                  <span
-                    class="success--text font-weight-bold"
-                    v-if="Editform.status == 1"
-                    >เปิดใช้งาน</span
-                  ><span class="error--text font-weight-bold" v-else
-                    >ปิดใช้งาน</span
-                  >
-                </div>
-                <div class="align-baseline align-center my-2">
-                  <v-row class="ma-3">
-                    <v-col cols="6" class="pa-0 align-baseline"
-                      >วันที่เปิดรับ
-                      <v-text-field
-                        dense
-                        placeholder="กรุณากรอกวันที่เปิดรับ"
-                        hide-details="auto"
-                        outlined
-                        required
-                        type="number"
-                        class=" col-12 col-sm-6"
-                        v-model="Editform.open_day"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="6" class="pa-0"
-                      ><div>เวลาเปิดรับ</div>
-                      <el-time-select
-                        :picker-options="{
-                          start: '00:00',
-                          step: '00:15',
-                          end: '23:59'
-                        }"
-                        class=""
-                        format="HH:mm"
-                        arrow-control
-                        placeholder="เวลาเปิดรับ"
-                        v-model="Editform.open_time"
-                      >
-                      </el-time-select>
-                    </v-col>
-                    <v-col cols="6" class="pa-0  align-baseline"
-                      >วันที่ปิดรับ
-                      <v-text-field
-                        dense
-                        required
-                        outlined
-                        placeholder="กรุณากรอกวันที่ปิดรับ"
-                        hide-details="auto"
-                        class=" col-12 col-sm-6"
-                        type="number"
-                        v-model="Editform.close_day"
-                      ></v-text-field
-                    ></v-col>
-                    <v-col cols="6" class="pa-0"
-                      ><div>เวลาปิดรับ</div>
-                      <el-time-select
-                        class=""
-                        format="HH:mm"
-                        :picker-options="{
-                          start: '00:00',
-                          step: '00:15',
-                          end: '23:59'
-                        }"
-                        arrow-control
-                        placeholder="เวลาปิดรับ"
-                        v-model="Editform.close_time"
-                      >
-                      </el-time-select>
-                    </v-col>
-                    <v-col cols="6" class="pa-0  align-baseline"
-                      >วันที่ออกผล
-                      <v-text-field
-                        dense
-                        outlined
-                        required
-                        placeholder="กรุณากรอกวันที่ออกผล"
-                        hide-details="auto"
-                        class=" col-12 col-sm-6"
-                        type="number"
-                        v-model="Editform.lotto_day"
-                      ></v-text-field
-                    ></v-col>
-                    <v-col cols="6" class="pa-0"
-                      ><div>เวลาออกผล</div>
-                      <el-time-select
-                        :picker-options="{
-                          start: '00:00',
-                          step: '00:15',
-                          end: '23:59'
-                        }"
-                        class=""
-                        format="HH:mm"
-                        arrow-control
-                        placeholder="เวลาออกผล"
-                        v-model="Editform.lotto_time"
-                      >
-                      </el-time-select>
-                    </v-col>
-                  </v-row>
-                  <div class="d-flex align-baseline">
-                    รอบที่ออกผล :
-                    <v-text-field
-                      class="col-auto col-md-6 col-lg-4 mx-2"
-                      dense
-                      label="รอบที่ออกผล"
-                      outlined
-                      v-model="Editform.lotto_round"
-                    ></v-text-field>
-                  </div>
-                  <span class="font-weight-bold primary--text">ออกผลเเบบ</span>
-                  <v-radio-group
-                    row
-                    hide-details="auto"
-                    class="mb-2"
-                    v-model="Editform.plan_type"
-                  >
-                    <v-radio label="รายเดือน" :value="0"></v-radio>
-                    <v-radio label="รายวัน" :value="1"></v-radio>
-                  </v-radio-group>
-                  <div class="row">
-                    <div class="col-12 col-md-8" v-if="Editform.plan_type == 0">
-                      <span class="primary--text font-weight-bold"
-                        >เดือนที่ออกผล</span
-                      >
-                      <div class="row">
-                        <div class="col-6">
-                          <v-checkbox
-                            hide-details="auto"
-                            v-model="Editform.jan"
-                            label="มกราคม"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="กุมภาพันธ์"
-                            v-model="Editform.feb"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="มีนาคม"
-                            v-model="Editform.mar"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="เมษายน"
-                            v-model="Editform.apr"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="พฤษภาคม"
-                            v-model="Editform.may"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="มิถุนายน"
-                            v-model="Editform.jun"
-                            hide-details="auto"
-                          ></v-checkbox>
-                        </div>
-                        <div class="col-6">
-                          <v-checkbox
-                            label="กรกฎาคม"
-                            v-model="Editform.jul"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="สิงหาคม"
-                            v-model="Editform.aug"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="กันยายน"
-                            v-model="Editform.sep"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="ตุลาคม"
-                            v-model="Editform.oct"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="พฤศจิกายน"
-                            v-model="Editform.nov"
-                            hide-details="auto"
-                          ></v-checkbox>
-                          <v-checkbox
-                            label="ธันวาคม"
-                            v-model="Editform.dec"
-                            hide-details="auto"
-                          ></v-checkbox>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-12 col-md-6" v-if="Editform.plan_type == 1">
-                      <span class="purple--text font-weight-bold"
-                        >วันที่ออกผล</span
-                      >
-                      <v-checkbox
-                        hide-details="auto"
-                        v-model="Editform.monday"
-                        label="วันจันทร์"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="Editform.tuesday"
-                        label="วันอังคาร"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="Editform.wednesday"
-                        label="วันพุธ"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="Editform.thursday"
-                        label="วันพฤหัสบดี"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="Editform.friday"
-                        label="วันศุกร์"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="Editform.saturday"
-                        label="วันเสาร์"
-                        hide-details="auto"
-                      ></v-checkbox>
-                      <v-checkbox
-                        v-model="Editform.sunday"
-                        label="วันอาทิตย์"
-                        hide-details="auto"
-                      ></v-checkbox>
-                    </div>
-                  </div>
-                </div>
-                <v-btn color="success" @click="EditForm()">แก้ไข</v-btn>
-                <v-btn color="error" @click="modaledit = false">ยกเลิก</v-btn>
-              </v-form>
-
-              <!-- detail  -->
-            </v-card>
-          </v-card>
-        </v-dialog>
-        <!-- modaledit  -->
-        <!-- dllisttype -->
-        <v-dialog max-width="600"
-          ><div>
-            <div class="d-flex">
-              รายละเอียดตัวเลข / หวยไทย <v-spacer></v-spacer
-              ><v-btn color="primary" rounded small @click="createNumprize()"
-                ><v-icon>mdi-plus</v-icon>เพิ่มตัวเลข</v-btn
+                  <v-icon>mdi-magnify</v-icon></v-btn
+                ></v-text-field
               >
             </div>
+          </div>
 
-            <v-data-table
-              :header="headerGenlotto"
-              class="elevation-2 rounded-lg my-5"
-            ></v-data-table></div
-        ></v-dialog>
-        <v-dialog full-width v-model="dlcreateNum" max-width="600">
-          <v-card class="pa-4">
-            <v-card-title><h4>สร้างตัวเลข</h4></v-card-title>
-            <div>ชื่อหวย</div>
-            <div>จำนวนตัวเลข</div>
-            <div>จำนวนรางวัล</div>
-          </v-card>
-        </v-dialog>
-      </v-container>
-    </v-row>
-  </v-flex>
+          <div class="col-12 col-sm-6 ">
+            <h4>
+              จำนวนทั้งหมด
+              <span class="purple--text font-weight-bold">{{
+                pagination.rowsNumber
+              }}</span>
+              โปรเเกรมหวย
+            </h4>
+          </div>
+          <div class="col-12 col-sm-6 text-sm-right  ">
+            <v-btn
+              color="primary"
+              class="mx-2 px-2"
+              rounded
+              dark
+              @click="modal_add = true"
+            >
+              <v-icon>mdi-plus</v-icon>สร้างโปรแกรมหวย</v-btn
+            >
+          </div>
+        </v-row>
+        <v-card class="mx-auto  justify-center classtable">
+          <v-data-table
+            :server-items-length="pagination.rowsNumber"
+            :items-per-page.sync="pagination.rowsPerPage"
+            :page.sync="pagination.page"
+            :headers="headers"
+            :items="itemexample"
+            :options.sync="options"
+            hide-default-footer
+            :loading="isLoading"
+          >
+            <template #[`item.no`]="{index}">
+              {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
+            </template>
+            <template #[`item.action`]="{item}">
+              <v-tooltip bottom color="black">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    @click="showdetail(item)"
+                    v-bind="attrs"
+                    v-on="on"
+                    color="black"
+                    x-small
+                    outlined
+                    icon
+                    fab
+                    ><v-icon dark>
+                      mdi-dots-horizontal
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ดูชนิดของหวย</span>
+              </v-tooltip>
+              <v-tooltip bottom color="warning">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    color="warning"
+                    x-small
+                    outlined
+                    @click="editProgramlotto(item)"
+                    icon
+                    fab
+                    ><v-icon dark>
+                      mdi-pencil
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>แก้ไขโปรเเกรมหวย</span>
+              </v-tooltip>
+              <v-tooltip bottom color="red">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    color="red"
+                    x-small
+                    outlined
+                    icon
+                    fab
+                    @click="deleteProgramlotto(item)"
+                    ><v-icon dark>
+                      mdi-delete
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ลบโปรเเกรมหวย</span>
+              </v-tooltip>
+              <v-tooltip bottom color="black">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    color="black"
+                    x-small
+                    outlined
+                    icon
+                    fab
+                    @click="closeNumbertype(item)"
+                    ><v-icon dark>
+                      mdi-lock
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ปิดโปรเเกรมหวย</span>
+              </v-tooltip>
+            </template>
+            <template #[`item.type`]="{item}">
+              <span v-if="item.TypeCategory_Id">{{
+                item.TypeCategory_Id.LottoType_Id.title
+              }}</span>
+            </template>
+            <template #[`item.status`]="{item}">
+              <v-chip color="success" v-if="item.status == 1" dark small>
+                <v-icon left small>mdi-circle-medium</v-icon>เปิดใช้งาน
+              </v-chip>
+              <v-chip v-else color="error" dark small>
+                <v-icon left small>mdi-circle-medium</v-icon>ปิดใช้งาน
+              </v-chip>
+            </template>
+            <template #[`item.permaxbet`]="{item}">
+              {{ item.permaxbet }} %
+            </template></v-data-table
+          >
+        </v-card>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="1">
+            <v-select
+              dense
+              outlined
+              v-model="pagination.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChange"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="11">
+            <v-pagination
+              v-model="pagination.page"
+              :total-visible="7"
+              :length="
+                Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+              "
+            ></v-pagination>
+          </v-col>
+        </v-row>
+      </div>
+    </div>
+
+    <div v-else>
+      <progranlotto-detail></progranlotto-detail>
+    </div>
+    <!-- modaladd  -->
+    <v-dialog full-width v-model="modal_add" max-width="800" persistent>
+      <v-card class="pa-4">
+        <v-card-title><h3>เพิ่มโปรเเกรมหวย</h3></v-card-title>
+        <v-card class="pa-2">
+          <v-form ref="form" v-model="validForm">
+            <div class="col-12 col-md-6 col-lg-4 pa-1">
+              <v-select
+                v-model="selecttype"
+                :items="typeList"
+                item-text="title"
+                item-value="id"
+                :rules="formRules.selecttype"
+                @change="rendertypecate"
+                label="ประเภทหวย"
+                outlined
+                dense
+                hide-details="auto"
+              ></v-select>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4  pa-1">
+              <v-select
+                @change="selectTitle(typeCateList, form.title)"
+                v-model="form.title"
+                :disabled="form.selecttype == ''"
+                :items="typeCateList"
+                :rules="formRules.title"
+                item-text="title"
+                item-value="title"
+                label=""
+                outlined
+                dense
+                placeholder="ชื่อหวย"
+                hide-details="auto"
+              ></v-select>
+            </div>
+
+            <div class="align-baseline align-center  mb-3">
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  class="align-baseline"
+                  v-if="form.plan_type == 0"
+                  >วันที่เปิดรับ
+                  <v-text-field
+                    dense
+                    :rules="formRules.open_day"
+                    placeholder="กรุณากรอกวันที่เปิดรับ"
+                    hide-details="auto"
+                    outlined
+                    required
+                    type="number"
+                    class=" col-12 col-sm-6"
+                    v-model="form.open_day"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6"
+                  ><div>เวลาเปิดรับ</div>
+                  <el-time-select
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:01',
+                      end: '23:59'
+                    }"
+                    class=""
+                    :rules="formRules.open_time"
+                    format="HH:mm"
+                    arrow-control
+                    placeholder="เวลาเปิดรับ"
+                    v-model="form.open_time"
+                  >
+                  </el-time-select>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  class=" align-baseline"
+                  v-if="form.plan_type == 0"
+                  >วันที่ปิดรับ
+                  <v-text-field
+                    dense
+                    required
+                    outlined
+                    :rules="formRules.close_day"
+                    placeholder="กรุณากรอกวันที่ปิดรับ"
+                    hide-details="auto"
+                    class=" col-12 col-sm-6"
+                    type="number"
+                    v-model="form.close_day"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="12" sm="6"
+                  ><div>เวลาปิดรับ</div>
+                  <el-time-select
+                    class=""
+                    :rules="formRules.close_time"
+                    format="HH:mm"
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:01',
+                      end: '23:59'
+                    }"
+                    arrow-control
+                    placeholder="เวลาปิดรับ"
+                    v-model="form.close_time"
+                  >
+                  </el-time-select>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  class="align-baseline"
+                  v-if="form.plan_type == 0"
+                  >วันที่ออกผล
+                  <v-text-field
+                    dense
+                    outlined
+                    required
+                    :rules="formRules.lotto_day"
+                    placeholder="กรุณากรอกวันที่ออกผล"
+                    hide-details="auto"
+                    class="col-12 col-sm-6"
+                    type="number"
+                    v-model="form.lotto_day"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="12" sm="6"
+                  ><div>เวลาออกผล</div>
+                  <el-time-select
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:01',
+                      end: '23:59'
+                    }"
+                    class=""
+                    format="HH:mm"
+                    :rules="formRules.lotto_time"
+                    arrow-control
+                    placeholder="เวลาออกผล"
+                    v-model="form.lotto_time"
+                  >
+                  </el-time-select>
+                </v-col>
+              </v-row>
+              <div class="align-baseline mt-2">
+                รอบที่ออกผล :
+                <div class="col-auto col-md-6 col-lg-4 mx-2 pa-0">
+                  <v-text-field
+                    dense
+                    label="รอบที่ออกผล"
+                    outlined
+                    :rules="formRules.lotto_round"
+                    v-model="form.lotto_round"
+                  ></v-text-field>
+                </div>
+              </div>
+              <span class="font-weight-bold primary--text">ออกผลเเบบ</span>
+              <v-radio-group
+                row
+                hide-details="auto"
+                class="pb-5"
+                v-model="form.plan_type"
+                :rules="formRules.plan_type"
+              >
+                <v-radio label="รายเดือน" :value="0"></v-radio>
+                <v-radio label="รายวัน" :value="1"></v-radio>
+              </v-radio-group>
+              <div class="row">
+                <div class="col-12 col-md-8" v-if="form.plan_type == 0">
+                  <span class="primary--text font-weight-bold"
+                    >เดือนที่ออกผล</span
+                  >
+                  <div class="row">
+                    <div class="col-6">
+                      <v-checkbox
+                        hide-details="auto"
+                        v-model="form.jan"
+                        label="มกราคม"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="กุมภาพันธ์"
+                        v-model="form.feb"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="มีนาคม"
+                        v-model="form.mar"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="เมษายน"
+                        v-model="form.apr"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="พฤษภาคม"
+                        v-model="form.may"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="มิถุนายน"
+                        v-model="form.jun"
+                        hide-details="auto"
+                      ></v-checkbox>
+                    </div>
+                    <div class="col-6">
+                      <v-checkbox
+                        label="กรกฎาคม"
+                        v-model="form.jul"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="สิงหาคม"
+                        v-model="form.aug"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="กันยายน"
+                        v-model="form.sep"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="ตุลาคม"
+                        v-model="form.oct"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="พฤศจิกายน"
+                        v-model="form.nov"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="ธันวาคม"
+                        v-model="form.dec"
+                        hide-details="auto"
+                      ></v-checkbox>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6" v-if="form.plan_type == 1">
+                  <span class="purple--text font-weight-bold">วันที่ออกผล</span>
+                  <v-checkbox
+                    hide-details="auto"
+                    v-model="form.monday"
+                    label="วันจันทร์"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="form.tuesday"
+                    label="วันอังคาร"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="form.wednesday"
+                    label="วันพุธ"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="form.thursday"
+                    label="วันพฤหัสบดี"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="form.friday"
+                    label="วันศุกร์"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="form.saturday"
+                    label="วันเสาร์"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="form.sunday"
+                    label="วันอาทิตย์"
+                    hide-details="auto"
+                  ></v-checkbox>
+                </div>
+              </div>
+            </div>
+            <v-btn color="success" @click="submitForm()">สร้าง</v-btn>
+            <v-btn color="error" @click="closeForm()">ยกเลิก</v-btn>
+          </v-form>
+
+          <!-- detail  -->
+        </v-card>
+      </v-card>
+    </v-dialog>
+    <!-- modaladd  -->
+    <!-- modaledit  -->
+    <v-dialog full-width v-model="modaledit" max-width="800" persistent>
+      <v-card class="pa-4">
+        <v-card-title><h3>แก้ไขโปรเเกรมหวย</h3></v-card-title>
+        <v-card class="pa-2">
+          <v-form>
+            <v-text-field
+              v-model="Editform.title"
+              label="ชื่อโปรเเกรมหวย"
+              outlined
+              class="col-12 col-md-6 col-lg-4 "
+              dense
+              placeholder="ชื่อหวย"
+              hide-details="auto"
+            ></v-text-field>
+            <div
+              class=" d-flex align-baseline mt-3 white rounded-lg elevation-3 col-12 col-md-4 col-lg-4 text-center"
+            >
+              <v-switch
+                v-model="Editform.status"
+                :true-value="1"
+                :false-value="0"
+              ></v-switch>
+              สถานะ:
+              <span
+                class="success--text font-weight-bold"
+                v-if="Editform.status == 1"
+                >เปิดใช้งาน</span
+              ><span class="error--text font-weight-bold" v-else
+                >ปิดใช้งาน</span
+              >
+            </div>
+            <div class="align-baseline align-center my-2">
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  v-if="Editform.plan_type == 0"
+                  class=" align-baseline"
+                  >วันที่เปิดรับ
+                  <v-text-field
+                    dense
+                    placeholder="กรุณากรอกวันที่เปิดรับ"
+                    hide-details="auto"
+                    outlined
+                    required
+                    type="number"
+                    class=" col-12 col-sm-6"
+                    v-model="Editform.open_day"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" class=" align-baseline"
+                  ><div>เวลาเปิดรับ</div>
+                  <el-time-select
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:01',
+                      end: '23:59'
+                    }"
+                    class=""
+                    format="HH:mm"
+                    arrow-control
+                    placeholder="เวลาเปิดรับ"
+                    v-model="Editform.open_time"
+                  >
+                  </el-time-select>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  class="  align-baseline"
+                  v-if="Editform.plan_type == 0"
+                  >วันที่ปิดรับ
+                  <v-text-field
+                    dense
+                    required
+                    outlined
+                    placeholder="กรุณากรอกวันที่ปิดรับ"
+                    hide-details="auto"
+                    class=" col-12 col-sm-6"
+                    type="number"
+                    v-model="Editform.close_day"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="12" sm="6"
+                  ><div>เวลาปิดรับ</div>
+                  <el-time-select
+                    class=""
+                    format="HH:mm"
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:01',
+                      end: '23:59'
+                    }"
+                    arrow-control
+                    placeholder="เวลาปิดรับ"
+                    v-model="Editform.close_time"
+                  >
+                  </el-time-select>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  class="  align-baseline"
+                  v-if="Editform.plan_type == 0"
+                  >วันที่ออกผล
+                  <v-text-field
+                    dense
+                    outlined
+                    required
+                    placeholder="กรุณากรอกวันที่ออกผล"
+                    hide-details="auto"
+                    class=" col-12 col-sm-6"
+                    type="number"
+                    v-model="Editform.lotto_day"
+                  ></v-text-field
+                ></v-col>
+                <v-col cols="12" sm="6"
+                  ><div>เวลาออกผล</div>
+                  <el-time-select
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:01',
+                      end: '23:59'
+                    }"
+                    format="HH:mm"
+                    arrow-control
+                    placeholder="เวลาออกผล"
+                    v-model="Editform.lotto_time"
+                  >
+                  </el-time-select>
+                </v-col>
+              </v-row>
+              <div class="align-baseline mt-3">
+                รอบที่ออกผล :
+                <div class="col-auto col-md-6 col-lg-4 mx-2">
+                  <v-text-field
+                    dense
+                    outlined
+                    v-model="Editform.lotto_round"
+                  ></v-text-field>
+                </div>
+              </div>
+              <span class="font-weight-bold primary--text">ออกผลเเบบ</span>
+              <v-radio-group
+                row
+                hide-details="auto"
+                class="mb-2"
+                v-model="Editform.plan_type"
+              >
+                <v-radio label="รายเดือน" :value="0"></v-radio>
+                <v-radio label="รายวัน" :value="1"></v-radio>
+              </v-radio-group>
+              <div class="row">
+                <div class="col-12 col-md-8" v-if="Editform.plan_type == 0">
+                  <span class="primary--text font-weight-bold"
+                    >เดือนที่ออกผล</span
+                  >
+                  <div class="row">
+                    <div class="col-6">
+                      <v-checkbox
+                        hide-details="auto"
+                        v-model="Editform.jan"
+                        label="มกราคม"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="กุมภาพันธ์"
+                        v-model="Editform.feb"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="มีนาคม"
+                        v-model="Editform.mar"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="เมษายน"
+                        v-model="Editform.apr"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="พฤษภาคม"
+                        v-model="Editform.may"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="มิถุนายน"
+                        v-model="Editform.jun"
+                        hide-details="auto"
+                      ></v-checkbox>
+                    </div>
+                    <div class="col-6">
+                      <v-checkbox
+                        label="กรกฎาคม"
+                        v-model="Editform.jul"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="สิงหาคม"
+                        v-model="Editform.aug"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="กันยายน"
+                        v-model="Editform.sep"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="ตุลาคม"
+                        v-model="Editform.oct"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="พฤศจิกายน"
+                        v-model="Editform.nov"
+                        hide-details="auto"
+                      ></v-checkbox>
+                      <v-checkbox
+                        label="ธันวาคม"
+                        v-model="Editform.dec"
+                        hide-details="auto"
+                      ></v-checkbox>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6" v-if="Editform.plan_type == 1">
+                  <span class="purple--text font-weight-bold">วันที่ออกผล</span>
+                  <v-checkbox
+                    hide-details="auto"
+                    v-model="Editform.monday"
+                    label="วันจันทร์"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="Editform.tuesday"
+                    label="วันอังคาร"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="Editform.wednesday"
+                    label="วันพุธ"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="Editform.thursday"
+                    label="วันพฤหัสบดี"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="Editform.friday"
+                    label="วันศุกร์"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="Editform.saturday"
+                    label="วันเสาร์"
+                    hide-details="auto"
+                  ></v-checkbox>
+                  <v-checkbox
+                    true-value="true"
+                    v-model="Editform.sunday"
+                    label="วันอาทิตย์"
+                    hide-details="auto"
+                  ></v-checkbox>
+                </div>
+              </div>
+            </div>
+            <v-btn color="success" @click="EditForm()">แก้ไข</v-btn>
+            <v-btn color="error" @click="modaledit = false">ยกเลิก</v-btn>
+          </v-form>
+
+          <!-- detail  -->
+        </v-card>
+      </v-card>
+    </v-dialog>
+    <!-- modaledit  -->
+    <!-- dllisttype -->
+    <v-dialog max-width="600"
+      ><div>
+        <div class="d-flex">
+          รายละเอียดตัวเลข / หวยไทย <v-spacer></v-spacer
+          ><v-btn color="primary" rounded small @click="createNumprize()"
+            ><v-icon>mdi-plus</v-icon>เพิ่มตัวเลข</v-btn
+          >
+        </div>
+
+        <v-data-table
+          :header="headerGenlotto"
+          class="elevation-2 rounded-lg my-5"
+        ></v-data-table></div
+    ></v-dialog>
+    <v-dialog full-width v-model="dlcreateNum" max-width="600">
+      <v-card class="pa-4">
+        <v-card-title><h4>สร้างตัวเลข</h4></v-card-title>
+        <div>ชื่อหวย</div>
+        <div>จำนวนตัวเลข</div>
+        <div>จำนวนรางวัล</div>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -772,7 +792,8 @@ export default {
       validForm: true,
       selecttype: "",
       formRules: {
-        selecttype: [v => !!v || "กรุราเลือกประเภทการออกผล"],
+        plan_type: [v => !!v || "กรุราเลือกประเภทการออกผล"],
+        selecttype: [v => !!v || "กรุราเลือกประเภทหวย"],
         title: [v => !!v || "กรุณากรอกชื่อ"],
         open_day: [v => !!v || "กรุณากรอกวันเปิด"],
         close_day: [v => !!v || "กรุณากรอกวันปิด"],
@@ -798,14 +819,14 @@ export default {
       modal_add: false,
       form: {
         typecategory_id: "",
-        title: "",
-        open_day: "",
+        title: 0,
+        open_day: 0,
         open_time: "00:00",
-        close_day: "",
+        close_day: 0,
         close_time: "00:00",
-        lotto_day: "",
+        lotto_day: 0,
         lotto_time: "00:00",
-        plan_type: 0,
+        plan_type: 1,
         lotto_round: "",
         status: 0,
         monday: false,
@@ -829,15 +850,15 @@ export default {
         dec: false
       },
       Editform: {
-        title: "",
-        open_day: "",
+        title: 0,
+        open_day: 0,
         open_time: "00:00",
-        close_day: "",
+        close_day: 0,
         close_time: "00:00",
-        lotto_day: "",
+        lotto_day: 0,
         lotto_time: "00:00",
         plan_type: 0,
-        lotto_round: "",
+        lotto_round: 0,
         status: 0,
         monday: false,
         tuesday: false,
@@ -1005,6 +1026,7 @@ export default {
       this.dlcreateNum = true;
     },
     async submitForm() {
+      console.log(this.form);
       if (!this.$refs.form.validate()) {
         return false;
       } else {
@@ -1044,7 +1066,8 @@ export default {
       "getTypeCategory",
       "createTypeCategory",
       "updateTypeCategoryDetail",
-      "closeCategoryTypeDetail"
+      "closeCategoryTypeDetail",
+      "deleteCategoryTypeDetail"
     ]),
     async gettypelist() {
       try {
@@ -1147,11 +1170,11 @@ export default {
       }
     },
     async editProgramlotto(item) {
-      console.log(item);
       this.modaledit = true;
-      this.Editform = item;
+      this.Editform = Object.assign({}, item);
     },
     async deleteProgramlotto(item) {
+      console.log(item);
       try {
         this.$swal({
           title: "แน่ใจหรือไม่ว่าต้องการลบ?",
@@ -1175,12 +1198,6 @@ export default {
             } else {
               this.$fetch();
             }
-          } else {
-            if (this.title_search) {
-              this.searchlotto();
-            } else {
-              this.$fetch();
-            }
           }
         });
       } catch (error) {
@@ -1196,7 +1213,7 @@ export default {
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
           confirmButtonText: "ปิดหวย",
-          ancelButtonText: "ยกเลิก"
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.closeCategoryTypeDetail(item.id);
@@ -1206,12 +1223,6 @@ export default {
               showConfirmButton: false,
               timer: 1500
             });
-            if (this.title_search) {
-              this.searchlotto();
-            } else {
-              this.$fetch();
-            }
-          } else {
             if (this.title_search) {
               this.searchlotto();
             } else {

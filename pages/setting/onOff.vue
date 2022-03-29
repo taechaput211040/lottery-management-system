@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <h2>เปิดปิดหวย</h2>
 
     <div class="white rounded-lg mt-2">
@@ -84,7 +84,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-flex>
+  </div>
 </template>
 
 <script>

@@ -66,7 +66,6 @@ export async function updateFlexOutcomerate({ commit }, body) {
 }
 export async function setflexoddProfit({ commit }, body) {
   return new Promise(async (resolve, reject) => {
-
     try {
       let response = await this.$axios.patch(
         `https://sm-lotto.com/v1alpha/lotto/setting_flex_odd/api/flex_odd/update/flex_odd_lotto`,

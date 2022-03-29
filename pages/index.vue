@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <div v-if="!isLoading">
       <v-row>
         <v-col cols="12" sm="4"
@@ -169,7 +169,7 @@
         indeterminate
       ></v-progress-circular>
     </div>
-  </v-flex>
+  </div>
 </template>
 <script>
 import VueApexCharts from "vue-apexcharts";

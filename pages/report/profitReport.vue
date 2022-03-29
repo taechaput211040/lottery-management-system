@@ -1,8 +1,8 @@
 <template>
-  <v-flex>
+  <div>
     <h2>กำไร /ขาดทุน</h2>
     <lotto-table></lotto-table>
-  </v-flex>
+  </div>
 </template>
 
 <script>

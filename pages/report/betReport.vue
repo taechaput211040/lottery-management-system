@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <h2>ยกเลิกโพย /รายการแทง</h2>
 
     <div class="mt-6">
@@ -90,7 +90,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-flex>
+  </div>
 </template>
 
 <script>

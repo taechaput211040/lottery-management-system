@@ -20,7 +20,7 @@
         :items="datarender"
       >
         <template #[`item.no`]="{index}">
-              {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
+          {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
         <template #[`item.unlimitedNumber`]="{item}">
           <v-btn rounded color="primary" dark small @click="unlimitDetail(item)"
@@ -68,7 +68,7 @@
         :loading="isLoading"
         :options.sync="optionupline"
       >
-       <template #[`item.no`]="{index}">
+        <template #[`item.no`]="{index}">
           {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
       </v-data-table>
@@ -155,7 +155,7 @@
         </div>
         <v-card-actions>
           <v-btn class="success" @click="submitUpdate()">เเก้ไข</v-btn>
-          <v-btn class="error" @click="updateDiaglog = false">ยกเลิก</v-btn>
+          <v-btn class="error" @click="clostupdate()">ยกเลิก</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -314,7 +314,9 @@ export default {
       "getAllsettingUpline",
       "updateSettingseller"
     ]),
-
+    async clostupdate() {
+      this.updateDiaglog = false;
+    },
     async getSelfeData() {
       this.isLoading = true;
       try {
@@ -337,7 +339,7 @@ export default {
     },
     openDialogupdate(item) {
       this.updateDiaglog = true;
-      this.form_edit = item;
+      this.form_edit = Object.assign({}, item);
     },
     checkpositive(evt) {
       evt = evt ? evt : window.event;

@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <h2>รายงานผลรางวัล</h2>
     <div class="my-3 rounded-lg white">
       <h3 class="pa-3">ตัวเลือกการค้นหา</h3>
@@ -68,7 +68,7 @@
         </v-data-table>
       </div>
     </div>
-  </v-flex>
+  </div>
 </template>
 
 <script>

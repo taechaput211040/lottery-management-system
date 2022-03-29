@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <div v-if="!isLoading">
       <template>
         <v-card class="ma-2 pa-6">
@@ -163,7 +163,7 @@
         indeterminate
       ></v-progress-circular>
     </div>
-  </v-flex>
+  </div>
 </template>
 <script>
 import { mapActions } from "vuex";

@@ -33,7 +33,6 @@ export async function createLottotype({ commit }, body) {
 export async function updateLottotype({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-     
       let response = await this.$axios.patch(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoType/update/${body.id}`,
         {
@@ -149,7 +148,7 @@ export async function getTypeCategoryDetail(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/get`,
         {
           params: {
-            title:params.title,
+            title: params.title,
             currentPage: params.currentPage,
             limit: params.limit
           }
@@ -210,6 +209,7 @@ export async function createType({ commit }, body) {
 //TypeCategory/insert
 export async function createTypeCategory({ commit }, body) {
   return new Promise(async (resolve, reject) => {
+    console.log(body);
     try {
       let response = await this.$axios.post(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/insert`,
@@ -229,7 +229,7 @@ export async function updateTypeCategoryDetail({ commit }, body) {
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/update/${body.id}`,
         body
       );
-  
+
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -551,6 +551,18 @@ export async function getLottoNumberType(
   });
 }
 
+export async function getTypeDefult({ commit, id }) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/lottonumbertype_default`
+      );
+      resolve(response.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 // LottoNumberType/orderby
 export async function getLottoNumberTypeSort({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
@@ -588,11 +600,10 @@ export async function updateLottoNumberTypeByid({ commit }, body) {
       let response = await this.$axios.patch(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/update/${body.id}`,
         {
+          lottonumbertype_default_id: body.lottonumbertype_default_id,
           typecategory_id: body.typecategory_id,
-          name: body.name,
-          number: body.number,
           status: body.status,
-          typecategory_title: body.name
+          amount_reward: body.amount_reward
         }
       );
       resolve(response.data);

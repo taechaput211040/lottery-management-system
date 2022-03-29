@@ -219,7 +219,9 @@
             ></v-text-field>
           </div>
           <v-card-actions>
-            <v-btn color="success" @click="submitEdit()">ตั้งค่า</v-btn>
+            <v-btn color="success" @click="submitEdit(formupdate)"
+              >ตั้งค่า</v-btn
+            >
             <v-btn color="error" @click="closeEdit()">ยกเลิก</v-btn>
           </v-card-actions>
         </v-card></v-form
@@ -240,6 +242,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      valid: false,
       option: {},
       pageSizes: [5, 10, 15, 25],
       optionupline: {},
@@ -424,7 +427,8 @@ export default {
     },
     openupdateComerate(item) {
       this.dlupdate = true;
-      this.formupdate = item;
+      this.formupdate = Object.assign({}, item);
+      // this.formupdate = item;
     },
     checkpositive(evt) {
       evt = evt ? evt : window.event;
@@ -439,22 +443,24 @@ export default {
         return true;
       }
     },
-    async submitEdit() {
+    async submitEdit(item) {
+      item = JSON.parse(JSON.stringify(item));
+      console.log(item);
       try {
         let body = {
           typecategory_id: this.selectCate,
           lotto_numbertype: [
             {
-              lottonumbertype_id: this.formupdate.lottonumbertype_id,
-              maximum_out_come_rate: this.formupdate.maximum_out_come_rate,
-              minimum_bet_prize: this.formupdate.minimum_bet_prize,
-              maximum_bet_prize: this.formupdate.maximum_bet_prize
+              lottonumbertype_id: item.lottonumbertype_id,
+              maximum_out_come_rate: item.maximum_out_come_rate,
+              minimum_bet_prize: item.minimum_bet_prize,
+              maximum_bet_prize: item.maximum_bet_prize
             }
           ]
         };
         await this.updateFlexOutcomerate(body);
         this.dlupdate = false;
-        await this.selectFlexodd(value);
+        await this.selectFlexodd(this.selectCate);
       } catch (error) {
         this.dlupdate = false;
       }

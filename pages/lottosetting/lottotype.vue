@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <div v-if="!this.$route.query.id">
       <h1 class="mt-2">ประเภทของหวย</h1>
       <div class="white rounded-lg ma-2 py-2">
@@ -193,7 +193,7 @@
       </div>
     </div>
     <type-catagory v-else></type-catagory>
-  </v-flex>
+  </div>
 </template>
 
 <script>
@@ -310,8 +310,6 @@ export default {
               timer: 1500
             });
             this.$fetch();
-          } else {
-            this.$fetch();
           }
         });
       } catch (error) {
@@ -336,8 +334,6 @@ export default {
               "Your file has been deleted.",
               "success"
             );
-            this.$fetch();
-          } else {
             this.$fetch();
           }
         });

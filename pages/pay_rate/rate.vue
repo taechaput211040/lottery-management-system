@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <h2>ตั้งค่าหวยเพลา</h2>
     <div v-if="!this.$route.query.id">
       <main-table></main-table>
@@ -10,7 +10,7 @@
       <detail-table></detail-table>
     </div>
     <div v-else><unlimited-table></unlimited-table></div>
-  </v-flex>
+  </div>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <h2>หวยเพลา / รายงานตัวเลขสูงสุด</h2>
     <div class="pa-1 rounded-lg white my-3 pa-2">
       <div class="row py-3">
@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-  </v-flex>
+  </div>
 </template>
 
 <script>

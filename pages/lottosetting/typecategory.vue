@@ -1,9 +1,9 @@
 <template>
-  <v-flex
+  <div
     ><v-container>
       <type-catagory v-if="!this.$route.query.id"></type-catagory>
       <type-catagorydetail v-else></type-catagorydetail> </v-container
-  ></v-flex>
+  ></div>
 </template>
 
 <script>

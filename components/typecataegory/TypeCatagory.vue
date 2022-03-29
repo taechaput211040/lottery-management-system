@@ -389,7 +389,8 @@ export default {
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ลบ"
+          confirmButtonText: "ลบ",
+          cancelButtonText: "ยกเลิก"
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteTypeCategory(item.id);
@@ -398,8 +399,6 @@ export default {
               "Your file has been deleted.",
               "success"
             );
-            this.$fetch();
-          } else {
             this.$fetch();
           }
         });
@@ -426,8 +425,6 @@ export default {
               showConfirmButton: false,
               timer: 1500
             });
-            this.$fetch();
-          } else {
             this.$fetch();
           }
         });

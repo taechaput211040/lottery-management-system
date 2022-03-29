@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <div>
     <div v-if="!isLoading">
       <h2>บันทึกผลรางวัล</h2>
       <filter-search @search="searchfunction"></filter-search>
@@ -15,16 +15,18 @@
         <v-radio label="ผลยังไม่ออก" value="unsuccess"></v-radio>
       </v-radio-group>
       <div class="rounded-lg mt-5 pa-3 white">
-        <v-text-field
-          v-model="search"
-          class="col-md-4 col-6 pa-2"
-          append-icon="mdi-magnify"
-          label="ค้นหาชื่อหวย"
-          outlined
-          single-line
-          dense
-          hide-details
-        ></v-text-field>
+        <div class="col-md-4 col-6 pa-2">
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="ค้นหาชื่อหวย"
+            outlined
+            single-line
+            dense
+            hide-details="auto"
+          ></v-text-field>
+        </div>
+
         <v-data-table
           :headers="header"
           :items="dataAwardrender"
@@ -142,7 +144,7 @@
         indeterminate
       ></v-progress-circular>
     </div>
-  </v-flex>
+  </div>
 </template>
 
 <script>
