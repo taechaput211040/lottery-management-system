@@ -17,7 +17,20 @@
           <v-radio label="เพลา" value="2"></v-radio>
         </v-radio-group>
       </div>
-      <v-data-table :headers="headerTable" :items="datarender"> </v-data-table>
+      <v-data-table :headers="headerTable" :items="datarender">
+        
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+            color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template></v-data-table
+      >
     </div>
   </div>
 </template>

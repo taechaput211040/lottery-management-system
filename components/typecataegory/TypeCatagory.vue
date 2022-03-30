@@ -22,6 +22,17 @@
           hide-default-footer
           :loading="isLoading"
         >
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+               color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
           <template #[`item.no`]="{index}">
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
@@ -118,6 +129,7 @@
                 <v-text-field
                   label="ชื่อชนิดหวย"
                   v-model="formCreate.title"
+                  :rules="[v => !!v || 'กรุณากรอกชื่อชนิดหวย']"
                   dense
                   outlined
                 ></v-text-field>
@@ -316,20 +328,24 @@ export default {
       this.loading = false;
     },
     async addCategpry() {
-      try {
-        let body = {
-          title: this.formCreate.title,
-          lotto_flag: this.formCreate.lotto_flag,
-          rule_play: this.formCreate.rule_play,
-          lottotype_id: this.$route.query.id
-        };
-        await this.createType(body);
-        this.modal_add = false;
-        this.$fetch();
-      } catch (error) {
-        console.log(error);
-        this.modal_add = false;
-        this.$fetch();
+      if (this.$refs.formcreate.validate()) {
+        try {
+          let body = {
+            title: this.formCreate.title,
+            lotto_flag: this.formCreate.lotto_flag,
+            rule_play: this.formCreate.rule_play,
+            lottotype_id: this.$route.query.id
+          };
+          await this.createType(body);
+          this.modal_add = false;
+          this.$fetch();
+        } catch (error) {
+          console.log(error);
+          this.modal_add = false;
+          this.$fetch();
+        }
+      } else {
+        this.$swal("กรุณากรอกรายละเอียดให้ครบถ้วน", "", "warning");
       }
     },
     async getdataRender() {

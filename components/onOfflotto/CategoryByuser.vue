@@ -11,6 +11,18 @@
         :loading="isLoading"
         :items="dataDetail"
       >
+     
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+              color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
         <template #[`item.no`]="{index}">
           <!-- {{item.upline_status}} -->
           {{ index + 1 }}
@@ -69,7 +81,10 @@
             ></v-text-field>
             <div class="mt-3 d-column">
               สถานะการใช้งาน
-              <v-switch v-model="edititem.status" hide-details="auto"></v-switch>
+              <v-switch
+                v-model="edititem.status"
+                hide-details="auto"
+              ></v-switch>
             </div>
           </div>
 

@@ -1,8 +1,8 @@
 <template>
   <div class="">
     <div class="d-flex align-baseline">
-      <v-btn color="red" class="ma-3" small dark @click="$router.go(-1)"
-        >ย้อนกลับ</v-btn
+      <v-btn color="red" @click="$router.go(-1)" small dark
+        ><v-icon left>mdi-code-less-than</v-icon> ย้อนกลับ</v-btn
       >
       <h3 class="primary--text font-weight-bold my-4">
         หวยของตัวเอง :
@@ -19,6 +19,18 @@
         :loading="isLoading"
         :items="datarender"
       >
+      
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+            color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
         <template #[`item.no`]="{index}">
           {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
@@ -68,6 +80,18 @@
         :loading="isLoading"
         :options.sync="optionupline"
       >
+    
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+            color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
         <template #[`item.no`]="{index}">
           {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
@@ -94,7 +118,9 @@
     </div>
     <v-dialog max-width="600px" v-model="updateDiaglog">
       <v-card class="pa-3">
-        <v-card-title class="justify-center font-weight-bold">แก้ไขชนิดหวย</v-card-title>
+        <v-card-title class="justify-center font-weight-bold"
+          >แก้ไขชนิดหวย</v-card-title
+        >
 
         <div class="elevation-3 rounded-lg pa-3">
           <v-text-field
@@ -109,7 +135,7 @@
           ></v-text-field>
           <v-text-field
             hide-details="auto"
-            v-model="form_edit.maximum_out_come_rate"
+            v-model.number="form_edit.maximum_out_come_rate"
             label="อัตราจ่ายสูงสุด"
             outlined
             dense
@@ -118,7 +144,7 @@
           ></v-text-field>
           <v-text-field
             hide-details="auto"
-            v-model="form_edit.minimum_bet_prize"
+            v-model.number="form_edit.minimum_bet_prize"
             label="อัตราแทงขั้นต่ำ"
             @keypress="e => checkpositive(e)"
             dense
@@ -127,7 +153,7 @@
           ></v-text-field>
           <v-text-field
             hide-details="auto"
-            v-model="form_edit.maximum_bet_prize"
+            v-model.number="form_edit.maximum_bet_prize"
             @keypress="e => checkpositive(e)"
             label="อัตราแทงสูงสุด"
             dense
@@ -136,7 +162,7 @@
           ></v-text-field>
           <v-text-field
             hide-details="auto"
-            v-model="form_edit.self_receive_amount"
+            v-model.number="form_edit.self_receive_amount"
             @keypress="e => checkpositive(e)"
             label="รับของ"
             dense
@@ -145,7 +171,7 @@
           ></v-text-field>
           <v-text-field
             hide-details="auto"
-            v-model="form_edit.discount_amount"
+            v-model.number="form_edit.discount_amount"
             label="ยอดส่วนลด"
             @keypress="e => checkpositive(e)"
             outlined
@@ -361,11 +387,15 @@ export default {
           lotto_numbertype: [
             {
               lottonumbertype_id: this.form_edit.lottonumbertype_id,
-              maximum_out_come_rate: this.form_edit.maximum_out_come_rate,
-              minimum_bet_prize: this.form_edit.minimum_bet_prize,
-              maximum_bet_prize: this.form_edit.maximum_bet_prize,
-              self_receive_amount: this.form_edit.self_receive_amount,
-              discount_amount: this.form_edit.discount_amount
+              maximum_out_come_rate: parseFloat(
+                this.form_edit.maximum_out_come_rate
+              ),
+              minimum_bet_prize: parseFloat(this.form_edit.minimum_bet_prize),
+              maximum_bet_prize: parseFloat(this.form_edit.maximum_bet_prize),
+              self_receive_amount: parseFloat(
+                this.form_edit.self_receive_amount
+              ),
+              discount_amount: parseFloat(this.form_edit.discount_amount)
             }
           ]
         };

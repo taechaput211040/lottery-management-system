@@ -1,3 +1,29 @@
+export async function getAccountReport(
+  { commit },
+  params = {
+    username: undefined,
+    currentPage: undefined,
+    limit: undefined
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/users/get_members`,
+        {
+          params: {
+            username: params.username,
+            currentPage: params.currentPage,
+            limit: params.limit
+          }
+        }
+      );
+      resolve(response.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 export async function getBetReport(
   { commit },
   params = {

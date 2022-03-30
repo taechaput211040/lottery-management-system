@@ -51,7 +51,7 @@
                   กำไรขั้นต่ำ(%)
                   <v-text-field
                     dense
-                    v-model="formset.profit"
+                    v-model.number="formset.profit"
                     hide-details="auto"
                     @keypress="e => checkpositive(e)"
                     class="mb-2"
@@ -67,7 +67,7 @@
                   <v-text-field
                     dense
                     type="number"
-                    v-model="formset.flexodd"
+                    v-model.number="formset.flexodd"
                     @keypress="e => checkpositive(e)"
                     placeholder="กรอกอัตราน้ำไหลขั้นต่ำ"
                     outlined
@@ -100,6 +100,18 @@
         :loading="isLoading"
         :items="dataOutcome"
       >
+      
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+           color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
         <template #[`item.no`]="{index}">
           {{ index + 1 }}
         </template>
@@ -145,6 +157,18 @@
         hide-default-footer
         :options.sync="optionupline"
       >
+    
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+          color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
         <template #[`item.no`]="{index}">
           {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
@@ -195,7 +219,7 @@
               placeholder="กรุณากรอกอัตราการจ่ายสูงสุด"
               @keypress="e => checkpositive(e)"
               hide-details="auto"
-              v-model="formupdate.maximum_out_come_rate"
+              v-model.number="formupdate.maximum_out_come_rate"
             ></v-text-field>
             <v-text-field
               outlined
@@ -206,7 +230,7 @@
               dense
               class="my-2"
               hide-details="auto"
-              v-model="formupdate.minimum_bet_prize"
+              v-model.number="formupdate.minimum_bet_prize"
             ></v-text-field>
             <v-text-field
               outlined
@@ -217,14 +241,14 @@
               type="number"
               dense
               hide-details="auto"
-              v-model="formupdate.maximum_bet_prize"
+              v-model.number="formupdate.maximum_bet_prize"
             ></v-text-field>
           </div>
           <v-card-actions class="justify-center">
-            <v-btn color="success"  @click="submitEdit(formupdate)"
+            <v-btn color="success" @click="submitEdit(formupdate)"
               >ตั้งค่า</v-btn
             >
-            <v-btn color="error"  @click="closeEdit()">ยกเลิก</v-btn>
+            <v-btn color="error" @click="closeEdit()">ยกเลิก</v-btn>
           </v-card-actions>
         </v-card></v-form
       >
@@ -384,6 +408,7 @@ export default {
               showConfirmButton: false,
               timer: 1500
             });
+            this.getPercent();
           } else {
           }
         });

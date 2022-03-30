@@ -2,7 +2,7 @@
   <div>
     <div class="pa-1 rounded-lg white my-3 pa-2">
       เลือกประเภทหวย
-     
+
       <v-radio-group
         hide-details="auto"
         class="my-3"
@@ -27,6 +27,18 @@
         :loading="isLoading"
         :items="datarender"
       >
+   
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+        color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>s
         <template #[`item.no`]="{index}">
           {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>

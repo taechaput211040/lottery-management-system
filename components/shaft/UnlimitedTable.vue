@@ -1,8 +1,8 @@
 <template>
   <div class="">
     <div class="d-flex align-baseline">
-      <v-btn color="red" class="ma-3" small dark @click="$router.go(-1)"
-        >ย้อนกลับ</v-btn
+      <v-btn color="red" @click="$router.go(-1)" small dark
+        ><v-icon left>mdi-code-less-than</v-icon> ย้อนกลับ</v-btn
       >
       <h3 class="font-weight-bold my-4">
         <span class="purple--text ">{{ this.$route.query.title }}</span> :
@@ -22,6 +22,17 @@
         :loading="isLoading"
         :items="datarender"
       >
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+            color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
         <template #[`item.no`]="{index}">
           {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
@@ -83,6 +94,17 @@
               hide-default-footer
               class="elevation-1"
             >
+              <template v-slot:no-data>
+                <v-alert
+                  :value="true"
+                  border="left"
+                 color="blue-grey"
+                  type="error"
+                  icon="mdi-warning"
+                >
+                  ไม่พบข้อมูล
+                </v-alert>
+              </template>
               <template #[`item.lotto_number`]="{ item }">
                 <div class="pa-2">
                   <v-text-field
@@ -111,7 +133,7 @@
                     dense
                     @keypress="e => checkpositive(e)"
                     label="อัตราจ่าย"
-                    v-model="item.out_come_rate"
+                    v-model.number="item.out_come_rate"
                     type="number"
                   />
                 </div>
@@ -124,7 +146,7 @@
                     @keypress="e => checkpositive(e)"
                     dense
                     label="รับของ"
-                    v-model="item.self_receive_amount"
+                    v-model.number="item.self_receive_amount"
                     type="number"
                   />
                 </div>
@@ -188,7 +210,7 @@
               :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
               label="อัตราจ่าย"
               dense
-              v-model="form.out_come_rate"
+              v-model.number="form.out_come_rate"
             ></v-text-field>
             <v-text-field
               outlined
@@ -197,17 +219,12 @@
               label="รับของ"
               type="number"
               dense
-              v-model="form.self_receive_amount"
+              v-model.number="form.self_receive_amount"
             ></v-text-field>
           </div>
           <v-card-actions class="justify-center">
-            <v-btn  color="success" @click="submitUpdate()"
-              >แก้ไขเลขอั้น</v-btn
-            >
-            <v-btn
-              
-              color="error"
-              @click="editlimitedDialog = false"
+            <v-btn color="success" @click="submitUpdate()">แก้ไขเลขอั้น</v-btn>
+            <v-btn color="error" @click="editlimitedDialog = false"
               >ยกเลิก</v-btn
             >
           </v-card-actions>

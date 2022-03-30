@@ -70,8 +70,8 @@ export async function setflexoddProfit({ commit }, body) {
       let response = await this.$axios.patch(
         `https://sm-lotto.com/v1alpha/lotto/setting_flex_odd/api/flex_odd/update/flex_odd_lotto`,
         {
-          flex_odd_lotto: parseInt(body.flexodd),
-          profit: parseInt(body.profit)
+          flex_odd_lotto: parseFloat(body.flexodd),
+          profit: parseFloat(body.profit)
         }
       );
 

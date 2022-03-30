@@ -11,6 +11,17 @@
           :loading="isLoading"
           :items="itemtypeaward"
         >
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+               color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
           <template #[`item.no`]="{index}">
             {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
           </template>
@@ -60,7 +71,9 @@
     <!-- TODO : change and cancel button -->
     <v-dialog v-model="dialogConfig" max-width="300">
       <v-card class="pa-3">
-        <v-card-title class="justify-center font-weight-bold">จัดการสถานะ</v-card-title>
+        <v-card-title class="justify-center font-weight-bold"
+          >จัดการสถานะ</v-card-title
+        >
         <div class="elevation-3 rounded-lg pa-3">
           <v-text-field
             :value="editItem.title"
@@ -68,7 +81,6 @@
             filled
             hide-details="auto"
             dense
-            
             label="ชื่อหวย"
           ></v-text-field>
           <div class="d-column mt-2">

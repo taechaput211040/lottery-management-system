@@ -23,6 +23,17 @@
         :options.sync="option"
         hide-default-footer
       >
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+            color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
         <template #[`item.created_at`]="{item}">
           {{ dateformat(item.created_at) }}
         </template>
@@ -394,11 +405,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteLottoNumberType(item.id);
-            this.$swal(
-              "ลบเรียบร้อย!",
-              "ดำเนิการเสร็จสิ้น",
-              "success"
-            );
+            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
             this.$fetch();
           }
         });
@@ -426,7 +433,7 @@ export default {
               timer: 1500
             });
             this.$fetch();
-          } 
+          }
         });
       } catch (error) {
         console.log(error);

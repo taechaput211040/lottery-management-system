@@ -9,6 +9,18 @@
         :headers="headers"
         :items="itemrender"
       >
+    
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+             color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
         <template #[`item.self_flex`]="{item}">
           <v-badge left color="primary" v-if="item.self_flex == true">
             <span slot="badge">เปิด</span>
@@ -90,7 +102,10 @@
       <v-dialog v-model="updateDialog" max-width="300">
         <v-card class="pa-4">
           <v-card-title class="justify-center">ตั้งค่าการใช้งาน</v-card-title>
-          <div class="elevation-3 pa-2 rounded-lg" v-if="updateform.username == $store.state.auth.username">
+          <div
+            class="elevation-3 pa-2 rounded-lg"
+            v-if="updateform.username == $store.state.auth.username"
+          >
             <v-switch
               label="น้ำไหล"
               v-model="updateform.self_flex"
@@ -102,7 +117,7 @@
               hide-details="auto"
             ></v-switch>
           </div>
-          <div v-else class="elevation-3 pa-2 rounded-lg" >
+          <div v-else class="elevation-3 pa-2 rounded-lg">
             <v-switch
               label="น้ำไหล"
               v-model="updateform.upline_flex_odd"
@@ -178,7 +193,7 @@ export default {
       }
     },
     openDlupdate(item) {
-      this.updateform = Object.assign({}, item);;
+      this.updateform = Object.assign({}, item);
       this.updateDialog = true;
     },
     async submitsetting() {

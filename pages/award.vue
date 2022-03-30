@@ -32,6 +32,17 @@
           :items="dataAwardrender"
           :search="search"
         >
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+               color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
           <template #[`item.no`]="{index}">
             {{ index + 1 }}
           </template>
@@ -239,10 +250,7 @@ export default {
 
       this.selectSection();
     },
-    submitnumber(item, key) {
-      console.log(item);
-      console.log(key);
-    },
+
     ...mapActions("lottosetting", [
       "getawardlotto",
       "getlottobyprogram",

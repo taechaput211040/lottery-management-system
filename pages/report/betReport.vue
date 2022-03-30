@@ -27,6 +27,17 @@
           </div>
         </div>
         <v-data-table :headers="headersdatelotto" :items="itemtypeaward">
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+               color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
           <template #[`item.actions`]>
             <div class="d-flex justify-center">
               <v-tooltip bottom color="black" dark>
@@ -84,6 +95,17 @@
         </div>
 
         <v-data-table :headers="headerDetail" hide-default-footer>
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+               color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
         </v-data-table>
         <v-card-actions class="justify-end">
           <v-btn color="error" @click="dialogdetail = false">ยกเลิก</v-btn>

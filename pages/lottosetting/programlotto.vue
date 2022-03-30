@@ -60,6 +60,17 @@
             hide-default-footer
             :loading="isLoading"
           >
+            <template v-slot:no-data>
+              <v-alert
+                :value="true"
+                border="left"
+                 color="blue-grey"
+                type="error"
+                icon="mdi-warning"
+              >
+                ไม่พบข้อมูล
+              </v-alert>
+            </template>
             <template #[`item.no`]="{index}">
               {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
             </template>
@@ -185,7 +196,9 @@
     <!-- modaladd  -->
     <v-dialog full-width v-model="modal_add" max-width="800" persistent>
       <v-card class="pa-4">
-        <v-card-title class="justify-center"><h3>เพิ่มโปรเเกรมหวย</h3></v-card-title>
+        <v-card-title class="justify-center"
+          ><h3>เพิ่มโปรเเกรมหวย</h3></v-card-title
+        >
         <v-card class="pa-2 elevation-3">
           <v-form ref="form" v-model="validForm">
             <div class="col-12 col-md-6 col-lg-4 pa-1">
@@ -759,8 +772,21 @@
         <v-data-table
           :header="headerGenlotto"
           class="elevation-2 rounded-lg my-5"
-        ></v-data-table></div
-    ></v-dialog>
+        >
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+               color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template></v-data-table
+        >
+      </div></v-dialog
+    >
     <v-dialog full-width v-model="dlcreateNum" max-width="600">
       <v-card class="pa-4">
         <v-card-title><h4>สร้างตัวเลข</h4></v-card-title>
@@ -1187,11 +1213,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteCategoryTypeDetail(item.id);
-            this.$swal(
-              "ลบเรียบร้อย!",
-              "ดำเนิการเสร็จสิ้น",
-              "success"
-            );
+            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
             this.$fetch();
             if (this.title_search) {
               this.searchlotto();

@@ -220,50 +220,10 @@ export default {
             status: true
           },
           {
-            title: "Company Setting",
-            to: "/company",
-            icon: "mdi-credit-card-plus-outline",
-            status: false,
-            subLinks: [
-              {
-                icon: "mdi-view-dashboard",
-                text: "แบ่งหุ้น/ถือสู้",
-                to: "/account/profile",
-                status: true
-              },
-              {
-                icon: "mdi-view-dashboard",
-                text: "รายการ Agent",
-                to: "/account/chanword",
-                status: true
-              }
-            ]
-          },
-          {
-            title: "Agent Setting",
-            to: "/agent",
-            icon: "mdi-credit-card-plus-outline",
-            status: false,
-            subLinks: [
-              {
-                icon: "mdi-view-dashboard",
-                text: "ส่วนแบ่งที่ได้รับ",
-                to: "/account/profile",
-                status: false
-              },
-              {
-                icon: "mdi-view-dashboard",
-                text: "อัตราจ่ายคอมมิชชั่น",
-                to: "/account/chanword",
-                status: false
-              }
-            ]
-          },
-          {
-            title: "Member Setting",
-            to: "/member",
-            icon: "mdi-credit-card-plus-outline",
-            status: false
+            title: "รายการสมาชิก",
+            to: "/reportAccount",
+            icon: "mdi-account",
+            status: true
           }
         ];
         return menu;
@@ -391,50 +351,10 @@ export default {
           status: true
         },
         {
-          title: "Company Setting",
-          to: "/company",
-          icon: "mdi-credit-card-plus-outline",
-          status: false,
-          subLinks: [
-            {
-              icon: "mdi-view-dashboard",
-              text: "แบ่งหุ้น/ถือสู้",
-              to: "/account/profile",
-              status: true
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "รายการ Agent",
-              to: "/account/chanword",
-              status: true
-            }
-          ]
-        },
-        {
-          title: "Agent Setting",
-          to: "/agent",
-          icon: "mdi-credit-card-plus-outline",
-          status: false,
-          subLinks: [
-            {
-              icon: "mdi-view-dashboard",
-              text: "ส่วนแบ่งที่ได้รับ",
-              to: "/account/profile",
-              status: true
-            },
-            {
-              icon: "mdi-view-dashboard",
-              text: "อัตราจ่ายคอมมิชชั่น",
-              to: "/account/chanword",
-              status: true
-            }
-          ]
-        },
-        {
-          title: "Member Setting",
-          to: "/member",
-          icon: "mdi-credit-card-plus-outline",
-          status: false
+          title: "รายการสมาชิก",
+          to: "/reportAccount",
+          icon: "mdi-account",
+          status: true
         }
       ],
       miniVariant: false,

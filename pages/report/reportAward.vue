@@ -47,6 +47,17 @@
       <v-divider></v-divider>
       <div class=" rounded-lg">
         <v-data-table :headers="headersdatelotto" :items="itemtypeaward">
+             <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+            color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
           <template #[`item.action`]>
             <v-btn rounded color="primary" small
               ><v-icon left>mdi-magnify</v-icon>ดูผล
@@ -60,6 +71,17 @@
       <v-divider></v-divider>
       <div class=" rounded-lg">
         <v-data-table :headers="headersdatelotto" :items="itemtypeaward">
+             <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            border="left"
+           color="blue-grey"
+            type="error"
+            icon="mdi-warning"
+          >
+            ไม่พบข้อมูล
+          </v-alert>
+        </template>
           <template #[`item.action`]>
             <v-btn rounded color="primary" small
               ><v-icon left>mdi-magnify</v-icon>ดูผล
