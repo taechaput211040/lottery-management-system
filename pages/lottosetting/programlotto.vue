@@ -43,7 +43,7 @@
               class="mx-2 px-2"
               rounded
               dark
-              @click="modal_add = true"
+              @click="openAdd(form)"
             >
               <v-icon>mdi-plus</v-icon>สร้างโปรแกรมหวย</v-btn
             >
@@ -64,7 +64,7 @@
               <v-alert
                 :value="true"
                 border="left"
-                 color="blue-grey"
+                color="blue-grey"
                 type="error"
                 icon="mdi-warning"
               >
@@ -75,78 +75,80 @@
               {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
             </template>
             <template #[`item.action`]="{item}">
-              <v-tooltip bottom color="black">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    @click="showdetail(item)"
-                    v-bind="attrs"
-                    v-on="on"
-                    color="black"
-                    x-small
-                    outlined
-                    icon
-                    fab
-                    ><v-icon dark>
-                      mdi-dots-horizontal
-                    </v-icon>
-                  </v-btn></template
-                >
-                <span>ดูชนิดของหวย</span>
-              </v-tooltip>
-              <v-tooltip bottom color="warning">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    v-bind="attrs"
-                    v-on="on"
-                    color="warning"
-                    x-small
-                    outlined
-                    @click="editProgramlotto(item)"
-                    icon
-                    fab
-                    ><v-icon dark>
-                      mdi-pencil
-                    </v-icon>
-                  </v-btn></template
-                >
-                <span>แก้ไขโปรเเกรมหวย</span>
-              </v-tooltip>
-              <v-tooltip bottom color="red">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    v-bind="attrs"
-                    v-on="on"
-                    color="red"
-                    x-small
-                    outlined
-                    icon
-                    fab
-                    @click="deleteProgramlotto(item)"
-                    ><v-icon dark>
-                      mdi-delete
-                    </v-icon>
-                  </v-btn></template
-                >
-                <span>ลบโปรเเกรมหวย</span>
-              </v-tooltip>
-              <v-tooltip bottom color="black">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    v-bind="attrs"
-                    v-on="on"
-                    color="black"
-                    x-small
-                    outlined
-                    icon
-                    fab
-                    @click="closeNumbertype(item)"
-                    ><v-icon dark>
-                      mdi-lock
-                    </v-icon>
-                  </v-btn></template
-                >
-                <span>ปิดโปรเเกรมหวย</span>
-              </v-tooltip>
+              <div class="d-flex justify-center">
+                <v-tooltip bottom color="black">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      @click="showdetail(item)"
+                      v-bind="attrs"
+                      v-on="on"
+                      color="black"
+                      x-small
+                      outlined
+                      icon
+                      fab
+                      ><v-icon dark>
+                        mdi-dots-horizontal
+                      </v-icon>
+                    </v-btn></template
+                  >
+                  <span>ดูชนิดของหวย</span>
+                </v-tooltip>
+                <v-tooltip bottom color="warning">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      color="warning"
+                      x-small
+                      outlined
+                      @click="editProgramlotto(item)"
+                      icon
+                      fab
+                      ><v-icon dark>
+                        mdi-pencil
+                      </v-icon>
+                    </v-btn></template
+                  >
+                  <span>แก้ไขโปรเเกรมหวย</span>
+                </v-tooltip>
+                <v-tooltip bottom color="red">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      color="red"
+                      x-small
+                      outlined
+                      icon
+                      fab
+                      @click="deleteProgramlotto(item)"
+                      ><v-icon dark>
+                        mdi-delete
+                      </v-icon>
+                    </v-btn></template
+                  >
+                  <span>ลบโปรเเกรมหวย</span>
+                </v-tooltip>
+                <v-tooltip bottom color="black">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      color="black"
+                      x-small
+                      outlined
+                      icon
+                      fab
+                      @click="closeNumbertype(item)"
+                      ><v-icon dark>
+                        mdi-lock
+                      </v-icon>
+                    </v-btn></template
+                  >
+                  <span>ปิดโปรเเกรมหวย</span>
+                </v-tooltip>
+              </div>
             </template>
             <template #[`item.type`]="{item}">
               <span v-if="item.TypeCategory_Id">{{
@@ -240,17 +242,18 @@
                   class="align-baseline"
                   v-if="form.plan_type == 0"
                   >วันที่เปิดรับ
-                  <v-text-field
+                  <v-select
                     dense
                     :rules="formRules.open_day"
                     placeholder="กรุณากรอกวันที่เปิดรับ"
                     hide-details="auto"
                     outlined
+                    :items="start_day"
                     required
                     type="number"
                     class=" col-12 col-sm-6"
                     v-model="form.open_day"
-                  ></v-text-field>
+                  />
                 </v-col>
                 <v-col cols="12" sm="6"
                   ><div>เวลาเปิดรับ</div>
@@ -275,17 +278,18 @@
                   class=" align-baseline"
                   v-if="form.plan_type == 0"
                   >วันที่ปิดรับ
-                  <v-text-field
+                  <v-select
                     dense
                     required
                     outlined
+                    :items="start_day"
                     :rules="formRules.close_day"
                     placeholder="กรุณากรอกวันที่ปิดรับ"
                     hide-details="auto"
                     class=" col-12 col-sm-6"
                     type="number"
                     v-model="form.close_day"
-                  ></v-text-field
+                  ></v-select
                 ></v-col>
                 <v-col cols="12" sm="6"
                   ><div>เวลาปิดรับ</div>
@@ -310,9 +314,10 @@
                   class="align-baseline"
                   v-if="form.plan_type == 0"
                   >วันที่ออกผล
-                  <v-text-field
+                  <v-select
                     dense
                     outlined
+                    :items="start_day"
                     required
                     :rules="formRules.lotto_day"
                     placeholder="กรุณากรอกวันที่ออกผล"
@@ -320,7 +325,7 @@
                     class="col-12 col-sm-6"
                     type="number"
                     v-model="form.lotto_day"
-                  ></v-text-field
+                  ></v-select
                 ></v-col>
                 <v-col cols="12" sm="6"
                   ><div>เวลาออกผล</div>
@@ -358,7 +363,6 @@
                 hide-details="auto"
                 class="pb-5"
                 v-model="form.plan_type"
-                :rules="formRules.plan_type"
               >
                 <v-radio label="รายเดือน" :value="0"></v-radio>
                 <v-radio label="รายวัน" :value="1"></v-radio>
@@ -777,7 +781,7 @@
             <v-alert
               :value="true"
               border="left"
-               color="blue-grey"
+              color="blue-grey"
               type="error"
               icon="mdi-warning"
             >
@@ -809,7 +813,15 @@ export default {
     TabContent,
     ProgranlottoDetail
   },
-
+  computed: {
+    start_day() {
+      let date = [];
+      for (let i = 1; i <= 31; i++) {
+        date.push(i);
+      }
+      return date;
+    }
+  },
   data() {
     return {
       title_search: undefined,
@@ -818,7 +830,6 @@ export default {
       validForm: true,
       selecttype: "",
       formRules: {
-        plan_type: [v => !!v || "กรุราเลือกประเภทการออกผล"],
         selecttype: [v => !!v || "กรุราเลือกประเภทหวย"],
         title: [v => !!v || "กรุณากรอกชื่อ"],
         open_day: [v => !!v || "กรุณากรอกวันเปิด"],
@@ -852,7 +863,6 @@ export default {
         close_time: "00:00",
         lotto_day: 0,
         lotto_time: "00:00",
-        plan_type: 1,
         lotto_round: "",
         status: 0,
         monday: false,
@@ -982,23 +992,39 @@ export default {
           text: "รอบหวย",
           value: "lotto_round",
           filterable: false,
-          align: "center"
+          align: "center",
+          sortable: false
         },
         {
           text: "ประเภทหวย",
           align: "center",
           filterable: false,
-          value: "type"
+          value: "type",
+          sortable: false
         },
         {
           text: "สถานะ",
           align: "center",
           filterable: false,
           value: "status",
-          width: "150px"
+          width: "150px",
+          sortable: false
+        },
+        {
+          text: "เเก้ไขล่าสุดโดย",
+          align: "center",
+          filterable: false,
+          value: "updated_by",
+          sortable: false
         },
 
-        { text: "Action", value: "action", align: "center" }
+        {
+          text: "Action",
+          value: "action",
+          align: "center",
+          width: "250px",
+          sortable: false
+        }
       ],
       itemexample: []
     };
@@ -1169,8 +1195,8 @@ export default {
       );
     },
     closeForm() {
+      this.form = {};
       this.modal_add = false;
-      this.$refs.form.reset();
       this.$refs.form.resetValidation();
     },
     openEdit(data) {
@@ -1225,6 +1251,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    openAdd(item) {
+      this.form = Object.assign({}, item);
+      this.modal_add = true;
     },
     async closeNumbertype(item) {
       try {

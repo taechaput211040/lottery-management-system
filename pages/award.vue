@@ -15,7 +15,7 @@
         <v-radio label="ผลยังไม่ออก" value="unsuccess"></v-radio>
       </v-radio-group>
       <div class="rounded-lg mt-5 pa-3 white">
-        <div class="col-md-4 col-6 pa-2">
+        <!-- <div class="col-md-4 col-6 pa-2">
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
@@ -25,18 +25,23 @@
             dense
             hide-details="auto"
           ></v-text-field>
-        </div>
+        </div> -->
 
         <v-data-table
           :headers="header"
-          :items="dataAwardrender"
+          hide-default-footer
+          :items="dataAwardrender.data"
           :search="search"
+          :server-items-length="pagination.rowsNumber"
+          :items-per-page.sync="pagination.rowsPerPage"
+          :page.sync="pagination.page"
+          :options.sync="options"
         >
           <template v-slot:no-data>
             <v-alert
               :value="true"
               border="left"
-               color="blue-grey"
+              color="blue-grey"
               type="error"
               icon="mdi-warning"
             >
@@ -44,7 +49,7 @@
             </v-alert>
           </template>
           <template #[`item.no`]="{index}">
-            {{ index + 1 }}
+            {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
           <template #[`item.save`]="{item}">
             <v-btn
@@ -78,6 +83,27 @@
             >
           </template>
         </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="1">
+            <v-select
+              dense
+              outlined
+              v-model="pagination.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChange"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="11">
+            <v-pagination
+              v-model="pagination.page"
+              :total-visible="7"
+              :length="
+                Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+              "
+            ></v-pagination>
+          </v-col>
+        </v-row>
       </div>
       <v-dialog max-width="600px" v-model="dlSavenumber">
         <v-form v-model="valid" ref="formnumber">
@@ -114,7 +140,7 @@
                     :counter="parseInt(item.number)"
                     :rules="[
                       v => !!v,
-                      v => v && v.length >= parseInt(item.number)
+                      v => (v && v.length >= parseInt(item.number)) || ''
                     ]"
                     small
                   ></v-text-field>
@@ -132,7 +158,7 @@
                     :counter="parseInt(item.number)"
                     :rules="[
                       v => !!v,
-                      v => v && v.length >= parseInt(item.number)
+                      v => (v && v.length >= parseInt(item.number)) || ''
                     ]"
                     hide-details="auto"
                     dense
@@ -142,7 +168,7 @@
             </div>
             <v-card-actions class="justify-center">
               <v-btn color="success" @click="submitnumber()">บันทึก</v-btn
-              ><v-btn color="error" @click="dlSavenumber = false">ยกเลิก</v-btn>
+              ><v-btn color="error" @click="closeDl()">ยกเลิก</v-btn>
             </v-card-actions>
           </v-card>
         </v-form>
@@ -163,9 +189,12 @@ import { mapActions } from "vuex";
 import FilterSearch from "../components/form/FilterSearch.vue";
 export default {
   components: { FilterSearch },
+
   data() {
     return {
+      options: {},
       valid: false,
+      pageSizes: [5, 10, 15, 25],
       isArray: false,
       search: "",
       isLoading: false,
@@ -183,19 +212,19 @@ export default {
         },
         {
           text: "ชื่อหวย",
-          value: "typecategory_title",
+          value: "title",
           class: "font-weight-bold",
           align: "left"
         },
         {
           text: "รอบวันที่",
-          value: "date",
+          value: "lotto_round",
           class: "font-weight-bold",
           align: "left"
         },
         {
           text: "เวลาออกผล",
-          value: "time",
+          value: "bet_lotto_time",
           class: "font-weight-bold",
           align: "left"
         },
@@ -235,12 +264,19 @@ export default {
         sortBy: "desc",
         descending: false,
         page: 1,
-        rowsPerPage: 15,
+        rowsPerPage: 10,
         rowsNumber: 100
       }
     };
   },
-
+  watch: {
+    options: {
+      async handler() {
+        await this.selectSection();
+      },
+      deep: true
+    }
+  },
   async fetch() {
     this.selectSection();
   },
@@ -278,15 +314,21 @@ export default {
       let params = this.getParameter(status);
       try {
         const data = await this.getawardlotto(params);
-        this.dataAwardrender = data.result;
+        if (status == undefined) {
+          this.dataAwardrender = data.result;
+          this.pagination.rowsNumber = this.dataAwardrender.total;
+        } else {
+          this.dataAwardrender = data.result[0].result_status_lotto;
+          this.pagination.rowsNumber = this.dataAwardrender.total;
+        }
       } catch (error) {
         console.log(error);
       }
     },
     async openDlupdate(item) {
       try {
-        this.progranlottoID = item.programlotto_id;
-        let data = await this.getlottobyprogram(item.programlotto_id);
+        this.progranlottoID = item.id;
+        let data = await this.getlottobyprogram(item.id);
         this.itemNumber = data;
         this.dlSavenumber = true;
         console.log(this.itemNumber);
@@ -349,6 +391,10 @@ export default {
         this.$swal("กรุณากรอกผลรางวัลให้ครบถ้วน", "", "warning");
       }
     },
+    closeDl() {
+      this.dlSavenumber = false;
+      this.$refs.formnumber.resetValidation();
+    },
     rangeInput(self, length, itemmodel) {
       // console.log(itemmodel);
       if (itemmodel == undefined) {
@@ -356,6 +402,11 @@ export default {
       } else if (/[0-9]/g.test(self.key) && itemmodel.length >= length) {
         self.preventDefault();
       }
+    },
+    async handlePageSizeChange(size) {
+      this.pagination.page = 1;
+      this.pagination.rowsPerPage = size;
+      this.selectSection();
     }
   }
 };

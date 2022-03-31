@@ -100,12 +100,11 @@
         :loading="isLoading"
         :items="dataOutcome"
       >
-      
         <template v-slot:no-data>
           <v-alert
             :value="true"
             border="left"
-           color="blue-grey"
+            color="blue-grey"
             type="error"
             icon="mdi-warning"
           >
@@ -157,12 +156,11 @@
         hide-default-footer
         :options.sync="optionupline"
       >
-    
         <template v-slot:no-data>
           <v-alert
             :value="true"
             border="left"
-          color="blue-grey"
+            color="blue-grey"
             type="error"
             icon="mdi-warning"
           >
@@ -317,6 +315,13 @@ export default {
           text: "ดำเนินการ",
           value: "action",
           class: "font-weight-bold",
+          align: "center"
+        },
+        {
+          text: "เเก้ไขล่าสุด",
+          value: "updated_by",
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold",
           align: "center"
         }
       ],

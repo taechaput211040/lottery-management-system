@@ -96,3 +96,34 @@ export async function getReportDetail(
     }
   });
 }
+
+export async function getReportNumber(
+  { commit },
+  params = {
+    lottotype_id: undefined,
+    start_date: undefined,
+    end_date: undefined,
+    currentPage: undefined,
+    limit: undefined
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/report_prize`,
+        {
+          params: {
+            lottotype_id: params.lottotype_id,
+            start_date: params.start_date,
+            end_date: params.end_date,
+            currentPage: params.currentPage,
+            limit: params.limit
+          }
+        }
+      );
+      resolve(response.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

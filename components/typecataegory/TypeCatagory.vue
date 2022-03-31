@@ -26,7 +26,7 @@
             <v-alert
               :value="true"
               border="left"
-               color="blue-grey"
+              color="blue-grey"
               type="error"
               icon="mdi-warning"
             >
@@ -133,7 +133,13 @@
                   dense
                   outlined
                 ></v-text-field>
-
+                <v-text-field
+                  v-model="formCreate.lotto_flag"
+                  label="ลิงก์รูปของชนิดหวย"
+                  outlined
+                  required
+                  dense
+                ></v-text-field>
                 <v-textarea
                   label="กฎกติกา"
                   v-model="formCreate.rule_play"
@@ -159,6 +165,7 @@
             <v-card-title>
               <h3>แก้ไขชนิดของหวย</h3>
             </v-card-title>
+
             <v-card class="pa-4 ma-3">
               <v-form>
                 <v-text-field
@@ -166,6 +173,13 @@
                   label="title"
                   filled
                   disabled
+                  required
+                  dense
+                ></v-text-field>
+                <v-text-field
+                  v-model="dataEdit.lotto_flag"
+                  label="ลิงก์รูปของชนิดหวย"
+                  outlined
                   required
                   dense
                 ></v-text-field>

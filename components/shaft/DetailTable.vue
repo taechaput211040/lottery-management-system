@@ -19,7 +19,6 @@
         :loading="isLoading"
         :items="datarender"
       >
-      
         <template v-slot:no-data>
           <v-alert
             :value="true"
@@ -80,7 +79,6 @@
         :loading="isLoading"
         :options.sync="optionupline"
       >
-    
         <template v-slot:no-data>
           <v-alert
             :value="true"
@@ -313,6 +311,13 @@ export default {
           text: "ดำเนินการ",
           value: "action",
           class: "font-weight-bold",
+          align: "center"
+        },
+        {
+          text: "เเก้ไขล่าสุด",
+          value: "updated_by",
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold",
           align: "center"
         }
       ],

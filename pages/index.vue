@@ -1,5 +1,28 @@
 <template>
   <div>
+    <input type="date" class="form-control" v-model="dateFrom" :max="dateTo" />
+    <input type="date" class="form-control" v-model="dateTo" :min="dateFrom" />
+    <template>
+      <div class="demo-time-range">
+        <el-time-select
+          v-model="startTime"
+          :max-time="endTime"
+          class="mr-4"
+          placeholder="Start time"
+          start="08:30"
+          step="00:15"
+          end="18:30"
+        />
+        <el-time-select
+          v-model="endTime"
+          :min-time="startTime"
+          placeholder="End time"
+          start="08:30"
+          step="00:15"
+          end="18:30"
+        />
+      </div>
+    </template>
     <div v-if="!isLoading">
       <v-row>
         <v-col cols="12" sm="4"
@@ -82,7 +105,7 @@
                       <v-alert
                         :value="true"
                         border="left"
-                       color="blue-grey"
+                        color="blue-grey"
                         type="error"
                         icon="mdi-warning"
                       >
@@ -132,7 +155,7 @@
                       <v-alert
                         :value="true"
                         border="left"
-                         color="blue-grey"
+                        color="blue-grey"
                         type="error"
                         icon="mdi-warning"
                       >
@@ -181,7 +204,7 @@
                   <v-alert
                     :value="true"
                     border="left"
-                     color="blue-grey"
+                    color="blue-grey"
                     type="error"
                     icon="mdi-warning"
                   >
@@ -209,8 +232,58 @@ import VueApexCharts from "vue-apexcharts";
 import CardView from "../components/form/CardView.vue";
 export default {
   components: { VueApexCharts, CardView },
+  watch: {
+    start_day(newVal, oldVal) {
+      if (newVal) {
+        this.Opendate = null;
+        this.Closedate = null;
+        this.Betdate = null;
+      }
+    },
+    close_date(newVal, oldVal) {
+      if (newVal) {
+        this.Closedate = null;
+        this.Betdate = null;
+      }
+    },
+    bet_date(newVal, oldVal) {
+      if (newVal) {
+        this.Betdate = null;
+      }
+    }
+  },
+  computed: {
+    start_day() {
+      let date = [];
+      for (let i = 1; i <= 31; i++) {
+        date.push(i);
+      }
+      return date;
+    },
+    close_date() {
+      let date = [];
+      for (let i = this.Opendate; i <= 31; i++) {
+        date.push(i);
+      }
+      return date;
+    },
+    bet_date() {
+      let date = [];
+      for (let i = this.Closedate; i <= 31; i++) {
+        date.push(i);
+      }
+      return date;
+    }
+  },
   data() {
     return {
+      dateTo: "",
+      dateFrom: "",
+      startTime: "",
+      endTime: "",
+      Closedate: "",
+      Opendate: "",
+      Betdate: "",
       itembytype: [
         {
           type: "หวยรัฐบาล",
