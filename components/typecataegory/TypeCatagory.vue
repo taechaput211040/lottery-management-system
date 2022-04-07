@@ -140,13 +140,8 @@
                   required
                   dense
                 ></v-text-field>
-                <v-textarea
-                  label="กฎกติกา"
-                  v-model="formCreate.rule_play"
-                  dense
-                  required
-                  outlined
-                ></v-textarea>
+                  <div class="mt-3 font-weight-bold">กติกา</div> 
+                <vue-editor v-model="formCreate.rule_play" />
               </v-card>
               <v-row class="pa-2">
                 <v-spacer></v-spacer>
@@ -183,15 +178,10 @@
                   required
                   dense
                 ></v-text-field>
-                <v-textarea
-                  label="กฎกติกา"
-                  v-model="dataEdit.rule_play"
-                  dense
-                  required
-                  outlined
-                ></v-textarea>
-                สถานะการใช้งาน
-                <v-switch
+               <div class="mt-3 font-weight-bold">กติกา</div> 
+                <vue-editor v-model="dataEdit.rule_play" />
+               <div class="mt-3 font-weight-bold">สถานะการใช้งาน</div> 
+                <v-switch 
                   v-model="dataEdit.status"
                   :false-value="0"
                   :true-value="1"
@@ -213,7 +203,7 @@
         <!-- edit  -->
       </v-card>
       <v-row align="baseline" class="ma-3 ">
-        <v-col cols="12" sm="2" lg="1">
+        <v-col cols="12" sm="2" lg="2" xl="1">
           <v-select
             outlined
             hide-details="auto "
@@ -224,7 +214,7 @@
             label="รายการต่อนหน้า"
           ></v-select>
         </v-col>
-        <v-col cols="12" sm="10" lg="11">
+        <v-col cols="12" sm="10" lg="10">
           <v-pagination
             v-model="pagination.page"
             :total-visible="7"
@@ -241,6 +231,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      content: "",
       valid: false,
       formCreate: {
         title: "",

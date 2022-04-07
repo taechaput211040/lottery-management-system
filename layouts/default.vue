@@ -167,9 +167,21 @@ export default {
                 status: true
               },
               {
-                icon: "mdi-clipboard",
+                icon: "mdi-numeric",
                 text: "รายงานตัวเลข",
                 to: "/report/reportnumber",
+                status: true
+              },
+              {
+                icon: "mdi-file-table-box-outline",
+                text: "รายงานน้ำไหล ปัจจุบัน",
+                to: "/report/reportFlexodd",
+                status: true
+              },
+              {
+                icon: "mdi-currency-usd",
+                text: "รายงานส่วนต่างอัตราจ่าย",
+                to: "/report/reportOutcomerate",
                 status: true
               }
             ]
@@ -203,6 +215,12 @@ export default {
                 icon: "mdi-toggle-switch-off-outline",
                 text: "เปิดปิดหวยในสายงาน",
                 to: "/setting/onOffChild",
+                status: true
+              },
+              {
+                icon: "mdi-clipboard-pulse",
+                text: "ประเภทการแทง",
+                to: "/lottosetting/settingtype",
                 status: true
               }
             ]
@@ -272,9 +290,21 @@ export default {
               status: true
             },
             {
-              icon: "mdi-clipboard",
+              icon: "mdi-numeric",
               text: "รายงานตัวเลข",
               to: "/report/reportnumber",
+              status: true
+            },
+            {
+              icon: "mdi-file-table-box-outline",
+              text: "รายงานน้ำไหล ปัจจุบัน",
+              to: "/report/reportFlexodd",
+              status: true
+            },
+            {
+              icon: "mdi-currency-usd",
+              text: "รายงานส่วนต่างอัตราจ่าย",
+              to: "/report/reportOutcomerate",
               status: true
             }
           ]
@@ -302,12 +332,6 @@ export default {
               text: "โปรแกรมหวย",
               to: "/lottosetting/programlotto",
               status: true
-            },
-            {
-              icon: "mdi-clipboard-pulse",
-              text: "ประเภทการแทง",
-              to: "/lottosetting/settingtype",
-              status: true
             }
           ]
         },
@@ -334,6 +358,12 @@ export default {
               icon: "mdi-toggle-switch-off-outline",
               text: "เปิดปิดหวยในสายงาน",
               to: "/setting/onOffChild",
+              status: true
+            },
+            {
+              icon: "mdi-clipboard-pulse",
+              text: "ประเภทการแทง",
+              to: "/lottosetting/settingtype",
               status: true
             }
           ]

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 class="mt-2">ประเภทการแทง</h1>
-    <div class="ma-2 white rounded-lg classtable">
+    <h2>ประเภทการแทง</h2>
+    <div class="mt-2 white rounded-lg classtable">
       <v-data-table
         hide-default-footer
         :options.sync="option"
@@ -9,12 +9,11 @@
         :headers="headers"
         :items="itemrender"
       >
-    
         <template v-slot:no-data>
           <v-alert
             :value="true"
             border="left"
-             color="blue-grey"
+            color="blue-grey"
             type="error"
             icon="mdi-warning"
           >
@@ -81,7 +80,7 @@
         </template></v-data-table
       >
       <v-row align="baseline" class="ma-3 ">
-        <v-col cols="12" sm="2" lg="1">
+        <v-col cols="12" sm="2" lg="2" xl="1">
           <v-select
             outlined
             hide-details="auto "
@@ -91,7 +90,7 @@
             label="รายการต่อนหน้า"
           ></v-select>
         </v-col>
-        <v-col cols="12" sm="10" lg="11">
+        <v-col cols="12" sm="10" lg="10">
           <v-pagination
             v-model="option.page"
             :total-visible="7"

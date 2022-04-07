@@ -50,7 +50,7 @@
         </template>
       </v-data-table>
       <v-row align="baseline" class="ma-3 ">
-        <v-col cols="12" sm="2" lg="1">
+        <v-col cols="12" sm="2" lg="2" xl="1">
           <v-select
             outlined
             hide-details="auto "
@@ -60,7 +60,7 @@
             label="รายการต่อนหน้า"
           ></v-select>
         </v-col>
-        <v-col cols="12" sm="10" lg="11">
+        <v-col cols="12" sm="10" lg="10">
           <v-pagination
             v-model="option.page"
             :total-visible="7"
@@ -95,7 +95,7 @@
         </template>
       </v-data-table>
       <v-row align="baseline" class="ma-3 ">
-        <v-col cols="12" sm="2" lg="1">
+        <v-col cols="12" sm="2" lg="2" xl="1">
           <v-select
             outlined
             hide-details="auto "
@@ -105,7 +105,7 @@
             label="รายการต่อนหน้า"
           ></v-select>
         </v-col>
-        <v-col cols="12" sm="10" lg="11">
+        <v-col cols="12" sm="10" lg="10">
           <v-pagination
             v-model="optionupline.page"
             :total-visible="7"

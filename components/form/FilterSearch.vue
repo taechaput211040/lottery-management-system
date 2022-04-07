@@ -153,7 +153,7 @@ export default {
       this.$emit("search", this.filter);
     },
     getDateTime(date) {
-      return this.$moment(date).format("YYYY-MM-DDTHH:mm:ss");
+      return this.$moment(date).format("YYYY-MM-DD");
     },
     selectfiltertype(value) {
       let today = new Date();

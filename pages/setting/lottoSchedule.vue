@@ -35,14 +35,14 @@
           :options.sync="options"
           hide-default-footer
           :loading="isLoading"
-          :headers="headersdatelotto"
+          :headers="setHeader"
           :items="itemtypeaward"
         >
           <template v-slot:no-data>
             <v-alert
               :value="true"
               border="left"
-               color="blue-grey"
+              color="blue-grey"
               type="error"
               icon="mdi-warning"
             >
@@ -131,7 +131,7 @@
         </v-data-table>
 
         <v-row align="baseline" class="ma-3 ">
-          <v-col cols="12" sm="2" lg="1">
+          <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               outlined
               dense
@@ -142,7 +142,7 @@
               label="รายการต่อหน้า"
             ></v-select>
           </v-col>
-          <v-col cols="12" sm="10" lg="11">
+          <v-col cols="12" sm="10" lg="10">
             <v-pagination
               v-model="pagination.page"
               :total-visible="7"
@@ -352,7 +352,63 @@ export default {
       }
     };
   },
-
+  computed: {
+    setHeader() {
+      let headerender = this.headersdatelotto;
+      if (this.$store.state.auth.role != "LOTTO") {
+        headerender = [
+          {
+            text: "ลำดับ",
+            value: "no",
+            align: "center",
+            class: "font-weight-bold",
+            cellClass: "font-weight-bold"
+          },
+          {
+            text: "ชื่อหวย",
+            value: "title",
+            align: "left",
+            class: "font-weight-bold",
+            cellClass: "font-weight-bold"
+          },
+          {
+            text: "รอบหวย",
+            value: "lotto_round",
+            align: "left",
+            class: "font-weight-bold"
+          },
+          {
+            text: "วันที่เปิดแทง",
+            value: "bet_open_time",
+            align: "center",
+            class: "font-weight-bold"
+          },
+          {
+            text: "วันที่ปิดแทง",
+            value: "bet_close_time",
+            align: "center",
+            class: "font-weight-bold"
+          },
+          {
+            text: "วันที่ออกผล",
+            value: "bet_lotto_time",
+            align: "center",
+            class: "font-weight-bold"
+          },
+          {
+            text: "สถานะ",
+            value: "status",
+            sort: false,
+            align: "center",
+            class: "font-weight-bold"
+          }
+        ];
+        return headerender;
+      } else {
+        return this.headersdatelotto;
+      }
+    }
+  },
   async fetch() {
     this.getdataRender();
   },

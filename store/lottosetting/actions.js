@@ -340,7 +340,13 @@ export async function getProgramLotto(
     title: undefined,
     currentPage: undefined,
     limit: undefined,
-    type_id: undefined
+    LottoTypeId: undefined,
+    start_date: undefined,
+    end_date: undefined,
+    order_mode: undefined,
+    order_by: undefined,
+    type_id: undefined,
+    TypeCategoryId: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -352,7 +358,13 @@ export async function getProgramLotto(
             title: params.title,
             currentPage: params.currentPage,
             limit: params.limit,
-            LottoTypeId: params.type_id
+            LottoTypeId: params.type_id,
+            start_date: params.start_date,
+            end_date: params.end_date,
+            order_mode: params.order_mode,
+            order_by: params.order_by,
+            type_id: params.type_id,
+            TypeCategoryId: params.TypeCategoryId
           }
         }
       );

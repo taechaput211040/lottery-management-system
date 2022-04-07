@@ -1,35 +1,12 @@
 <template>
   <div>
-    <input type="date" class="form-control" v-model="dateFrom" :max="dateTo" />
-    <input type="date" class="form-control" v-model="dateTo" :min="dateFrom" />
-    <template>
-      <div class="demo-time-range">
-        <el-time-select
-          v-model="startTime"
-          :max-time="endTime"
-          class="mr-4"
-          placeholder="Start time"
-          start="08:30"
-          step="00:15"
-          end="18:30"
-        />
-        <el-time-select
-          v-model="endTime"
-          :min-time="startTime"
-          placeholder="End time"
-          start="08:30"
-          step="00:15"
-          end="18:30"
-        />
-      </div>
-    </template>
     <div v-if="!isLoading">
       <v-row>
         <v-col cols="12" sm="4"
           ><card-view
             title="รวมยอดแทง"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/edit.png"
-            value="100"
+            :value="this.betValue"
             value_class="primary--text font-weight-bold"
           ></card-view
         ></v-col>
@@ -37,7 +14,7 @@
           ><card-view
             title="รวมยอดรางวัล"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/reward.png"
-            value="100"
+            :value="this.payoutValue"
             value_class="success--text font-weight-bold"
           ></card-view
         ></v-col>
@@ -45,7 +22,7 @@
           ><card-view
             title="กำไรขาดทุน"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/profit.png"
-            value="B 100 "
+            :value="parseInt(this.betValue - this.payoutValue)"
             value_class="warning--text font-weight-bold"
           ></card-view
         ></v-col>
@@ -118,14 +95,14 @@
                     <template #[`item.type`]="{item,index}">
                       <div class="pa-2">
                         <div class="d-flex justify-space-between">
-                          <span class="font-weight-bold">{{ item.type }}</span>
+                          <span class="font-weight-bold">{{ item.title }}</span>
                         </div>
                         <v-progress-linear
                           height="10"
                           rounded
                           :color="randomcolor(index)"
                           class="mt-2"
-                          :value="item.summary"
+                          :value="`${item.bet_amount}`"
                         ></v-progress-linear>
                       </div>
                     </template>
@@ -168,20 +145,25 @@
                     <template #[`item.type`]="{item,index}">
                       <div class="pa-2">
                         <div class="d-flex justify-space-between">
-                          <span class="font-weight-bold">{{ item.type }}</span>
+                          <span class="font-weight-bold">{{ item.title }}</span>
                         </div>
+
                         <v-progress-linear
                           height="10"
                           rounded
                           :color="randomcolor(index)"
                           class="mt-2"
-                          :value="item.summary"
+                          :value="`${item.payout}`"
                         ></v-progress-linear>
                       </div>
                     </template>
+                    <template #[`item.bet_amount`]="{item}">
+                      {{ item.payout }}
+                    </template>
                   </v-data-table>
-                </div></div
-            ></v-col>
+                </div>
+              </div></v-col
+            >
           </v-row>
         </v-col>
         <v-col cols="12" lg="6" xl="8">
@@ -228,6 +210,7 @@
   </div>
 </template>
 <script>
+import { mapActions } from "vuex";
 import VueApexCharts from "vue-apexcharts";
 import CardView from "../components/form/CardView.vue";
 export default {
@@ -252,31 +235,12 @@ export default {
       }
     }
   },
-  computed: {
-    start_day() {
-      let date = [];
-      for (let i = 1; i <= 31; i++) {
-        date.push(i);
-      }
-      return date;
-    },
-    close_date() {
-      let date = [];
-      for (let i = this.Opendate; i <= 31; i++) {
-        date.push(i);
-      }
-      return date;
-    },
-    bet_date() {
-      let date = [];
-      for (let i = this.Closedate; i <= 31; i++) {
-        date.push(i);
-      }
-      return date;
-    }
-  },
+  computed: {},
   data() {
     return {
+      betValue: "",
+      payoutValue: "",
+      winloseValue: "",
       dateTo: "",
       dateFrom: "",
       startTime: "",
@@ -325,7 +289,7 @@ export default {
         },
         {
           text: "ผลรวม",
-          value: "summary",
+          value: "bet_amount",
           filterable: false,
           sortable: false,
           align: "center",
@@ -450,7 +414,23 @@ export default {
       }
     };
   },
+  async fetch() {
+    this.getDashboarddata();
+  },
   methods: {
+    ...mapActions("report", ["getDashboardWinlose"]),
+    async getDashboarddata() {
+      try {
+        let response = await this.getDashboardWinlose();
+        this.betValue = response.bet;
+        this.payoutValue = response.payout;
+        this.winloseValue = response.winlose;
+        this.itembytype = response.programs;
+        console.log(response, "rest");
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async testtodo(data) {
       console.log(data);
     },

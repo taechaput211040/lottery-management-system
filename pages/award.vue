@@ -28,7 +28,7 @@
         </div> -->
 
         <v-data-table
-          :headers="header"
+          :headers="setheader"
           hide-default-footer
           :items="dataAwardrender.data"
           :search="search"
@@ -62,11 +62,11 @@
               ><v-icon left>mdi-download-box</v-icon>กรอกผลรางวัล
             </v-btn>
           </template>
-          <template #[`item.calculate`]="{}">
-            <v-btn color="primary" text outlined small rounded
-              ><v-icon left>mdi-calculator</v-icon>คำนวณผลรางวัล
-            </v-btn> </template
-          ><template #[`item.status_lotto`]="{item}">
+
+          <template #[`item.bet_lotto_time`]="{item}">
+            {{ dateformat(item.bet_lotto_time) }}
+          </template>
+          <template #[`item.status_lotto`]="{item}">
             <v-chip color="success" v-if="item.status_lotto == true"
               ><v-icon left>mdi-circle</v-icon> ออกผลมาแล้ว</v-chip
             >
@@ -84,7 +84,7 @@
           </template>
         </v-data-table>
         <v-row align="baseline" class="ma-3 ">
-          <v-col cols="12" sm="2" lg="1">
+          <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               dense
               outlined
@@ -94,7 +94,7 @@
               label="รายการต่อหน้า"
             ></v-select>
           </v-col>
-          <v-col cols="12" sm="10" lg="11">
+          <v-col cols="12" sm="10" lg="10">
             <v-pagination
               v-model="pagination.page"
               :total-visible="7"
@@ -226,31 +226,34 @@ export default {
           text: "เวลาออกผล",
           value: "bet_lotto_time",
           class: "font-weight-bold",
-          align: "left"
+          align: "left",
+
+          sortable: false
         },
         {
           text: "สถานะการออกรางวัล",
           value: "status_lotto",
           class: "font-weight-bold",
-          align: "left"
+          align: "left",
+          width: "200px",
+
+          sortable: false
         },
         {
           text: "สถานะการคำนวณผลรางวัล",
           value: "status_calculate",
           class: "font-weight-bold",
-          align: "left"
-        },
-        {
-          text: "คำนวณผล",
-          value: "calculate",
-          class: "font-weight-bold",
-          align: "left"
+          align: "left",
+          sortable: false,
+          width: "200px"
         },
         {
           text: "กรอกผลรางวัล",
           value: "save",
           class: "font-weight-bold",
-          align: "left"
+          align: "left",
+
+          sortable: false
         }
       ],
       progranlottoID: "",
@@ -265,9 +268,69 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 10,
-        rowsNumber: 100
+        rowsNumber: 0
       }
     };
+  },
+  computed: {
+    setheader() {
+      let headerender = this.header;
+      if (this.$store.state.auth.role != "LOTTO") {
+        headerender = [
+          {
+            text: "No.",
+            value: "no",
+            class: "font-weight-bold",
+            cellClass: "font-weight-bold",
+            align: "center",
+            width: "80px"
+          },
+          {
+            text: "ชื่อหวย",
+            value: "title",
+            class: "font-weight-bold",
+            align: "left",
+            width: "200px",
+            sortable: false
+          },
+          {
+            text: "รอบวันที่",
+            value: "lotto_round",
+            class: "font-weight-bold",
+            align: "left",
+            width: "200px",
+            sortable: false
+          },
+          {
+            text: "เวลาออกผล",
+            value: "bet_lotto_time",
+            class: "font-weight-bold",
+            align: "left",
+            width: "200px",
+            sortable: false
+          },
+          {
+            text: "สถานะการออกรางวัล",
+            value: "status_lotto",
+            class: "font-weight-bold",
+            align: "left",
+            width: "200px",
+            sortable: false
+          },
+          {
+            text: "สถานะการคำนวณผลรางวัล",
+            value: "status_calculate",
+            class: "font-weight-bold",
+            align: "left",
+            sortable: false,
+            width: "200px"
+          }
+        ];
+        return headerender;
+      } else {
+        return headerender;
+      }
+    }
   },
   watch: {
     options: {
@@ -281,6 +344,9 @@ export default {
     this.selectSection();
   },
   methods: {
+    dateformat(date) {
+      return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
+    },
     searchfunction(filter) {
       this.filter = filter;
 

@@ -23,6 +23,7 @@
     "vue-apexcharts": "^1.6.2",
     "vue-form-wizard": "^0.8.4",
     "vue-sweetalert2": "^5.0.2",
+    "vue2-editor": "^2.10.3",
     "vuetify": "^2.5.5"
   },
   "devDependencies": {

@@ -19,28 +19,51 @@
                 hide-details="auto"
                 row
               >
-                <v-radio label="ทั้งหมด" value="0 "></v-radio>
+                <v-radio label="ทั้งหมด" value="0"></v-radio>
                 <v-radio label="น้ำไหล" value="1"></v-radio>
                 <v-radio label="เพลา" value="2"></v-radio>
               </v-radio-group>
             </div>
           </div>
         </div>
-        <v-data-table :headers="headersdatelotto" :items="itemtypeaward">
+        <v-data-table :headers="headersdatelotto" :items="itemReport">
           <template v-slot:no-data>
             <v-alert
               :value="true"
               border="left"
-               color="blue-grey"
+              color="blue-grey"
               type="error"
               icon="mdi-warning"
             >
               ไม่พบข้อมูล
             </v-alert>
           </template>
-          <template #[`item.actions`]>
+          <template #[`item.no`]="{index}">
+            {{ index + 1 }}
+          </template>
+          <template #[`item.actions`]="{item}">
             <div class="d-flex justify-center">
               <v-tooltip bottom color="black" dark>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    class="mx-1"
+                    :options.sync="options"
+                    fab
+                    dark
+                    x-small
+                    color="black"
+                    @click="getDetail(item, 1)"
+                  >
+                    <v-icon dark>
+                      mdi-clipboard-text
+                    </v-icon>
+                  </v-btn></template
+                >
+                <span>ดูรายละเอียดโพยแทง</span>
+              </v-tooltip>
+              <v-tooltip bottom color="warning" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -49,17 +72,17 @@
                     fab
                     dark
                     x-small
-                    color="black"
-                    @click="dialogdetail = true"
+                    color="warning"
+                    @click="getDetail(item, 2)"
                   >
                     <v-icon dark>
-                      mdi-clipboard-text
+                      mdi-clipboard-account
                     </v-icon>
                   </v-btn></template
                 >
-                <span>ดูรายละเอียดโพย</span>
+                <span>ดูรายละเอียดโพยรับของ</span>
               </v-tooltip>
-              <v-tooltip bottom color="error" dark>
+              <!-- <v-tooltip bottom color="error" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -76,35 +99,32 @@
                   </v-btn></template
                 >
                 <span>ยกเลิกโพย</span>
-              </v-tooltip>
+              </v-tooltip> -->
             </div>
+            <v-card cl></v-card>
           </template>
         </v-data-table>
+        
       </div>
     </div>
     <v-dialog v-model="dialogdetail" max-width="800">
       <v-card>
         <div class="ma-2 pa-2 font-weight-bold d-flex align-center">
-          <span class="primary--text">account</span><v-spacer></v-spacer>
-          <v-chip outlined color="primary"> เพลา </v-chip
-          ><v-chip outlined color="yellow"> ส่งโพย </v-chip
+          <v-chip  outlined color="green" class="green--text " 
+            ><v-icon left>mdi-account</v-icon
+            >{{ itemDetail.member_username }}</v-chip
+          ><v-spacer></v-spacer>
+          <v-chip outlined color="primary mx-2">
+            {{ itemDetail.typepurchase_name }} </v-chip
           ><v-chip outlined color="black" class="mr-2" dark>
-            หวยรายวัน
+            {{ itemDetail.lotto_round }}
           </v-chip>
-          หวยรัฐบาล 01-02-2022
+          {{ itemDetail.date }}
         </div>
 
-        <v-data-table :headers="headerDetail" hide-default-footer>
-          <template v-slot:no-data>
-            <v-alert
-              :value="true"
-              border="left"
-               color="blue-grey"
-              type="error"
-              icon="mdi-warning"
-            >
-              ไม่พบข้อมูล
-            </v-alert>
+        <v-data-table :headers="headerDetail" :items="itemDetail.data" class="elevation-1">
+          <template #[`item.no`]="{index}">
+            {{ index + 1 }}
           </template>
         </v-data-table>
         <v-card-actions class="justify-end">
@@ -125,48 +145,59 @@ export default {
       typecategory: "",
       roundID: "",
       listtype: [],
+      itemDetail: {},
+      options: {},
       selectCate: null,
       selectType: null,
       itemcategory: [],
+      itemReport: [],
       headerDetail: [
         {
           text: "ลำดับ",
           value: "no",
           align: "center",
           class: "font-weight-bold",
+          cellClass: "font-weight-bold",
+          width: "75px"
+        },
+        {
+          text: "ประเภท",
+          value: "lottonumbertype_name",
+          align: "center",
+          class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
-          text: "ประเภท & หมายเลข",
-          value: "type",
+          text: "หมายเลข",
+          value: "lotto_number",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
           text: "ยอด",
-          value: "amount",
+          value: "bet_amount",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
           text: "ส่วนลด",
-          value: "discont",
+          value: "discount",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
           text: "รวม",
-          value: "balance",
+          value: "winlose",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
           text: "จ่าย",
-          value: "pay",
+          value: "payout",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
@@ -190,49 +221,42 @@ export default {
         },
         {
           text: "agent",
-          value: "agent",
+          value: "agent_name",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
           text: "ชนิดหวย",
-          value: "type",
-          align: "center",
-          class: "font-weight-bold",
-          cellClass: "font-weight-bold"
-        },
-        {
-          text: "ส่วนลด",
-          value: "discont",
+          value: "lottotype_name",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
           text: "ชื่อหวย",
-          value: "lotto_name",
+          value: "title",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
           text: "ชื่องวด",
-          value: "round",
+          value: "lotto_round",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
-          text: "ชนิการเเทง",
-          value: "typebet",
+          text: "ชนิดการเเทง",
+          value: "typepurchase_name",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
         },
         {
           text: "วันที่",
-          value: "lotto_date",
+          value: "date",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold"
@@ -285,7 +309,7 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 15,
-        rowsNumber: 100
+        rowsNumber: 0
       }
     };
   },
@@ -297,47 +321,54 @@ export default {
       } else {
         this.type = value;
       }
-      await this.searchfunction(this.filter);
+      this.getReportdata();
     },
-    ...mapActions("report", ["getBetReport", "getReportDetail"]),
+    ...mapActions("report", [
+      "getBetReport",
+      "getReportDetail",
+      "getTransaction"
+    ]),
     async searchfunction(value) {
       this.filter = value;
-      this.getdata(value);
+      this.getReportdata();
     },
-    async getdata(fillter) {
-      console.log(fillter, "fillter");
-      console.log(this.type);
+    getparameter() {
+      let params = {
+        start_time: this.filter.startDate,
+        end_time: this.filter.endDate,
+        type_purchase: this.type,
+        page: this.pagination.page,
+        limit: this.pagination.rowsPerPage
+      };
+      return params;
+    },
+    async getReportdata() {
+      let params = this.getparameter();
+      let { data: response } = await this.getReportDetail(params);
+      this.itemReport = response.data;
+    },
+    async getDetail(item, value) {
+      let params = {
+        member_id: item.member_id,
+        program_id: item.program_id,
+        type_purchase: value
+      };
+      try {
+        let { data: res } = await this.getTransaction(params);
+        let details = {
+          typepurchase_name: item.typepurchase_name,
+          lotto_round: item.lotto_round,
+          title: item.title,
+          date: item.date,
+          member_username: item.member_username
+        };
+        this.itemDetail = { ...res, ...details };
+        console.log(this.itemDetail);
+      } catch (error) {
+        console.log(error);
+      }
 
-      // try {
-      //   let parameter = {
-      //     typecategory_id: this.typecategory,
-      //     program_id: this.roundID,
-      //     start_time: fillter.startDate,
-      //     end_time: fillter.endDate,
-      //     type_purchase: this.type,
-      //     page: this.pagination.page,
-      //     limit: this.pagination.rowsPerPage
-      //   };
-      //   let { data: report } = await this.getBetReport(parameter);
-      //   this.itemReport = report.data;
-      //   console.log(this.itemReport);
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      // try {
-      //   let parameter = {
-      //     start_time: fillter.startDate,
-      //     end_time: fillter.endDate,
-      //     type_purchase: this.type,
-      //     page: this.pagination.page,
-      //     limit: this.pagination.rowsPerPage
-      //   };
-      //   let { data: report } = await this.getBetReport(parameter);
-      //   this.itemReport = report.data;
-      //   console.log(this.itemReport);
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      this.dialogdetail = true;
     }
   }
 };

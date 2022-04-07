@@ -169,7 +169,7 @@
           >
         </v-card>
         <v-row align="baseline" class="ma-3 ">
-          <v-col cols="12" sm="2" lg="1">
+          <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               dense
               outlined
@@ -179,7 +179,7 @@
               label="รายการต่อหน้า"
             ></v-select>
           </v-col>
-          <v-col cols="12" sm="10" lg="11">
+          <v-col cols="12" sm="10" lg="10">
             <v-pagination
               v-model="pagination.page"
               :total-visible="7"
@@ -242,14 +242,14 @@
                   class="align-baseline"
                   v-if="form.plan_type == 0"
                   >วันที่เปิดรับ
-                  <v-select
+                  <v-text-field
                     dense
-                    :rules="formRules.open_day"
+                    :rules="[v => !!v || 'กรุณากรอกวันเปิด']"
                     placeholder="กรุณากรอกวันที่เปิดรับ"
                     hide-details="auto"
                     outlined
-                    :items="start_day"
                     required
+                    @keypress="e => checkpositive(e)"
                     type="number"
                     class=" col-12 col-sm-6"
                     v-model="form.open_day"
@@ -278,18 +278,18 @@
                   class=" align-baseline"
                   v-if="form.plan_type == 0"
                   >วันที่ปิดรับ
-                  <v-select
+                  <v-text-field
                     dense
                     required
                     outlined
-                    :items="start_day"
                     :rules="formRules.close_day"
                     placeholder="กรุณากรอกวันที่ปิดรับ"
                     hide-details="auto"
                     class=" col-12 col-sm-6"
+                    @keypress="e => checkpositive(e)"
                     type="number"
                     v-model="form.close_day"
-                  ></v-select
+                  ></v-text-field
                 ></v-col>
                 <v-col cols="12" sm="6"
                   ><div>เวลาปิดรับ</div>
@@ -314,18 +314,18 @@
                   class="align-baseline"
                   v-if="form.plan_type == 0"
                   >วันที่ออกผล
-                  <v-select
+                  <v-text-field
                     dense
                     outlined
-                    :items="start_day"
                     required
                     :rules="formRules.lotto_day"
                     placeholder="กรุณากรอกวันที่ออกผล"
                     hide-details="auto"
                     class="col-12 col-sm-6"
+                    @keypress="e => checkpositive(e)"
                     type="number"
                     v-model="form.lotto_day"
-                  ></v-select
+                  ></v-text-field
                 ></v-col>
                 <v-col cols="12" sm="6"
                   ><div>เวลาออกผล</div>
@@ -824,6 +824,13 @@ export default {
   },
   data() {
     return {
+      value: 0,
+      last_value: 0,
+      validation: {
+        min: 0,
+        max: 10,
+        decimal: 10
+      },
       title_search: undefined,
       modaledit: false,
       dlcreateNum: false,
@@ -832,7 +839,7 @@ export default {
       formRules: {
         selecttype: [v => !!v || "กรุราเลือกประเภทหวย"],
         title: [v => !!v || "กรุณากรอกชื่อ"],
-        open_day: [v => !!v || "กรุณากรอกวันเปิด"],
+
         close_day: [v => !!v || "กรุณากรอกวันปิด"],
         lotto_day: [v => !!v || "กรุณากรอกวันออกผล"],
         lotto_round: [v => !!v || "กรุณากรอกชื่อรอบ"]
@@ -1284,6 +1291,27 @@ export default {
         });
       } catch (error) {
         console.log(error);
+      }
+    },
+    checkpositive(evt) {
+      evt = evt ? evt : window.event;
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    rangeInput(self, itemmodel) {
+      // console.log(itemmodel);
+      if (itemmodel == undefined) {
+        itemmodel = "";
+      } else if (/[0-9]/g.test(self.key)) {
+        self.preventDefault();
       }
     }
   }
