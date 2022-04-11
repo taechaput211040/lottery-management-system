@@ -339,7 +339,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteLottotype(item);
-            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
+            this.$swal("ลบเรียบร้อย!", "ดำเนินการเสร็จสิ้น", "success");
             this.$fetch();
           }
         });

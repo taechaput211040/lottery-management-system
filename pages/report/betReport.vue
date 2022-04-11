@@ -11,8 +11,7 @@
         <div class="my-3">
           <h3 class="pa-3">รายการแทง</h3>
           <div class=" row align-center px-4 pt-3 pb-4">
-            <div class="font-weight-bold mx-2 col-12 pa-0"></div>
-            <div class="col-12 pa-0">
+            <div class="col-12 col-sm-6 pa-0">
               <v-radio-group
                 v-model="selectgroup"
                 @change="renderbyselecttype"
@@ -24,9 +23,34 @@
                 <v-radio label="เพลา" value="2"></v-radio>
               </v-radio-group>
             </div>
+            <div class="col-12 pa-0 col-sm-6 text-center">
+              <div class="row pt-3 justify-end">
+                <div class=" col-6 col-sm-5 col-md-5">
+                  <div class="elevation-2 rounded-lg pa-2">
+                    ยอดเเทงรวม
+                    <h4>{{ summary.bet }} บาท</h4>
+                  </div>
+                </div>
+                <div class="col-6 col-sm-5 col-md-5">
+                  <div class="elevation-2 rounded-lg pa-2">
+                    ยอดรวมแพ้/ชนะ
+                    <h4>{{ summary.winlose }} บาท</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <v-data-table :headers="headersdatelotto" :items="itemReport">
+        <v-data-table
+          :server-items-length="pagination.rowsNumber"
+          :items-per-page.sync="pagination.rowsPerPage"
+          :options.sync="options"
+          hide-default-footer
+          :page.sync="pagination.page"
+          :headers="headersdatelotto"
+          :items="itemReport"
+          class="pb-2 elevation-1"
+        >
           <template v-slot:no-data>
             <v-alert
               :value="true"
@@ -39,7 +63,7 @@
             </v-alert>
           </template>
           <template #[`item.no`]="{index}">
-            {{ index + 1 }}
+            {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
           <template #[`item.actions`]="{item}">
             <div class="d-flex justify-center">
@@ -104,31 +128,109 @@
             <v-card cl></v-card>
           </template>
         </v-data-table>
-        
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="2" xl="1">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="pagination.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChange"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="10">
+            <v-pagination
+              v-model="pagination.page"
+              :total-visible="7"
+              :length="
+                Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+              "
+            ></v-pagination>
+          </v-col>
+        </v-row>
       </div>
     </div>
     <v-dialog v-model="dialogdetail" max-width="800">
       <v-card>
-        <div class="ma-2 pa-2 font-weight-bold d-flex align-center">
-          <v-chip  outlined color="green" class="green--text " 
-            ><v-icon left>mdi-account</v-icon
-            >{{ itemDetail.member_username }}</v-chip
-          ><v-spacer></v-spacer>
-          <v-chip outlined color="primary mx-2">
-            {{ itemDetail.typepurchase_name }} </v-chip
-          ><v-chip outlined color="black" class="mr-2" dark>
-            {{ itemDetail.lotto_round }}
-          </v-chip>
-          {{ itemDetail.date }}
+        <v-card-actions class="justify-center">
+          <h2 v-if="detailstype == 1">รายละเอียดโพยเเทง</h2>
+          <h2 v-else>รายละเอียดโพยรับของ</h2>
+        </v-card-actions>
+        <v-divider></v-divider>
+        <div class=" pa-3 font-weight-bold row ma-0 align-center">
+          <div class="col-12 col-sm-6  pa-0">
+            <v-chip label outlined color="green" class="green--text "
+              ><v-icon left>mdi-account</v-icon
+              >{{ itemDetail.member_username }}</v-chip
+            >
+          </div>
+          <div class="col-12 col-sm-6 pa-0 mt-2 text-md-right">
+            <v-chip outlined color="primary mx-2">
+              {{ itemDetail.typepurchase_name }} </v-chip
+            ><v-chip outlined color="black" class="mr-2" dark>
+              {{ itemDetail.lotto_round }}
+            </v-chip>
+            {{ itemDetail.date }}
+          </div>
         </div>
 
-        <v-data-table :headers="headerDetail" :items="itemDetail.data" class="elevation-1">
+        <v-data-table
+          :server-items-length="paginationDetail.rowsNumber"
+          :items-per-page.sync="paginationDetail.rowsPerPage"
+          :options.sync="optionsDetail"
+          hide-default-footer
+          :page.sync="paginationDetail.page"
+          :headers="headerDetail"
+          :items="itemDetail.data"
+          class="elevation-1"
+        >
+          <template #[`item.status`]="{item}">
+   
+            <v-chip color="yellow" v-if="parseInt(item.status) == 0" dark small
+              ><v-icon left>mdi-circle</v-icon>กำลังประมวลผล</v-chip
+            >
+            <v-chip color="green" v-if="parseInt(item.status) == 1" dark small
+              ><v-icon left>mdi-circle</v-icon>รับแทง</v-chip
+            >
+            <v-chip color="error" v-else dark small
+              ><v-icon left>mdi-circle</v-icon>ยกเลิก</v-chip
+            >
+          </template>
           <template #[`item.no`]="{index}">
-            {{ index + 1 }}
+            {{
+              paginationDetail.rowsPerPage * (paginationDetail.page - 1) +
+                (index + 1)
+            }}
           </template>
         </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="2">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="paginationDetail.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChangeDetail"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="10">
+            <v-pagination
+              v-model="paginationDetail.page"
+              :total-visible="7"
+              :length="
+                Math.ceil(
+                  paginationDetail.rowsNumber / paginationDetail.rowsPerPage
+                )
+              "
+            ></v-pagination>
+          </v-col>
+        </v-row>
         <v-card-actions class="justify-end">
-          <v-btn color="error" @click="dialogdetail = false">ยกเลิก</v-btn>
+          <v-btn color="error" @click="closedialog()">ยกเลิก</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -142,12 +244,15 @@ export default {
   components: { FilterSearch },
   data() {
     return {
+      pageSizes: [5, 10, 15, 25],
+      optionsDetail: {},
       typecategory: "",
       roundID: "",
       listtype: [],
       itemDetail: {},
       options: {},
       selectCate: null,
+      summary: {},
       selectType: null,
       itemcategory: [],
       itemReport: [],
@@ -158,56 +263,64 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          width: "75px"
+          width: "75px",
+          sortable: false
         },
         {
           text: "ประเภท",
           value: "lottonumbertype_name",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "หมายเลข",
           value: "lotto_number",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "ยอด",
-          value: "bet_amount",
+          value: "bet",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
-          text: "ส่วนลด",
+          text: "ส่วนลด(บาท)",
           value: "discount",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
-          text: "รวม",
+          text: "รวม(บาท)",
           value: "winlose",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
-          text: "จ่าย",
+          text: "จ่าย(บาท)",
           value: "payout",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "สถานะ",
           value: "status",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         }
       ],
       dialogdetail: false,
@@ -217,77 +330,88 @@ export default {
           value: "no",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "agent",
           value: "agent_name",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "ชนิดหวย",
           value: "lottotype_name",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "ชื่อหวย",
           value: "title",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "ชื่องวด",
           value: "lotto_round",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "ชนิดการเเทง",
           value: "typepurchase_name",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "วันที่",
           value: "date",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "Username",
           value: "member_username",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
-          text: "ยอดเเทง",
-          value: "bet_amount",
+          text: "ยอดเเทง(บาท)",
+          value: "bet",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
-          text: "เเพ้/ชนะ",
+          text: "เเพ้/ชนะ(บาท)",
           value: "winlose",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "ดำเนินการ",
           value: "actions",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         }
       ],
       itemtypeaward: [
@@ -308,13 +432,46 @@ export default {
         sortBy: "desc",
         descending: false,
         page: 1,
-        rowsPerPage: 15,
+        rowsPerPage: 10,
         rowsNumber: 0
-      }
+      },
+      paginationDetail: {
+        sortBy: "desc",
+        descending: false,
+        page: 1,
+        rowsPerPage: 10,
+        rowsNumber: 0
+      },
+      detailstype: "",
+      itemDetailOpen: {}
     };
+  },
+  watch: {
+    options: {
+      async handler() {
+        await this.getReportdata();
+      },
+      deep: true
+    },
+    optionsDetail: {
+      async handler() {
+        await this.getRenderNumberlotto();
+      },
+      deep: true
+    }
   },
   async fetch() {},
   methods: {
+    closedialog() {
+      this.dialogdetail = false;
+      this.paginationDetail = {
+        sortBy: "desc",
+        descending: false,
+        page: 1,
+        rowsPerPage: 10,
+        rowsNumber: 0
+      };
+    },
     async renderbyselecttype(value) {
       if (value == 0) {
         this.type = undefined;
@@ -342,32 +499,57 @@ export default {
       };
       return params;
     },
+    async handlePageSizeChangeDetail(size) {
+      this.paginationDetail.page = 1;
+      this.paginationDetail.rowsPerPage = size;
+      this.getRenderNumberlotto();
+    },
+    async handlePageSizeChange(size) {
+      this.pagination.page = 1;
+      this.pagination.rowsPerPage = size;
+      this.getReportdata();
+    },
     async getReportdata() {
       let params = this.getparameter();
       let { data: response } = await this.getReportDetail(params);
+      console.log(response);
+      this.summary = response.summary;
       this.itemReport = response.data;
+      this.pagination.rowsNumber = response.pagination.total;
     },
-    async getDetail(item, value) {
+    getparameterDetail() {
       let params = {
-        member_id: item.member_id,
-        program_id: item.program_id,
-        type_purchase: value
+        member_id: this.itemDetailOpen.member_id,
+        program_id: this.itemDetailOpen.program_id,
+        type_purchase: this.detailstype,
+        page: this.paginationDetail.page,
+        limit: this.paginationDetail.rowsPerPage
       };
+      return params;
+    },
+    async getRenderNumberlotto() {
+      let params = this.getparameterDetail();
+      console.log(params);
       try {
         let { data: res } = await this.getTransaction(params);
         let details = {
-          typepurchase_name: item.typepurchase_name,
-          lotto_round: item.lotto_round,
-          title: item.title,
-          date: item.date,
-          member_username: item.member_username
+          typepurchase_name: this.itemDetailOpen.typepurchase_name,
+          lotto_round: this.itemDetailOpen.lotto_round,
+          title: this.itemDetailOpen.title,
+          date: this.itemDetailOpen.date,
+          member_username: this.itemDetailOpen.member_username
         };
         this.itemDetail = { ...res, ...details };
+        this.paginationDetail.rowsNumber = this.itemDetail.pagination.total;
         console.log(this.itemDetail);
       } catch (error) {
         console.log(error);
       }
-
+    },
+    async getDetail(item, value) {
+      this.itemDetailOpen = item;
+      this.detailstype = value;
+      this.getRenderNumberlotto();
       this.dialogdetail = true;
     }
   }

@@ -6,7 +6,7 @@
           ><card-view
             title="รวมยอดแทง"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/edit.png"
-            :value="this.betValue"
+            :value="this.betValue + ` บาท`"
             value_class="primary--text font-weight-bold"
           ></card-view
         ></v-col>
@@ -14,7 +14,7 @@
           ><card-view
             title="รวมยอดรางวัล"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/reward.png"
-            :value="this.payoutValue"
+            :value="this.payoutValue + ` บาท`"
             value_class="success--text font-weight-bold"
           ></card-view
         ></v-col>
@@ -22,7 +22,7 @@
           ><card-view
             title="กำไรขาดทุน"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/profit.png"
-            :value="parseInt(this.betValue - this.payoutValue)"
+            :value="parseInt(this.betValue - this.payoutValue) + ` บาท`"
             value_class="warning--text font-weight-bold"
           ></card-view
         ></v-col>
@@ -34,14 +34,25 @@
               class="title_card rounded-t-xl d-sm-flex pa-4 font-weight-bold"
             >
               <h2>ยอดกำไร/ขาดทุน</h2>
-
               <v-spacer></v-spacer>
               <div class="text-center ">
-                <v-btn class="mx-1 font-weight-bold" small color="primary"
+                <v-btn
+                  class="mx-1 font-weight-bold"
+                  small
+                  color="primary"
+                  @click="changDatefillter('findate')"
                   >วัน</v-btn
-                ><v-btn class="mx-1 font-weight-bold" small color="primary"
+                ><v-btn
+                  @click="changDatefillter('week')"
+                  class="mx-1 font-weight-bold"
+                  small
+                  color="primary"
                   >สัปดาห์</v-btn
-                ><v-btn class="mx-1 font-weight-bold" small color="primary"
+                ><v-btn
+                  @click="changDatefillter('thismounth')"
+                  class="mx-1 font-weight-bold"
+                  small
+                  color="primary"
                   >เดือน</v-btn
                 >
               </div>
@@ -58,7 +69,7 @@
         ></v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" lg="6" xl="4">
+        <v-col cols="12" lg="6" xl="5">
           <v-row>
             <v-col cols="12" sm="6" md="6" lg="12"
               ><div class="rounded-lg white pb-2">
@@ -102,13 +113,17 @@
                           rounded
                           :color="randomcolor(index)"
                           class="mt-2"
-                          :value="`${item.bet_amount}`"
+                          :value="`${item.bet}`"
                         ></v-progress-linear>
                       </div>
                     </template>
+                    <template #[`item.bet`]="{item}">
+                      {{ item.bet }} บาท
+                    </template>
                   </v-data-table>
-                </div></div
-            ></v-col>
+                </div>
+              </div></v-col
+            >
             <v-col cols="12" sm="6" md="6" lg="12">
               <div class="rounded-lg white pb-2">
                 <div
@@ -125,7 +140,7 @@
                 <div>
                   <v-data-table
                     :headers="header_bet"
-                    :items="itembytype"
+                    :items="itempayout"
                     hide-default-footer
                   >
                     <template v-slot:no-data>
@@ -157,8 +172,8 @@
                         ></v-progress-linear>
                       </div>
                     </template>
-                    <template #[`item.bet_amount`]="{item}">
-                      {{ item.payout }}
+                    <template #[`item.bet`]="{item}">
+                      {{ item.payout }} บาท
                     </template>
                   </v-data-table>
                 </div>
@@ -166,7 +181,7 @@
             >
           </v-row>
         </v-col>
-        <v-col cols="12" lg="6" xl="8">
+        <v-col cols="12" lg="6" xl="7">
           <div class="rounded-lg white pb-2">
             <div class="title_card align-center pa-4 font-weight-bold d-flex">
               <h2>จัดอันดับรับของใกล้จะเต็ม</h2>
@@ -238,7 +253,12 @@ export default {
   computed: {},
   data() {
     return {
+      filterDate: {
+        start_date: "2022-03-01T00:00:00.000Z",
+        end_date: "2022-04-30T23:59:59.999Z"
+      },
       betValue: "",
+      itempayout: [],
       payoutValue: "",
       winloseValue: "",
       dateTo: "",
@@ -289,12 +309,12 @@ export default {
         },
         {
           text: "ผลรวม",
-          value: "bet_amount",
+          value: "bet",
           filterable: false,
           sortable: false,
           align: "center",
           cellClass: "font-weight-bold",
-          width: "100px"
+          width: "150px"
         }
       ],
       header_recieve: [
@@ -312,28 +332,32 @@ export default {
           value: "type",
           sortable: false,
           filterable: false,
-          align: "center"
+          align: "center",
+          cellClass: "font-weight-bold"
         },
         {
           text: "ชนิดหวย",
           value: "category",
           sortable: false,
           filterable: false,
-          align: "center"
+          align: "center",
+          cellClass: "font-weight-bold"
         },
         {
           text: "รับของ",
           value: "recieve",
           sortable: false,
           filterable: false,
-          align: "center"
+          align: "center",
+          cellClass: "font-weight-bold"
         },
         {
-          text: "ยอดเเทง",
+          text: "ยอดเเทง(บาท)",
           value: "bet",
           sortable: false,
           filterable: false,
-          align: "center"
+          align: "center",
+          cellClass: "font-weight-bold"
         }
       ],
       itemrecieved: [
@@ -375,40 +399,57 @@ export default {
         }
       ],
       isLoading: false,
+
       series: [
         {
-          name: "series1",
-          data: [31, 40, 28, 51, 42, 109, 100, 100]
+          name: "ยอดกำไร",
+          data: [31, 40, 28, 51, 42, 109, 100, 100, 22, 35, 11, 85]
         },
         {
-          name: "series2",
-          data: [11, 32, 45, 32, 34, 52, 41, 22]
+          name: "ยอดขาดทุน",
+          data: [11, 32, 45, 32, 34, 52, 41, 22, 100, 100, 22, 35]
         }
       ],
       chartOptions: {
         chart: {
-          height: 350,
-          type: "area"
+          type: "area",
+          height: 300,
+          foreColor: "#999",
+          stacked: true,
+          dropShadow: {
+            enabled: true,
+            enabledSeries: [0],
+            top: -2,
+            left: 2,
+            blur: 5,
+            opacity: 0.06
+          }
         },
+        fill: {
+          type: "solid",
+          fillOpacity: 0.7
+        },
+
         dataLabels: {
           enabled: false
         },
+        colors: ["#00E396", "#FF5951"],
         stroke: {
           curve: "smooth"
         },
         xaxis: {
           categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "June",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec"
+            "มค.",
+            "กพ.",
+            "มีค.",
+            "เมย.",
+            "พค.",
+            "มิย.",
+            "สค.",
+            "กย.",
+            "ตค.",
+            "พย.",
+            "ธค."
           ]
         }
       }
@@ -418,14 +459,86 @@ export default {
     this.getDashboarddata();
   },
   methods: {
+    getDateTime(date) {
+      return this.$moment(date).format("YYYY-MM-DD HH:mm:ss");
+    },
+    changDatefillter(value) {
+      let today = new Date();
+      switch (value) {
+        case "findate":
+          this.filterDate = {
+            start_date: this.getDateTime(
+              new Date(today.getFullYear(), today.getMonth(), 1)
+            ),
+            end_date: this.getDateTime(
+              new Date(today.getFullYear(), today.getMonth(), 1).setHours(
+                23,
+                59,
+                59,
+                999
+              )
+            )
+          };
+          break;
+        case "week":
+          var wfday = today.getDay(),
+            diff = today.getDate() - wfday + (wfday == 0 ? -6 : 1);
+          var wlday = diff + 6;
+          this.filterDate = {
+            start_date: this.getDateTime(
+              new Date(today.setDate(diff)).setHours(0, 0, 0, 0)
+            ),
+            end_date: this.getDateTime(
+              new Date(today.setDate(wlday)).setHours(23, 59, 59, 999)
+            )
+          };
+          break;
+        case "thismounth":
+          this.filterDate = {
+            start_date: this.getDateTime(
+              new Date(today.getFullYear(), today.getMonth(), 1)
+            ),
+            end_date: this.getDateTime(
+              new Date(today.getFullYear(), today.getMonth() + 1, 0).setHours(
+                23,
+                59,
+                59,
+                999
+              )
+            )
+          };
+          break;
+        default:
+          break;
+      }
+      this.getDashboarddata();
+    },
+
+    getParameter() {
+      let params = {
+        start_time: this.filterDate.start_date,
+        end_time: this.filterDate.end_date
+      };
+      return params;
+    },
     ...mapActions("report", ["getDashboardWinlose"]),
     async getDashboarddata() {
+      let params = this.getParameter();
       try {
-        let response = await this.getDashboardWinlose();
+        let { data: response } = await this.getDashboardWinlose(params);
         this.betValue = response.bet;
         this.payoutValue = response.payout;
         this.winloseValue = response.winlose;
-        this.itembytype = response.programs;
+        this.itembytype = response.programs
+          .sort(function(a, b) {
+            return b.bet - a.bet;
+          })
+          .slice(0, 5);
+        this.itempayout = response.programs
+          .sort(function(a, b) {
+            return b.payout - a.payout;
+          })
+          .slice(0, 5);
         console.log(response, "rest");
       } catch (error) {
         console.log(error);

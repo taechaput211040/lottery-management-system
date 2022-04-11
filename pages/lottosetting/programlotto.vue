@@ -88,11 +88,11 @@
                       icon
                       fab
                       ><v-icon dark>
-                        mdi-dots-horizontal
+                        mdi-magnify-plus
                       </v-icon>
                     </v-btn></template
                   >
-                  <span>ดูชนิดของหวย</span>
+                  <span>รายละเอียดตัวเลข</span>
                 </v-tooltip>
                 <v-tooltip bottom color="warning">
                   <template v-slot:activator="{ on, attrs }">
@@ -986,7 +986,7 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          width: "150px"
+          width: "75px"
         },
         {
           text: "ชื่อหวย",
@@ -1029,7 +1029,7 @@ export default {
           text: "Action",
           value: "action",
           align: "center",
-          width: "250px",
+          width: "200px",
           sortable: false
         }
       ],
@@ -1246,7 +1246,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteCategoryTypeDetail(item.id);
-            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
+            this.$swal("ลบเรียบร้อย!", "ดำเนินการเสร็จสิ้น", "success");
             this.$fetch();
             if (this.title_search) {
               this.searchlotto();

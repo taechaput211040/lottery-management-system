@@ -36,6 +36,12 @@
           <template #[`item.no`]="{index}">
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
+          <template #[`item.title`]="{item}">
+            <div class="title_lotto">
+              <img v-if="item.lotto_flag" :src="item.lotto_flag" alt="" class="mx-2" />
+              <span>{{ item.title }}</span>
+            </div>
+          </template>
           <template #[`item.action`]="{item}">
             <div class="d-flex justify-center">
               <v-tooltip bottom color="warning">
@@ -140,7 +146,7 @@
                   required
                   dense
                 ></v-text-field>
-                  <div class="mt-3 font-weight-bold">กติกา</div> 
+                <div class="mt-3 font-weight-bold">กติกา</div>
                 <vue-editor v-model="formCreate.rule_play" />
               </v-card>
               <v-row class="pa-2">
@@ -178,10 +184,10 @@
                   required
                   dense
                 ></v-text-field>
-               <div class="mt-3 font-weight-bold">กติกา</div> 
+                <div class="mt-3 font-weight-bold">กติกา</div>
                 <vue-editor v-model="dataEdit.rule_play" />
-               <div class="mt-3 font-weight-bold">สถานะการใช้งาน</div> 
-                <v-switch 
+                <div class="mt-3 font-weight-bold">สถานะการใช้งาน</div>
+                <v-switch
                   v-model="dataEdit.status"
                   :false-value="0"
                   :true-value="1"
@@ -211,7 +217,7 @@
             v-model="pagination.rowsPerPage"
             :items="pageSizes"
             @change="handlePageSizeChange"
-            label="รายการต่อนหน้า"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
@@ -264,6 +270,7 @@ export default {
           text: "ชื่อ",
           align: "center",
           filterable: false,
+          sortable: false,
           value: "title",
           cellClass: "font-weight-bold"
         },
@@ -272,7 +279,9 @@ export default {
           text: "สถานะ",
           align: "status",
           filterable: false,
-          value: "status"
+          value: "status",
+          sortable: false,
+          align: "center"
         },
         { text: "สร้างเมื่อ ", value: "created_at", align: "center" },
         { text: "สร้างโดย", value: "created_by", align: "center" },
@@ -419,7 +428,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteTypeCategory(item.id);
-            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
+            this.$swal("ลบเรียบร้อย!", "ดำเนินการเสร็จสิ้น", "success");
             this.$fetch();
           }
         });

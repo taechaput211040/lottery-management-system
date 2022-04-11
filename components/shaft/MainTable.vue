@@ -2,7 +2,6 @@
   <div>
     <div class="pa-1 rounded-lg white my-3 pa-2">
       เลือกประเภทหวย
-
       <v-radio-group
         hide-details="auto"
         class="my-3"
@@ -11,7 +10,7 @@
         @change="selectCatebytype"
       >
         <v-radio
-          v-for="(item, i) in this.listtype"
+          v-for="(item, i) in $store.state.lottosetting.lottotype"
           :key="i"
           :label="item.title"
           :value="item.id"
@@ -27,18 +26,17 @@
         :loading="isLoading"
         :items="datarender"
       >
-   
         <template v-slot:no-data>
           <v-alert
             :value="true"
             border="left"
-        color="blue-grey"
+            color="blue-grey"
             type="error"
             icon="mdi-warning"
           >
             ไม่พบข้อมูล
-          </v-alert>
-        </template>s
+          </v-alert> </template
+        >s
         <template #[`item.no`]="{index}">
           {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
@@ -56,7 +54,7 @@
             dense
             v-model="option.itemsPerPage"
             :items="pageSizes"
-            label="รายการต่อนหน้า"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
@@ -115,13 +113,14 @@ export default {
     };
   },
   async fetch() {
-    this.isLoading = true;
-    try {
-      const { data } = await this.getTypelottoAll();
-      this.listtype = data.result;
-    } catch (error) {
-      console.log(error);
-    }
+   
+    // this.isLoading = true;
+    // try {
+    //   const { result } = this.$store.state.lottosetting.lottotype;
+    //   this.listtype = result;
+    // } catch (error) {
+    //   console.log(error);
+    // }
   },
   methods: {
     ...mapActions("shaft", ["getSellerAll"]),

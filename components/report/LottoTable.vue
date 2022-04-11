@@ -20,7 +20,6 @@
       <v-data-table
         :headers="headerTable"
         :items="datarender"
-        :server-items-length="pagination.rowsNumber"
         :items-per-page.sync="pagination.rowsPerPage"
         :page.sync="pagination.page"
         hide-default-footer
@@ -50,7 +49,7 @@
             v-model="pagination.rowsPerPage"
             :items="pageSizes"
             @change="handlePageSizeChange"
-            label="รายการต่อนหน้า"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
@@ -97,21 +96,21 @@ export default {
           width: "300px"
         },
         {
-          text: "Bet",
+          text: "Bet(บาท)",
           value: "bet_amount",
           align: "center",
           class: "font-weight-bold",
           sortable: false
         },
         {
-          text: "Turnover",
+          text: "Turnover(บาท)",
           value: "turnover",
           align: "center",
           class: "font-weight-bold",
           sortable: false
         },
         {
-          text: "Payout",
+          text: "Payout(บาท)",
           value: "payout",
           align: "center",
           class: "font-weight-bold",
@@ -119,7 +118,7 @@ export default {
         },
 
         {
-          text: "ยอดได้เสีย",
+          text: "ยอดได้เสีย(บาท)",
           value: "winlose",
           align: "center",
           class: "font-weight-bold",

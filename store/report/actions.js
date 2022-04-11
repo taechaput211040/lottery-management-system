@@ -119,34 +119,43 @@ export async function getReportNumber(
   });
 }
 
-export async function getDashboardWinlose({ commit }) {
+export async function getDashboardWinlose(
+  { commit },
+  params = {
+    start_date: undefined,
+    end_date: undefined
+  }
+) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = {
-        bet: 649676,
-        payout: 66270,
-        winlose: 62749.53,
-        programs: [
-          {
-            title: "หวยรัฐบาล",
-            lottotype_id: null,
-            lottotype_name: null,
-            bet: 649676,
-            bet_amount: 649015.46,
-            payout: 66270,
-            winlose: 62749.53
-          },
-          {
-            title: "หวยฮานอยสตาร์",
-            lottotype_id: null,
-            lottotype_name: null,
-            bet: 584334,
-            bet_amount: 584224.46,
-            payout: 112112,
-            winlose: 62749.53
-          }
-        ]
-      };
+      // let response = {
+      //   bet: 649676,
+      //   payout: 66270,
+      //   winlose: 62749.53,
+      //   programs: [
+      //     {
+      //       title: "หวยรัฐบาล",
+      //       lottotype_id: null,
+      //       lottotype_name: null,
+      //       bet: 649676,
+      //       bet_amount: 649015.46,
+      //       payout: 66270,
+      //       winlose: 62749.53
+      //     },
+      //     {
+      //       title: "หวยฮานอยสตาร์",
+      //       lottotype_id: null,
+      //       lottotype_name: null,
+      //       bet: 584334,
+      //       bet_amount: 584224.46,
+      //       payout: 112112,
+      //       winlose: 62749.53
+      //     }
+      //   ]
+      // };
+      let response = await this.$axios.get(
+        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Overview/${params.start_time}/${params.end_time}`
+      );
       resolve(response);
     } catch (error) {
       reject(error);
@@ -214,7 +223,9 @@ export async function getTransaction(
   params = {
     member_id: undefined,
     program_id: undefined,
-    type_purchase: undefined
+    type_purchase: undefined,
+    page: undefined,
+    limit: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -223,7 +234,9 @@ export async function getTransaction(
         `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Transaction/${params.program_id}/${params.member_id}`,
         {
           params: {
-            type_purchase: params.type_purchase
+            type_purchase: params.type_purchase,
+            page: params.page,
+            limit: params.limit
           }
         }
       );

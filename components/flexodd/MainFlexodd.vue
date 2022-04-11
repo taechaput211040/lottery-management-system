@@ -133,7 +133,7 @@
             dense
             v-model="option.itemsPerPage"
             :items="pageSizes"
-            label="รายการต่อนหน้า"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
@@ -179,7 +179,7 @@
             dense
             v-model="optionupline.itemsPerPage"
             :items="pageSizesupline"
-            label="รายการต่อนหน้า"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
@@ -196,7 +196,7 @@
       <v-form ref="edtform">
         <v-card class="pa-3">
           <v-card-title primary-title class="justify-center font-weight-bold">
-            แก้ไขอัตราน้ำไหลหวย
+            แก้ไขอัตราหวยน้ำไหล
           </v-card-title>
           <div class="rounded-lg pa-2 elevation-3">
             <v-text-field
@@ -338,13 +338,6 @@ export default {
           class: "font-weight-bold",
           align: "center"
         },
-
-        {
-          text: "ยอดรวมแทง",
-          value: "self_receive_balance",
-          class: "font-weight-bold",
-          align: "center"
-        },
         {
           text: "แทงต่ำสุด",
           value: "minimum_bet_prize",
@@ -372,8 +365,7 @@ export default {
   async fetch() {
     this.isLoading = true;
     try {
-      const { data } = await this.getTypelottoAll();
-      this.listtype = data.result;
+      this.listtype = this.$store.state.lottosetting.lottotype;
       this.isLoading = false;
       this.getPercent();
     } catch (error) {

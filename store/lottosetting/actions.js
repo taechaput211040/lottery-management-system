@@ -1,10 +1,11 @@
 //Lotto Type : get//
-export async function getLottotype({ commit }) {
+export async function getLottotype(context) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoType/get`
       );
+      context.commit("set_lottotype",response.data.result.data);
       resolve(response.data);
     } catch (error) {
       reject(error);

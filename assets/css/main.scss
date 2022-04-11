@@ -166,7 +166,7 @@ table.v-table thead th:not(:first-child) {
 .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
 .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td,
 .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
-  padding: 5px !important;
+  padding: 10px !important;
 }
 .v-list-item--dense .v-list-item__title,
 .v-list-item--dense .v-list-item__subtitle,
@@ -188,4 +188,13 @@ table.v-table thead th:not(:first-child) {
   top: 9px;
   z-index: 1;
   left: 213px;
+}
+.title_lotto {
+  display: flex;
+  align-items: center;
+  img {
+    width: 30px;
+    height: 30px;
+  }
+  justify-content: center;
 }

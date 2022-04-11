@@ -52,7 +52,7 @@
               dense
               v-model="option.itemsPerPage"
               :items="pageSizes"
-              label="รายการต่อนหน้า"
+              label="รายการต่อหน้า"
             ></v-select>
           </v-col>
           <v-col cols="12" sm="10" lg="10">

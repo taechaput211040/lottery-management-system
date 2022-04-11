@@ -57,7 +57,7 @@
             dense
             v-model="option.itemsPerPage"
             :items="pageSizes"
-            label="รายการต่อนหน้า"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
@@ -102,7 +102,7 @@
             dense
             v-model="optionupline.itemsPerPage"
             :items="pageSizes"
-            label="รายการต่อนหน้า"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
@@ -117,7 +117,7 @@
     <v-dialog max-width="600px" v-model="updateDiaglog">
       <v-card class="pa-3">
         <v-card-title class="justify-center font-weight-bold"
-          >แก้ไขชนิดหวย</v-card-title
+          >แก้ไขอัตราหวยเพลา</v-card-title
         >
 
         <div class="elevation-3 rounded-lg pa-3">

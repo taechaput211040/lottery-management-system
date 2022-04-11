@@ -110,7 +110,7 @@
 </template>
 
 <script>
-// import { mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   middleware: "auth",
   head: {
@@ -394,17 +394,20 @@ export default {
     };
   },
   async fetch() {
+    this.e;
     this.showUser =
       localStorage.getItem("username") || sessionStorage.getItem("username");
   },
   async created() {
-    console.log(this.$store.state.auth.role);
+    await this.getLottotype();
+
     // await this.checkauthen();
   },
+  mounted() {
+    console.log(this.$store.state.lottosetting.lottotype);
+  },
   methods: {
-    // ...mapActions("auth", {
-    //   auth: "login"
-    // }),
+    ...mapActions("lottosetting", ["getLottotype"]),
     async logout() {
       try {
         localStorage.clear();

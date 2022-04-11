@@ -9,8 +9,8 @@
     <div class="my-3 rounded-lg white">
       <h3 class="pa-3">รายละเอียดการค้นหา</h3>
       <v-divider></v-divider>
-      <div class="pa-3 d-flex align-center">
-        <div class="pa-0 my-2 col-12 col-sm-6 col-lg-4">
+      <div class="pa-3 row align-center">
+        <div class="pa-2  col-12 col-sm-6 col-lg-4">
           <v-text-field
             outlined
             dense
@@ -20,9 +20,11 @@
             hide-details="auto"
           ></v-text-field>
         </div>
-        <v-btn color="primary" class="mx-2" @click="searchlotto()"
-          ><v-icon left>mdi-magnify</v-icon> ค้นหา</v-btn
-        >
+        <div class="pa-2 col-12 col-sm-6 col-lg-4">
+          <v-btn color="primary" class="mx-2" @click="searchlotto()"
+            ><v-icon left>mdi-magnify</v-icon> ค้นหา</v-btn
+          >
+        </div>
       </div>
     </div>
     <div><h2>รายการรอบหวย</h2></div>
@@ -528,7 +530,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteProgramLotto(item.id);
-            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
+            this.$swal("ลบเรียบร้อย!", "ดำเนินการเสร็จสิ้น", "success");
             if (this.title_lotto) {
               this.searchlotto();
             } else {

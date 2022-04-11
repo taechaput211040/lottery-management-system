@@ -84,7 +84,7 @@
             dense
             v-model="option.itemsPerPage"
             :items="pageSizes"
-            label="รายการต่อนหน้า"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
@@ -229,7 +229,8 @@ export default {
         {
           text: "ชื่อ",
           align: "center",
-          value: "name"
+          value: "name",
+          cellClass:"font-weight-bold"
         },
         {
           text: "จำนวนตัวเลข",
@@ -405,7 +406,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.deleteLottoNumberType(item.id);
-            this.$swal("ลบเรียบร้อย!", "ดำเนิการเสร็จสิ้น", "success");
+            this.$swal("ลบเรียบร้อย!", "ดำเนินการเสร็จสิ้น", "success");
             this.$fetch();
           }
         });

@@ -20,6 +20,7 @@
                 item-text="title"
                 item-value="id"
                 hide-details="auto"
+                @change="getReport"
                 outlined
                 v-model="selectType"
                 dense
@@ -239,11 +240,10 @@ export default {
     try {
       this.isLoading = true;
       const { result } = await this.getLottotype();
-      this.listtype = result.data;
+      this.listtype = this.$store.state.lottosetting.lottotype;
       this.isLoading = false;
     } catch (error) {
       console.log(error);
-      
     }
   },
   methods: {

@@ -66,7 +66,8 @@
           >
             <div class="white rounded-lg ">
               <div class="py-3">{{ item.name }}</div>
-              <v-data-table class="elevation-1"
+              <v-data-table
+                class="elevation-1"
                 :headers="headerReport"
                 :items="item.data"
                 hide-default-footer
@@ -218,8 +219,7 @@ export default {
   async fetch() {
     this.isLoading = true;
     try {
-      const { result } = await this.getLottotype();
-      this.listtype = result.data;
+      this.listtype = this.$store.state.lottosetting.lottotype;
       this.isLoading = false;
     } catch (error) {
       console.log(error);

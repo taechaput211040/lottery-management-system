@@ -53,6 +53,7 @@
           </template>
           <template #[`item.save`]="{item}">
             <v-btn
+              :disabled="item.status_calculate == true"
               color="black"
               text
               outlined
@@ -67,18 +68,18 @@
             {{ dateformat(item.bet_lotto_time) }}
           </template>
           <template #[`item.status_lotto`]="{item}">
-            <v-chip color="success" v-if="item.status_lotto == true"
+            <v-chip small color="success" v-if="item.status_lotto == true"
               ><v-icon left>mdi-circle</v-icon> ออกผลมาแล้ว</v-chip
             >
-            <v-chip color="error" v-if="item.status_lotto == false"
+            <v-chip small color="error" v-if="item.status_lotto == false"
               ><v-icon left>mdi-circle</v-icon> ผลยังไม่ออก</v-chip
             >
           </template>
           <template #[`item.status_calculate`]="{item}">
-            <v-chip color="success" v-if="item.status_lotto == true"
+            <v-chip small color="success" v-if="item.status_calculate == true"
               ><v-icon left>mdi-circle</v-icon>คำนวณผลเรียบร้อย</v-chip
             >
-            <v-chip color="error" v-if="item.status_lotto == false"
+            <v-chip small color="error" v-if="item.status_calculate == false"
               ><v-icon left>mdi-circle</v-icon>ยังไม่คำนวณผล</v-chip
             >
           </template>
@@ -120,49 +121,57 @@
                   class="col-9 row "
                   v-if="Array.isArray(item.lotto_number) == true"
                 >
-                  <v-text-field
-                    class="col-2 mx-1 text-center"
+                  <div
+                    class="col-6 col-sm-4 col-md-3 mx-1 text-center"
                     v-for="(j, n_key) in parseInt(item.amount_reward)"
                     :key="n_key"
-                    outlined
-                    type="number"
-                    hide-details="auto"
-                    dense
-                    v-model="item.lotto_number[n_key]"
-                    @keydown="
-                      e =>
-                        rangeInput(
-                          e,
-                          parseInt(item.number),
-                          item.lotto_number[n_key]
-                        )
-                    "
-                    :counter="parseInt(item.number)"
-                    :rules="[
-                      v => !!v,
-                      v => (v && v.length >= parseInt(item.number)) || ''
-                    ]"
-                    small
-                  ></v-text-field>
+                  >
+                    <v-text-field
+                      outlined
+                      type="number"
+                      hide-details="auto"
+                      dense
+                      v-model="item.lotto_number[n_key]"
+                      @keydown="
+                        e =>
+                          rangeInput(
+                            e,
+                            parseInt(item.number),
+                            item.lotto_number[n_key]
+                          )
+                      "
+                      :counter="parseInt(item.number)"
+                      :rules="[
+                        v => !!v,
+                        v => (v && v.length >= parseInt(item.number)) || ''
+                      ]"
+                      small
+                    ></v-text-field>
+                  </div>
                 </div>
                 <div class="col-9 row my-1" v-else>
-                  <v-text-field
-                    class="col-2 mx-1 text-center"
-                    outlined
-                    type="number"
-                    v-model="item.lotto_number"
-                    @keydown="
-                      e =>
-                        rangeInput(e, parseInt(item.number), item.lotto_number)
-                    "
-                    :counter="parseInt(item.number)"
-                    :rules="[
-                      v => !!v,
-                      v => (v && v.length >= parseInt(item.number)) || ''
-                    ]"
-                    hide-details="auto"
-                    dense
-                  ></v-text-field>
+                  <div class="col-6 col-sm-4 col-md-3 mx-1 text-center">
+                    <v-text-field
+                      outlined
+                      type="number"
+                      v-model="item.lotto_number"
+                      @keydown="
+                        e =>
+                          rangeInput(
+                            e,
+                            parseInt(item.number),
+                            item.lotto_number
+                          )
+                      "
+                      :counter="parseInt(item.number)"
+                      :rules="[
+                        v => !!v,
+                        v => (v && v.length >= parseInt(item.number)) || ''
+                      ]"
+                      hide-details="auto"
+                      dense
+                    ></v-text-field>
+                  </div>
                 </div>
               </div>
             </div>
@@ -220,7 +229,8 @@ export default {
           text: "รอบวันที่",
           value: "lotto_round",
           class: "font-weight-bold",
-          align: "left"
+          align: "left",
+          sortable: false
         },
         {
           text: "เวลาออกผล",
@@ -235,7 +245,7 @@ export default {
           value: "status_lotto",
           class: "font-weight-bold",
           align: "left",
-          width: "200px",
+          width: "150px",
 
           sortable: false
         },

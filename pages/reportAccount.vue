@@ -52,7 +52,7 @@
             v-model="pagination.rowsPerPage"
             :items="pageSizes"
             @change="handlePageSizeChange"
-            label="รายการต่อนหน้า"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
@@ -211,7 +211,7 @@ export default {
             width: "100px"
           },
           {
-            text: "แก้ไขเลขอั้น",
+            text: "Username",
             value: "username",
             class: "font-weight-bold",
             cellClass: "primary--text font-weight-bold",
