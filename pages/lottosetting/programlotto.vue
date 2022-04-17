@@ -5,7 +5,7 @@
       <div class="ma-2  white rounded-lg">
         <v-row class="select-item pa-3 ">
           <div class="col-12">
-            <div class="col-12 col-md-6 col-lg-4  pa-0">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4  pa-0">
               <v-text-field
                 dense
                 solo-inverted

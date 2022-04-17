@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>ยกเลิกโพย /รายการแทง</h2>
+    <h2>รายการแทง / ยกเลิกโพย</h2>
 
     <div class="mt-6">
       <filter-search @search="searchfunction"></filter-search>
@@ -187,7 +187,6 @@
           class="elevation-1"
         >
           <template #[`item.status`]="{item}">
-   
             <v-chip color="yellow" v-if="parseInt(item.status) == 0" dark small
               ><v-icon left>mdi-circle</v-icon>กำลังประมวลผล</v-chip
             >
@@ -198,6 +197,11 @@
               ><v-icon left>mdi-circle</v-icon>ยกเลิก</v-chip
             >
           </template>
+          <template #[`item.agent_selfrecaive_name`]="{item}">
+            <span v-if="!item.agent_selfrecaive_name">-</span>
+            <span v-else>{{ item.agent_selfrecaive_name }}</span>
+          </template>
+
           <template #[`item.no`]="{index}">
             {{
               paginationDetail.rowsPerPage * (paginationDetail.page - 1) +
@@ -312,6 +316,15 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
+          sortable: false
+        },
+        {
+          text: "Agent รับของ",
+          value: "agent_selfrecaive_name",
+          align: "center",
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold",
+
           sortable: false
         },
         {
@@ -473,6 +486,7 @@ export default {
       };
     },
     async renderbyselecttype(value) {
+      this.pagination.page = 1;
       if (value == 0) {
         this.type = undefined;
       } else {

@@ -28,7 +28,6 @@ export async function gettoken(context, params) {
       );
       if (response.status == 200) {
         context.commit("set_login", response.data);
-       
         resolve(response);
       }
     } catch (error) {

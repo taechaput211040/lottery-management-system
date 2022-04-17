@@ -125,9 +125,20 @@
                   <span class="font-weight-bold error--text">ยังไม่ออกผล</span>
                 </div>
                 <div v-else>
-                  <span class="font-weight-bold success--text">{{
-                    item.lotto_number
-                  }}</span>
+                  <div
+                    class="font-weight-bold success--text"
+                    v-if="Array.isArray(JSON.parse(item.lotto_number)) === true"
+                  >
+                    <span
+                      v-for="(item, i) in JSON.parse(item.lotto_number)"
+                      :key="i"
+                    >
+                      {{ item }}
+                    </span>
+                  </div>
+                  <div v-else class="font-weight-bold success--text">
+                    {{ item.lotto_number }}
+                  </div>
                 </div>
               </template>
               <template #[`item.bet_lotto_time`]="{item}">

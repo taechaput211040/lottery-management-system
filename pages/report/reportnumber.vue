@@ -122,6 +122,7 @@
             <!-- :server-items-length="pagination.rowsNumber" -->
 
             <v-data-table
+              :server-items-length="pagination.rowsNumber"
               :items-per-page.sync="pagination.rowsPerPage"
               :page.sync="pagination.page"
               :options.sync="options"
@@ -131,7 +132,9 @@
               :items="itemDetail.data"
             >
               <template #[`item.no`]="{index}">
-                {{ index + 1 }}
+                {{
+                  pagination.rowsPerPage * (pagination.page - 1) + (index + 1)
+                }}
               </template></v-data-table
             >
             <div class="d-flex justify-center">
@@ -311,6 +314,7 @@ export default {
     getParameter() {
       let params = {
         program_id: this.toRound,
+        type_purchase: 2,
         lottonumbertype_id: this.numberValue.id,
         page: this.pagination.page,
         limit: 10
@@ -322,6 +326,7 @@ export default {
       try {
         let { data: response } = await this.getDetailNumberReport(params);
         this.itemDetail = { ...response, name: this.numberValue.name };
+        this.pagination.rowsNumber = this.itemDetail.pagination.total;
       } catch (error) {
         console.log(error);
       }

@@ -60,10 +60,11 @@
             <v-divider></v-divider>
             <div class="pa-3">
               <VueApexCharts
+                ref="realtimeChart"
                 type="area"
                 height="350"
                 :options="chartOptions"
-                :series="series"
+                :series="itemgraphshow"
               ></VueApexCharts>
             </div></div
         ></v-col>
@@ -253,6 +254,8 @@ export default {
   computed: {},
   data() {
     return {
+      typeOverview: "day",
+      graphRender: [],
       filterDate: {
         start_date: "2022-03-01T00:00:00.000Z",
         end_date: "2022-04-30T23:59:59.999Z"
@@ -400,14 +403,14 @@ export default {
       ],
       isLoading: false,
 
-      series: [
+      itemgraphshow: [
         {
           name: "ยอดกำไร",
-          data: [31, 40, 28, 51, 42, 109, 100, 100, 22, 35, 11, 85]
+          data: []
         },
         {
           name: "ยอดขาดทุน",
-          data: [11, 32, 45, 32, 34, 52, 41, 22, 100, 100, 22, 35]
+          data: []
         }
       ],
       chartOptions: {
@@ -436,51 +439,68 @@ export default {
         colors: ["#00E396", "#FF5951"],
         stroke: {
           curve: "smooth"
-        },
-        xaxis: {
-          categories: [
-            "มค.",
-            "กพ.",
-            "มีค.",
-            "เมย.",
-            "พค.",
-            "มิย.",
-            "สค.",
-            "กย.",
-            "ตค.",
-            "พย.",
-            "ธค."
-          ]
         }
       }
     };
   },
   async fetch() {
     this.getDashboarddata();
+    this.getDataGraph();
   },
   methods: {
     getDateTime(date) {
-      return this.$moment(date).format("YYYY-MM-DD HH:mm:ss");
+      return this.$moment(date).format("YYYY-MM-DDTHH:mm:ss" + "Z");
+    },
+
+    async mapchart(item) {
+      this.itemgraphshow[0].data = [];
+      this.itemgraphshow[1].data = [];
+      if (this.typeOverview !== "day") {
+        for (let i = 0; i < item.length; i++) {
+          this.itemgraphshow[0].data.push({
+            x: this.$moment(item[i].date).format("YYYY-MM-DD"),
+            y: item[i].bet
+          });
+          this.itemgraphshow[1].data.push({
+            x: this.$moment(item[i].date).format("YYYY-MM-DD"),
+            y: item[i].payout
+          });
+        }
+      } else {
+        for (let i = 0; i < item.length; i++) {
+          this.itemgraphshow[0].data.push({
+            x: this.$moment(item[i].date.toString(), "LT").format("HH:mm"),
+            y: item[i].bet
+          });
+          this.itemgraphshow[1].data.push({
+            x: this.$moment(item[i].date.toString(), "LT").format("HH:mm"),
+            y: item[i].payout
+          });
+        }
+      }
+
+      this.$refs.realtimeChart.updateSeries(this.itemgraphshow, false, true);
     },
     changDatefillter(value) {
       let today = new Date();
+      let datetoday = new Date().toJSON().slice(0, 10);
+
       switch (value) {
         case "findate":
+          this.typeOverview = "day";
+          this.getDataGraph();
           this.filterDate = {
-            start_date: this.getDateTime(
-              new Date(today.getFullYear(), today.getMonth(), 1)
-            ),
-            end_date: this.getDateTime(
-              new Date(today.getFullYear(), today.getMonth(), 1).setHours(
-                23,
-                59,
-                59,
-                999
-              )
-            )
+            start_date: this.$moment()
+              .set({ hour: 0, minute: 0, second: 0 })
+              .format(),
+            end_date: this.$moment()
+              .set({ hour: 23, minute: 59, second: 59 })
+              .format()
           };
           break;
         case "week":
+          this.typeOverview = "week";
+          this.getDataGraph();
           var wfday = today.getDay(),
             diff = today.getDate() - wfday + (wfday == 0 ? -6 : 1);
           var wlday = diff + 6;
@@ -494,6 +514,8 @@ export default {
           };
           break;
         case "thismounth":
+          this.typeOverview = "month";
+          this.getDataGraph();
           this.filterDate = {
             start_date: this.getDateTime(
               new Date(today.getFullYear(), today.getMonth(), 1)
@@ -521,7 +543,22 @@ export default {
       };
       return params;
     },
-    ...mapActions("report", ["getDashboardWinlose"]),
+    ...mapActions("report", ["getDashboardWinlose", "getGraphReport"]),
+    async getDataGraph() {
+      try {
+        let params = {
+          type: this.typeOverview
+        };
+        let { data } = await this.getGraphReport(params);
+
+        this.graphRender = data.sort(function(a, b) {
+          return a.date - b.date;
+        });
+        this.mapchart(this.graphRender);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getDashboarddata() {
       let params = this.getParameter();
       try {
@@ -539,7 +576,6 @@ export default {
             return b.payout - a.payout;
           })
           .slice(0, 5);
-        console.log(response, "rest");
       } catch (error) {
         console.log(error);
       }

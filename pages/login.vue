@@ -84,8 +84,7 @@ export default {
         const { data: response } = await this.login({
           username: this.username,
           password: this.password
-        });
-        console.log(response.hash);
+        }); 
         if (response.hash) {
           let params = {
             hash: response.hash,
@@ -93,6 +92,7 @@ export default {
           };
           let { data: datatoken } = await this.gettoken(params);
           if (this.checkonline) {
+            localStorage.clear();
             localStorage.setItem("hash", response.hash);
             localStorage.setItem("username", datatoken.username);
             localStorage.setItem("token", datatoken.token);

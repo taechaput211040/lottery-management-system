@@ -15,19 +15,30 @@
         <v-radio label="ผลยังไม่ออก" value="unsuccess"></v-radio>
       </v-radio-group>
       <div class="rounded-lg mt-5 pa-3 white">
-        <!-- <div class="col-md-4 col-6 pa-2">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-4  pa-0">
           <v-text-field
-            v-model="search"
+            v-model="searchtext"
             append-icon="mdi-magnify"
             label="ค้นหาชื่อหวย"
-            outlined
-            single-line
             dense
+            solo-inverted
+            @keyup.enter="serchAward()"
             hide-details="auto"
-          ></v-text-field>
-        </div> -->
+            ><v-btn
+              slot="append"
+              color="success"
+              @click="serchAward()"
+              fab
+              dark
+              x-small
+            >
+              <v-icon>mdi-magnify</v-icon></v-btn
+            ></v-text-field
+          >
+        </div>
 
         <v-data-table
+          class="mt-3"
           :headers="setheader"
           hide-default-footer
           :items="dataAwardrender.data"
@@ -201,6 +212,8 @@ export default {
 
   data() {
     return {
+      statusforsearch: undefined,
+      searchtext: undefined,
       options: {},
       valid: false,
       pageSizes: [5, 10, 15, 25],
@@ -241,21 +254,19 @@ export default {
           sortable: false
         },
         {
-          text: "สถานะการออกรางวัล",
+          text: "การออกรางวัล",
           value: "status_lotto",
           class: "font-weight-bold",
           align: "left",
-          width: "150px",
 
           sortable: false
         },
         {
-          text: "สถานะการคำนวณผลรางวัล",
+          text: "การคำนวณผลรางวัล",
           value: "status_calculate",
           class: "font-weight-bold",
           align: "left",
-          sortable: false,
-          width: "200px"
+          sortable: false
         },
         {
           text: "กรอกผลรางวัล",
@@ -354,12 +365,17 @@ export default {
     this.selectSection();
   },
   methods: {
+    serchAward() {
+      if (this.searchtext === "") {
+        this.searchtex = undefined;
+      }
+      this.selectSection();
+    },
     dateformat(date) {
       return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
     },
     searchfunction(filter) {
       this.filter = filter;
-
       this.selectSection();
     },
 
@@ -368,30 +384,46 @@ export default {
       "getlottobyprogram",
       "savelottonumber"
     ]),
-    getParameter(status) {
+    getParameter() {
+      if (
+        this.searchtext === "" ||
+        this.searchtext === null ||
+        this.searchtext === undefined
+      ) {
+        this.searchtext = undefined;
+      }
       let params = {
+        title: this.searchtext,
         start_date: this.filter.startDate,
         end_date: this.filter.endDate,
-        status_lotto: status,
+        status_lotto: this.statusforsearch,
         currentPage: this.pagination.page,
         limit: this.pagination.rowsPerPage
       };
       return params;
     },
     async selectSection(value) {
-      let status = undefined;
-      if (value === "success") {
-        status = true;
-      } else if (value === "unsuccess") {
-        status = false;
-      } else {
-        status = undefined;
+      if (value) {
+        if (value === "success") {
+          this.statusforsearch = true;
+        } else if (value === "unsuccess") {
+          this.statusforsearch = false;
+        } else {
+          this.statusforsearch = undefined;
+        }
       }
-      let params = this.getParameter(status);
+
+      this.getAwardList();
+    },
+    async getAwardList() {
+      let params = this.getParameter();
       try {
         const data = await this.getawardlotto(params);
-        if (status == undefined) {
+        if (this.statusforsearch == undefined && !this.searchtext) {
           this.dataAwardrender = data.result;
+          this.pagination.rowsNumber = this.dataAwardrender.total;
+        } else if (this.searchtext) {
+          this.dataAwardrender = data.result[0].result_title;
           this.pagination.rowsNumber = this.dataAwardrender.total;
         } else {
           this.dataAwardrender = data.result[0].result_status_lotto;
@@ -410,7 +442,11 @@ export default {
         console.log(this.itemNumber);
         for (let i = 0; i < this.itemNumber.length; i++) {
           if (this.itemNumber[i].lotto_number == null) {
-            this.itemNumber[i].lotto_number = [];
+            if (this.itemNumber[i].amount_reward > 1) {
+              this.itemNumber[i].lotto_number = [];
+            } else {
+              this.itemNumber[i].lotto_number = "";
+            }
           }
         }
       } catch (error) {
@@ -418,31 +454,19 @@ export default {
       }
     },
     async submitnumber() {
+      console.log(this.itemNumber, "asdasdsads");
       let body = {
         program_id: this.progranlottoID,
         lottonumbertype_details: []
       };
-      this.isArray = Array.isArray(this.itemNumber[0].lotto_number);
 
-      if (this.isArray === true) {
-        for (let i = 0; i < this.itemNumber.length; i++) {
-          for (let j = 0; j < this.itemNumber[i].lotto_number.length; j++) {
-            body.lottonumbertype_details.push({
-              lottonumbertype_id: this.itemNumber[i].id,
-              lotto_number: this.itemNumber[i].lotto_number[j]
-            });
-          }
-        }
-      } else if (this.isArray === false) {
-        for (let i = 0; i < this.itemNumber.length; i++) {
-          body.lottonumbertype_details.push({
-            lottonumbertype_id: this.itemNumber[i].id,
-            lotto_number: this.itemNumber[i].lotto_number
-          });
-        }
+      for (let i = 0; i < this.itemNumber.length; i++) {
+        body.lottonumbertype_details.push({
+          lottonumbertype_id: this.itemNumber[i].id,
+          lotto_number: this.itemNumber[i].lotto_number
+        });
       }
-      console.log(this.isArray, "array");
-      console.log(body, "body");
+
       if (this.$refs.formnumber.validate()) {
         try {
           await this.savelottonumber(body);

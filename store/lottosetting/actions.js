@@ -744,6 +744,7 @@ export async function deleteLottoPrize({ commit, id }) {
 export async function getawardlotto(
   { commit },
   params = {
+    title:undefined,
     start_date: undefined,
     end_date: undefined,
     status_lotto: undefined,
@@ -757,6 +758,7 @@ export async function getawardlotto(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/get_award`,
         {
           params: {
+            title: params.title,
             start_date: params.start_date,
             end_date: params.end_date,
             status_lotto: params.status_lotto,

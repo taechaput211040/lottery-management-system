@@ -101,10 +101,11 @@
       <v-dialog v-model="updateDialog" max-width="300">
         <v-card class="pa-4">
           <v-card-title class="justify-center">ตั้งค่าการใช้งาน</v-card-title>
-          <div
-            class="elevation-3 pa-2 rounded-lg"
-            v-if="updateform.username == $store.state.auth.username"
-          >
+          <div class="text-center my-2">
+            <v-icon fab>mdi-account-box</v-icon> :
+            <v-chip small label>{{ updateform.username }}</v-chip>
+          </div>
+          <div class="elevation-3 pa-2 rounded-lg">
             <v-switch
               label="น้ำไหล"
               v-model="updateform.self_flex"
@@ -116,22 +117,12 @@
               hide-details="auto"
             ></v-switch>
           </div>
-          <div v-else class="elevation-3 pa-2 rounded-lg">
-            <v-switch
-              label="น้ำไหล"
-              v-model="updateform.upline_flex_odd"
-              hide-details="auto"
-            ></v-switch>
-            <v-switch
-              label="เพลา"
-              v-model="updateform.upline_seller"
-              hide-details="auto"
-            ></v-switch>
-          </div>
+
           <v-card-actions class="justify-center">
-            <v-btn color="success" @click="submitsetting(updateform.username)"
-              >ยืนยัน</v-btn
-            ><v-btn color="error" @click="updateDialog = false">ยกเลิก</v-btn>
+            <v-btn color="success" small @click="submitsetting()">ยืนยัน</v-btn
+            ><v-btn color="error" small @click="updateDialog = false"
+              >ยกเลิก</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -140,7 +131,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -174,6 +165,9 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapState("auth", ["username"])
+  },
   async fetch() {
     this.getData();
   },
@@ -193,24 +187,17 @@ export default {
     },
     openDlupdate(item) {
       this.updateform = Object.assign({}, item);
+      console.log(this.updateform);
       this.updateDialog = true;
     },
     async submitsetting() {
       try {
         let body = {};
-        if (this.updateform.username == this.$store.state.auth.username) {
-          body = {
-            username: this.updateform.username,
-            flex_odd: this.updateform.self_flex,
-            seller: this.updateform.self_seller
-          };
-        } else {
-          body = {
-            username: this.updateform.username,
-            flex_odd: this.updateform.upline_flex_odd,
-            seller: this.updateform.upline_seller
-          };
-        }
+        body = {
+          username: this.updateform.username,
+          flex_odd: this.updateform.self_flex,
+          seller: this.updateform.self_seller
+        };
 
         await this.changeStausType(body);
         this.updateDialog = false;

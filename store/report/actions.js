@@ -128,33 +128,26 @@ export async function getDashboardWinlose(
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      // let response = {
-      //   bet: 649676,
-      //   payout: 66270,
-      //   winlose: 62749.53,
-      //   programs: [
-      //     {
-      //       title: "หวยรัฐบาล",
-      //       lottotype_id: null,
-      //       lottotype_name: null,
-      //       bet: 649676,
-      //       bet_amount: 649015.46,
-      //       payout: 66270,
-      //       winlose: 62749.53
-      //     },
-      //     {
-      //       title: "หวยฮานอยสตาร์",
-      //       lottotype_id: null,
-      //       lottotype_name: null,
-      //       bet: 584334,
-      //       bet_amount: 584224.46,
-      //       payout: 112112,
-      //       winlose: 62749.53
-      //     }
-      //   ]
-      // };
       let response = await this.$axios.get(
         `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Overview/${params.start_time}/${params.end_time}`
+      );
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export async function getGraphReport(
+  { commit },
+  params = {
+    type: undefined
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Overview/${params.type}`
       );
       resolve(response);
     } catch (error) {

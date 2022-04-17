@@ -13,7 +13,13 @@
             <v-icon large center>mdi-account-circle </v-icon>
           </v-btn>
         </template>
-        <v-btn fab dark small color="orange">
+        <v-btn
+          fab
+          dark
+          small
+          color="orange"
+          @click="$router.push('/changepassword')"
+        >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn @click="logout" fab dark small color="red">
@@ -110,7 +116,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 export default {
   middleware: "auth",
   head: {
@@ -381,7 +387,7 @@ export default {
           status: true
         },
         {
-          title: "รายการสมาชิก",
+          title: " ",
           to: "/reportAccount",
           icon: "mdi-account",
           status: true
@@ -394,7 +400,6 @@ export default {
     };
   },
   async fetch() {
-    this.e;
     this.showUser =
       localStorage.getItem("username") || sessionStorage.getItem("username");
   },

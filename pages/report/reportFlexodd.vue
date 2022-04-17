@@ -72,7 +72,48 @@
       </div>
     </div>
     <div class="pa-1 rounded-lg white my-3 pa-2">
+      <VueApexCharts
+        type="bar"
+        height="350"
+        :options="chartOptions"
+        :series="series"
+      ></VueApexCharts>
+    </div>
+    <div class="my-3 rounded-lg white">
+      {{ this.payoutrate }}
+      <h3 class="pa-3">รายละเอียดน้ำไหล</h3>
+      <v-divider></v-divider>
+      <div class="row pa-3">
+        <div class="col-12 col-sm-3">
+          อัตราจ่ายสูงสุด
+          <v-text-field
+            placeholder="อัตราจ่ายสูงสุด"
+            hide-details="auto"
+            dense
+            filled
+            disabled
+            :value="this.payoutrate.maximum_out_come_rate || 0"
+          ></v-text-field>
+        </div>
+        <div class="col-12 col-sm-3">
+          ราคาสูงสุดต่อเลข
+          <v-text-field
+            placeholder="ราคาสูงสุดต่อเลข"
+            hide-details="auto"
+            :value="this.payoutrate.maximum_bet_prize || 0"
+            dense
+            filled
+            disabled
+          ></v-text-field>
+        </div>
+      </div>
       <v-data-table :headers="headerReport" :items="itemRender.data">
+        <template #[`item.pay_out`]="{item}">
+          {{ profitNormal(item) }}
+        </template>
+        <template #[`item.payrate`]="{item}">
+          {{ calPayrate(item) }}
+        </template>
         <template #[`item.actions`]="{item}">
           <v-btn small rounded color="primary" @click="editPay(item)"
             >แก้ไขจำนวนเงิน</v-btn
@@ -85,9 +126,78 @@
 
 <script>
 import { mapActions } from "vuex";
+import VueApexCharts from "vue-apexcharts";
+
 export default {
+  components: { VueApexCharts },
   data() {
     return {
+      payoutrate: {
+        maximum_out_come_rate: 999
+      },
+      series: [
+        {
+          name: "ยอดกำไร",
+          data: [31, 40, 28, 51, 42, 109, 100, 100, 22, 35, 11, 85]
+        }
+      ],
+      chartOptions: {
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: "40%"
+          }
+        },
+        chart: {
+          height: 350,
+          type: "bar",
+          foreColor: "#999",
+          stacked: true
+        },
+        fill: {
+          type: "solid",
+          fillOpacity: 0.7
+        },
+
+        dataLabels: {
+          enabled: false
+        },
+        colors: ["#00E396"],
+        stroke: {
+          curve: "smooth"
+        },
+        xaxis: {
+          categories: [
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Aug",
+            "Sep",
+            "Oct"
+          ]
+        }
+      },
+      itemRender: {
+        data: [
+          { lotto_number: "756", bet: 123 },
+          { lotto_number: "245", bet: 332 },
+          { lotto_number: "137", bet: 222 },
+          { lotto_number: "135", bet: 133 }
+        ],
+        count: [
+          { lotto_number: "756", count: 5 },
+          { lotto_number: "245", count: 6 },
+          { lotto_number: "137", count: 9 },
+          { lotto_number: "135", count: 8 }
+        ]
+      },
+
       headerReport: [
         {
           text: "เลข",
@@ -108,6 +218,14 @@ export default {
         },
         {
           text: "อัตราจ่าย",
+          value: "payrate",
+          align: "center",
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold",
+          sortable: false
+        },
+        {
+          text: "จ่ายเงิน",
           value: "pay_out",
           align: "center",
           class: "font-weight-bold",
@@ -124,7 +242,7 @@ export default {
         },
         {
           text: "กำไรขาดทุนปกติ",
-          value: "profit_flexodd",
+          value: "profit",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
@@ -149,7 +267,7 @@ export default {
       selectType: null,
       listtype: [],
       numberReportrender: [],
-      itemRender: [],
+      itemPayrate: [],
       pagination: {
         sortBy: "DESC",
         descending: false,
@@ -170,6 +288,10 @@ export default {
     }
   },
   methods: {
+    profitNormal(item) {
+      let profit = parseInt(item.bet * this.payoutrate.maximum_out_come_rate);
+      return profit;
+    },
     dateformat(date) {
       return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
     },
@@ -179,6 +301,11 @@ export default {
       "getProgramLotto"
     ]),
     ...mapActions("report", ["getNumberTypeReport", "getDetailNumberReport"]),
+    ...mapActions("flexodd", ["getOutcomerate"]),
+     calPayrate(item) {
+      const payrate = this.payoutrate.maximum_out_come_rate;
+      return payrate;
+    },
     async selectTypelotto(value) {
       this.itemcategory = [];
       this.selectTypeCategory = "";
@@ -198,7 +325,6 @@ export default {
       }
     },
     async getNumberreport(value, type) {
-      console.log(type);
       let params = {
         program_id: value,
         type_purchase: type,
@@ -235,6 +361,7 @@ export default {
         console.log(error);
         this.isLoading = false;
       }
+      this.getOutcome();
     },
     getParameter() {
       let params = {
@@ -254,6 +381,25 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      this.payoutrate = this.mapNumbertype();
+    },
+    mapNumbertype() {
+      let type = this.itemPayrate.find(x => {
+        return x.lottonumbertype_id === this.numberType;
+      });
+      if (!type) {
+        return 0;
+      }
+      return type;
+    },
+    async getOutcome() {
+      try {
+        let { data: response } = await this.getOutcomerate(
+          this.selectTypeCategory
+        );
+        this.itemPayrate = response.result;
+        console.log(this.itemPayrate);
+      } catch (error) {}
     },
     editPay(item) {}
   }

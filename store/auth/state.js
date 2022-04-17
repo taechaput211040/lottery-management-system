@@ -1,9 +1,10 @@
 export default function() {
   return {
     username:
+      localStorage.getItem("username") ||
       sessionStorage.getItem("username") ||
-      null ||
-      localStorage.getItem("username"),
+      null,
+
     hash:
       sessionStorage.getItem("hash") || null || localStorage.getItem("hash"),
     key:
