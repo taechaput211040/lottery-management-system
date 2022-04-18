@@ -63,18 +63,29 @@
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
           <template #[`item.save`]="{item}">
+            <!-- :disabled="item.status_calculate == true" -->
             <v-btn
-              :disabled="item.status_calculate == true"
               color="black"
               text
               outlined
               small
               rounded
-              @click="openDlupdate(item)"
+              @click="openDlupdate(item, 'save')"
               ><v-icon left>mdi-download-box</v-icon>กรอกผลรางวัล
             </v-btn>
           </template>
-
+          <template #[`item.calculate`]="{item}">
+            <v-btn
+              :disabled="item.calculate == true"
+              color="black"
+              text
+              outlined
+              small
+              rounded
+              @click="openDlupdate(item, 'calculate')"
+              ><v-icon left>mdi-download-box</v-icon>คำนวณผล
+            </v-btn>
+          </template>
           <template #[`item.bet_lotto_time`]="{item}">
             {{ dateformat(item.bet_lotto_time) }}
           </template>
@@ -117,75 +128,161 @@
           </v-col>
         </v-row>
       </div>
+      <v-dialog max-width="600px" v-model="dlcalculate">
+        <form>
+          <v-card>
+            <div class="pa-md-5 ">
+              <v-card-title
+                class="justify-center primary--text font-weight-bold"
+              >
+                คำนวณผลรางวัล
+              </v-card-title>
+              <div class="pa-5 rounded-lg pa-2 elevation-3">
+                <div v-for="(item, i) in this.itemNumber" :key="i">
+                  <div class="row align-baseline">
+                    <div class="col-4">{{ item.name }}</div>
+                    <div
+                      class="col-8 row "
+                      v-if="Array.isArray(item.lotto_number) == true"
+                    >
+                      <div
+                        class="col-6 col-sm-4 col-md-4 text-center"
+                        v-for="(j, n_key) in parseInt(item.amount_reward)"
+                        :key="n_key"
+                      >
+                        <v-text-field
+                          outlined
+                          type="number"
+                          hide-details="auto"
+                          dense
+                          v-model="item.lotto_number[n_key]"
+                          small
+                          disabled
+                          filled
+                        ></v-text-field>
+                      </div>
+                    </div>
+                    <div class="col-8 row" v-else>
+                      <div class="col-6 col-sm-4 col-md-4 text-center">
+                        <v-text-field
+                          outlined
+                          type="number"
+                          v-model="item.lotto_number"
+                          hide-details="auto"
+                          dense
+                          filled
+                          disabled
+                        ></v-text-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <v-card-actions class="justify-center">
+              <v-btn color="success" @click="submitCalculate()"
+                >คำนวณผลรางวัล</v-btn
+              ><v-btn color="error" @click="dlcalculate = false">ยกเลิก</v-btn>
+            </v-card-actions>
+          </v-card>
+        </form>
+      </v-dialog>
+      <v-dialog v-model="alertdl" max-width="400px" persistent>
+        <v-form v-model="validatePravity" ref="alertForm">
+          <v-card class="pa-3">
+            <div class="pa-5 rounded-lg pa-2 elevation-3 text-center">
+              <h2 class="error--text">กรอกรหัสความปลอดภัย</h2>
+              <v-text-field
+                outlined
+                hide-details="auto"
+                dense
+                class="ma-4"
+                :value="formCalculate.passcode"
+                :rules="[v => !!v || 'กรุณากรอกรหัสความปลอดภัย']"
+                :append-icon="value ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="() => (value = !value)"
+                :type="value ? 'password' : 'text'"
+                v-model="formCalculate.passcode"
+              ></v-text-field>
+            </div>
+            <v-card-actions class="justify-center">
+              <v-btn color="success" @click="confirmCalculate()">บันทึก</v-btn
+              ><v-btn color="error" @click="alertdl = false">ยกเลิก</v-btn>
+            </v-card-actions>
+          </v-card></v-form
+        >
+      </v-dialog>
       <v-dialog max-width="600px" v-model="dlSavenumber">
         <v-form v-model="valid" ref="formnumber">
           <v-card class="pa-3">
             <v-card-title class="justify-center primary--text font-weight-bold">
               กรอกข้อมูลผลรางวัล
             </v-card-title>
+            <div class="pa-5 rounded-lg pa-2 elevation-3">
+              <div v-for="(item, i) in this.itemNumber" :key="i">
+                <div class="row align-baseline">
+                  <div class="col-4">{{ item.name }}</div>
 
-            <div v-for="(item, i) in this.itemNumber" :key="i">
-              <div class="row align-baseline">
-                <div class="col-3">{{ item.name }}</div>
-
-                <div
-                  class="col-9 row "
-                  v-if="Array.isArray(item.lotto_number) == true"
-                >
                   <div
-                    class="col-6 col-sm-4 col-md-3 mx-1 text-center"
-                    v-for="(j, n_key) in parseInt(item.amount_reward)"
-                    :key="n_key"
+                    class="col-8 row "
+                    v-if="Array.isArray(item.lotto_number) == true"
                   >
-                    <v-text-field
-                      outlined
-                      type="number"
-                      hide-details="auto"
-                      dense
-                      v-model="item.lotto_number[n_key]"
-                      @keydown="
-                        e =>
-                          rangeInput(
-                            e,
-                            parseInt(item.number),
-                            item.lotto_number[n_key]
-                          )
-                      "
-                      :counter="parseInt(item.number)"
-                      :rules="[
-                        v => !!v,
-                        v => (v && v.length >= parseInt(item.number)) || ''
-                      ]"
-                      small
-                    ></v-text-field>
+                    <div
+                      class="col-6 col-sm-4 col-md-4 pa-1 text-center"
+                      v-for="(j, n_key) in parseInt(item.amount_reward)"
+                      :key="n_key"
+                    >
+                      <v-text-field
+                        outlined
+                        type="number"
+                        hide-details="auto"
+                        dense
+                        v-model="item.lotto_number[n_key]"
+                        @keydown="
+                          e =>
+                            rangeInput(
+                              e,
+                              parseInt(item.number),
+                              item.lotto_number[n_key]
+                            )
+                        "
+                        :counter="parseInt(item.number)"
+                        :rules="[
+                          v => !!v,
+                          v => (v && v.length >= parseInt(item.number)) || ''
+                        ]"
+                        small
+                      ></v-text-field>
+                    </div>
                   </div>
-                </div>
-                <div class="col-9 row my-1" v-else>
-                  <div class="col-6 col-sm-4 col-md-3 mx-1 text-center">
-                    <v-text-field
-                      outlined
-                      type="number"
-                      v-model="item.lotto_number"
-                      @keydown="
-                        e =>
-                          rangeInput(
-                            e,
-                            parseInt(item.number),
-                            item.lotto_number
-                          )
-                      "
-                      :counter="parseInt(item.number)"
-                      :rules="[
-                        v => !!v,
-                        v => (v && v.length >= parseInt(item.number)) || ''
-                      ]"
-                      hide-details="auto"
-                      dense
-                    ></v-text-field>
+                  <div class="col-8 row " v-else>
+                    <div class="col-6 col-sm-4 col-md-4 pa-1 text-center">
+                      <v-text-field
+                        outlined
+                        type="number"
+                        v-model="item.lotto_number"
+                        @keydown="
+                          e =>
+                            rangeInput(
+                              e,
+                              parseInt(item.number),
+                              item.lotto_number
+                            )
+                        "
+                        :counter="parseInt(item.number)"
+                        :rules="[
+                          v => !!v,
+                          v => (v && v.length >= parseInt(item.number)) || ''
+                        ]"
+                        hide-details="auto"
+                        dense
+                      ></v-text-field>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
             <v-card-actions class="justify-center">
               <v-btn color="success" @click="submitnumber()">บันทึก</v-btn
               ><v-btn color="error" @click="closeDl()">ยกเลิก</v-btn>
@@ -212,6 +309,11 @@ export default {
 
   data() {
     return {
+      value: String,
+      formCalculate: {},
+      validatePravity: false,
+      alertdl: false,
+      dlcalculate: false,
       statusforsearch: undefined,
       searchtext: undefined,
       options: {},
@@ -249,21 +351,25 @@ export default {
           text: "เวลาออกผล",
           value: "bet_lotto_time",
           class: "font-weight-bold",
-          align: "left",
-
-          sortable: false
+          align: "left"
         },
         {
           text: "การออกรางวัล",
           value: "status_lotto",
           class: "font-weight-bold",
           align: "left",
-
           sortable: false
         },
         {
           text: "การคำนวณผลรางวัล",
           value: "status_calculate",
+          class: "font-weight-bold",
+          align: "left",
+          sortable: false
+        },
+        {
+          text: "คำนวณผลรางวัล",
+          value: "calculate",
           class: "font-weight-bold",
           align: "left",
           sortable: false
@@ -327,8 +433,7 @@ export default {
             value: "bet_lotto_time",
             class: "font-weight-bold",
             align: "left",
-            width: "200px",
-            sortable: false
+            width: "200px"
           },
           {
             text: "สถานะการออกรางวัล",
@@ -382,9 +487,26 @@ export default {
     ...mapActions("lottosetting", [
       "getawardlotto",
       "getlottobyprogram",
-      "savelottonumber"
+      "savelottonumber",
+      "calculateAward"
     ]),
+    getOptionalOrder() {
+      let order = {};
+      if (this.options.sortBy[0]) {
+        console.log("thissss");
+        order.sortBy = this.options.sortBy[0];
+        if (this.options.sortDesc[0] === false) {
+          order.sortDesc = "ASC";
+        } else {
+          order.sortDesc = "DESC";
+        }
+      } else {
+        order = undefined;
+      }
+      return order;
+    },
     getParameter() {
+      let order = this.getOptionalOrder();
       if (
         this.searchtext === "" ||
         this.searchtext === null ||
@@ -398,7 +520,9 @@ export default {
         end_date: this.filter.endDate,
         status_lotto: this.statusforsearch,
         currentPage: this.pagination.page,
-        limit: this.pagination.rowsPerPage
+        limit: this.pagination.rowsPerPage,
+        order_by: order == undefined ? undefined : order.sortBy,
+        order_mode: order == undefined ? undefined : order.sortDesc
       };
       return params;
     },
@@ -433,13 +557,16 @@ export default {
         console.log(error);
       }
     },
-    async openDlupdate(item) {
+    async openDlupdate(item, type) {
       try {
         this.progranlottoID = item.id;
         let data = await this.getlottobyprogram(item.id);
         this.itemNumber = data;
-        this.dlSavenumber = true;
-        console.log(this.itemNumber);
+        if (type == "save") {
+          this.dlSavenumber = true;
+        } else if (type == "calculate") {
+          this.dlcalculate = true;
+        }
         for (let i = 0; i < this.itemNumber.length; i++) {
           if (this.itemNumber[i].lotto_number == null) {
             if (this.itemNumber[i].amount_reward > 1) {
@@ -451,6 +578,39 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    submitCalculate() {
+      this.alertdl = true;
+    },
+    async confirmCalculate() {
+      if (this.$refs.alertForm.validate()) {
+        let body = {
+          program_id: this.progranlottoID,
+          passcode: this.formCalculate.passcode
+        };
+        console.log(body);
+        try {
+          await this.calculateAward(body);
+          this.$swal({
+            icon: "success",
+            title: "คำนวณผลเสร็จสิ้น",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.alertdl = false;
+          this.dlcalculate = false;
+        } catch (error) {
+          this.$swal({
+            icon: "error",
+            title: "กรุณากรอกรหัสความปลดภัยให้ถุกต้อง",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          console.log(error);
+        }
+      } else {
+        this.$swal("กรุณากรอกรหัสความปลดภัยให้ถุกต้อง", "", "warning");
       }
     },
     async submitnumber() {
@@ -466,7 +626,6 @@ export default {
           lotto_number: this.itemNumber[i].lotto_number
         });
       }
-
       if (this.$refs.formnumber.validate()) {
         try {
           await this.savelottonumber(body);

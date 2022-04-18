@@ -80,10 +80,32 @@
       ></VueApexCharts>
     </div>
     <div class="my-3 rounded-lg white">
-      {{ this.payoutrate }}
       <h3 class="pa-3">รายละเอียดน้ำไหล</h3>
       <v-divider></v-divider>
       <div class="row pa-3">
+        <div class="col-12 col-sm-3">
+          รายรับทั้งหมด
+          <v-text-field
+            placeholder="รายรับทั้งหมด"
+            hide-details="auto"
+            dense
+            filled
+            disabled
+            :value="this.maximumIncomeAmount || 10"
+          ></v-text-field>
+        </div>
+        <div class="col-12 col-sm-3">
+          กำไรขั้นต่ำ
+
+          <v-text-field
+            placeholder="รายรับทั้งหมด"
+            hide-details="auto"
+            dense
+            filled
+            :value="minimumProfit"
+            disabled
+          ></v-text-field>
+        </div>
         <div class="col-12 col-sm-3">
           อัตราจ่ายสูงสุด
           <v-text-field
@@ -95,17 +117,6 @@
             :value="this.payoutrate.maximum_out_come_rate || 0"
           ></v-text-field>
         </div>
-        <div class="col-12 col-sm-3">
-          ราคาสูงสุดต่อเลข
-          <v-text-field
-            placeholder="ราคาสูงสุดต่อเลข"
-            hide-details="auto"
-            :value="this.payoutrate.maximum_bet_prize || 0"
-            dense
-            filled
-            disabled
-          ></v-text-field>
-        </div>
       </div>
       <v-data-table :headers="headerReport" :items="itemRender.data">
         <template #[`item.pay_out`]="{item}">
@@ -114,6 +125,10 @@
         <template #[`item.payrate`]="{item}">
           {{ calPayrate(item) }}
         </template>
+        <template #[`item.profit`]="{item}">
+          {{ getWinloseAmount(profitNormal(item)) }}</template
+        >
+
         <template #[`item.actions`]="{item}">
           <v-btn small rounded color="primary" @click="editPay(item)"
             >แก้ไขจำนวนเงิน</v-btn
@@ -132,6 +147,8 @@ export default {
   components: { VueApexCharts },
   data() {
     return {
+      maximumIncomeAmount: 300000,
+      per_flex_rate: 10,
       payoutrate: {
         maximum_out_come_rate: 999
       },
@@ -278,6 +295,7 @@ export default {
     };
   },
   async fetch() {
+    this.getPerFlex();
     this.isLoading = true;
     try {
       this.listtype = this.$store.state.lottosetting.lottotype;
@@ -287,7 +305,27 @@ export default {
       this.isLoading = false;
     }
   },
+  computed: {
+    minimumProfit() {
+      let profit = (this.per_flex_rate * this.maximumIncomeAmount) / 100;
+      return profit;
+    }
+  },
   methods: {
+    getWinloseAmount(item) {
+      let outcomrateAmount = this.maximumIncomeAmount;
+      let winlose = outcomrateAmount - parseInt(item);
+      return winlose;
+    },
+    async getPerFlex() {
+      try {
+        let { data } = await this.getPerflex();
+        this.per_flex_rate = data.result.profit;
+        console.log(this.per_flex_rate);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     profitNormal(item) {
       let profit = parseInt(item.bet * this.payoutrate.maximum_out_come_rate);
       return profit;
@@ -301,8 +339,9 @@ export default {
       "getProgramLotto"
     ]),
     ...mapActions("report", ["getNumberTypeReport", "getDetailNumberReport"]),
-    ...mapActions("flexodd", ["getOutcomerate"]),
-     calPayrate(item) {
+    ...mapActions("flexodd", ["getOutcomerate", "getPerflex"]),
+
+    calPayrate(item) {
       const payrate = this.payoutrate.maximum_out_come_rate;
       return payrate;
     },

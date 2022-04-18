@@ -25,7 +25,7 @@
         </template>
         <template #[`item.no`]="{index}">
           <!-- {{item.upline_status}} -->
-          {{ index + 1 }}
+            {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
         <template #[`item.actions`]="{item}">
           <v-btn color="warning" rounded small @click="openEdit(item)"

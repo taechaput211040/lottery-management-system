@@ -351,24 +351,21 @@ export default {
           value: "agent_name",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold",
-          sortable: false
+          cellClass: "font-weight-bold"
         },
         {
           text: "ชนิดหวย",
           value: "lottotype_name",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold",
-          sortable: false
+          cellClass: "font-weight-bold"
         },
         {
           text: "ชื่อหวย",
           value: "title",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold",
-          sortable: false
+          cellClass: "font-weight-bold"
         },
         {
           text: "ชื่องวด",
@@ -391,32 +388,28 @@ export default {
           value: "date",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold",
-          sortable: false
+          cellClass: "font-weight-bold"
         },
         {
           text: "Username",
           value: "member_username",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold",
-          sortable: false
+          cellClass: "font-weight-bold"
         },
         {
           text: "ยอดเเทง(บาท)",
           value: "bet",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold",
-          sortable: false
+          cellClass: "font-weight-bold"
         },
         {
           text: "เเพ้/ชนะ(บาท)",
           value: "winlose",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold",
-          sortable: false
+          cellClass: "font-weight-bold"
         },
         {
           text: "ดำเนินการ",
@@ -503,13 +496,30 @@ export default {
       this.filter = value;
       this.getReportdata();
     },
+    getOptionalOrder() {
+      let order = {};
+      if (this.options.sortBy[0]) {
+        order.sortBy = this.options.sortBy[0];
+        if (this.options.sortDesc[0] === false) {
+          order.sortDesc = "ASC";
+        } else {
+          order.sortDesc = "DESC";
+        }
+      } else {
+        order = undefined;
+      }
+      return order;
+    },
     getparameter() {
+      let order = this.getOptionalOrder();
       let params = {
         start_time: this.filter.startDate,
         end_time: this.filter.endDate,
         type_purchase: this.type,
         page: this.pagination.page,
-        limit: this.pagination.rowsPerPage
+        limit: this.pagination.rowsPerPage,
+        sort:
+          order == undefined ? undefined : `${order.sortBy}=${order.sortDesc}`
       };
       return params;
     },

@@ -281,14 +281,32 @@ export default {
       this.getReport();
     },
     getParameter() {
+      let order = this.getOptionalOrder();
       let parameter = {
         lottotype_id: this.selectType,
         start_date: this.filter.startDate,
         end_date: this.filter.endDate,
         currentPage: this.pagination.page,
-        limit: this.pagination.rowsPerPage
+        limit: this.pagination.rowsPerPage,
+        order_by: order == undefined ? undefined : order.sortBy,
+        order_mode: order == undefined ? undefined : order.sortDesc
       };
       return parameter;
+    },
+    getOptionalOrder() {
+      let order = {};
+      if (this.options.sortBy[0]) {
+        console.log("thissss");
+        order.sortBy = this.options.sortBy[0];
+        if (this.options.sortDesc[0] === false) {
+          order.sortDesc = "ASC";
+        } else {
+          order.sortDesc = "DESC";
+        }
+      } else {
+        order = undefined;
+      }
+      return order;
     },
     async getReport() {
       let params = await this.getParameter();

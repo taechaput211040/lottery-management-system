@@ -5,7 +5,7 @@ export async function getLottotype(context) {
       let response = await this.$axios.get(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoType/get`
       );
-      context.commit("set_lottotype",response.data.result.data);
+      context.commit("set_lottotype", response.data.result.data);
       resolve(response.data);
     } catch (error) {
       reject(error);
@@ -397,7 +397,7 @@ export async function createProgramLotto({ commit }, body) {
     try {
       let response = await this.$axios.post(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/insert`,
-        { body }
+        body
       );
       resolve(response.data);
     } catch (error) {
@@ -744,12 +744,14 @@ export async function deleteLottoPrize({ commit, id }) {
 export async function getawardlotto(
   { commit },
   params = {
-    title:undefined,
+    title: undefined,
     start_date: undefined,
     end_date: undefined,
     status_lotto: undefined,
     currentPage: undefined,
-    limit: undefined
+    limit: undefined,
+    order_mode: undefined,
+    order_by: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -763,7 +765,9 @@ export async function getawardlotto(
             end_date: params.end_date,
             status_lotto: params.status_lotto,
             currentPage: params.currentPage,
-            limit: params.limit
+            limit: params.limit,
+            order_mode: params.order_mode,
+            order_by: params.order_by
           }
         }
       );
@@ -791,6 +795,19 @@ export async function savelottonumber({ commit }, body) {
     try {
       let response = await this.$axios.patch(
         `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/update_reward`,
+        body
+      );
+      resolve(response.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+export async function calculateAward({ commit }, body) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.patch(
+        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/calculator_prize`,
         body
       );
       resolve(response.data);

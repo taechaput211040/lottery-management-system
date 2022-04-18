@@ -27,8 +27,135 @@
         </div>
       </div>
     </div>
-    <div><h2>รายการรอบหวย</h2></div>
+    <div class="d-flex align-center">
+      <h2>รายการรอบหวย</h2>
+    </div>
+    <v-dialog v-model="dlInsert" persistent max-width="800">
+      <v-card class="pa-3">
+        <v-form v-model="validform" ref="formcreate">
+          <v-card-title class="justify-center text-center font-weight-bold">
+            เพิ่มรอบหวย
+          </v-card-title>
+          <v-container fluid class="elevation-3 rounded-lg pa-3">
+            <v-row>
+              <v-col cols="4">
+                ประเภทหวย
+              </v-col>
+              <v-col cols="8">
+                <v-select
+                  :items="$store.state.lottosetting.lottotype"
+                  item-text="title"
+                  item-value="id"
+                  v-model="insertForm.lottotype_id"
+                  hide-details="auto"
+                  @change="selectTypelotto"
+                  :loading="isLoading"
+                  outlined
+                  dense
+                  placeholder="กรุณาเลือกประเภทหวย"
+                ></v-select>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="4">
+                ชื่อหวย
+              </v-col>
+              <v-col cols="8">
+                <v-autocomplete
+                  :items="itemcategory"
+                  item-text="title"
+                  hide-details="auto"
+                  item-value="id"
+                  :rules="[v => !!v || 'กรุณาเลือกหวย']"
+                  :disabled="insertForm.lottotype_id == null"
+                  v-model="insertForm.typecategory_id"
+                  outlined
+                  dense
+                  placeholder="กรุณาเลือกหวย"
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="4">
+                รอบหวย
+              </v-col>
+              <v-col cols="8">
+                <v-text-field
+                  label="จำนวนรอบ"
+                  :rules="[v => !!v || 'กรุณากรอกชื่อรอบ']"
+                  dense
+                  outlined
+                  hide-details="auto"
+                  v-model="insertForm.lotto_round"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <!-- start time -->
+            <v-row>
+              <v-col cols="4">
+                วัน และ เวลาที่เปิดแทง
+              </v-col>
+              <v-col cols="8">
+                <el-date-picker
+                  v-model="insertForm.bet_open_time"
+                  type="datetime"
+                  placeholder="วัน และ เวลาที่เปิดแทง"
+                  style="width:100%"
+                >
+                </el-date-picker>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="4">
+                วัน และ เวลาที่ปิดแทง
+              </v-col>
+              <v-col cols="8">
+                <el-date-picker
+                  type="datetime"
+                  style="width:100%"
+                  v-model="insertForm.bet_close_time"
+                  placeholder="เลือกวัน และ เวลาที่ปิดแทง"
+                >
+                </el-date-picker>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="4">
+                วัน และ เวลาที่หวยออก
+              </v-col>
+              <v-col cols="8">
+                <el-date-picker
+                  type="datetime"
+                  style="width:100%"
+                  v-model="insertForm.bet_lotto_time"
+                  placeholder="เลือก วัน และ เวลาที่หวยออก"
+                >
+                </el-date-picker>
+              </v-col>
+            </v-row>
+          </v-container>
+
+          <v-card-actions class="justify-center">
+            <v-btn color="success" @click="submitInsert()">แก้ไข</v-btn>
+            <v-btn color="error" @click="closeCreateconfig()"
+              >ยกเลิก</v-btn
+            ></v-card-actions
+          ></v-form
+        >
+      </v-card>
+    </v-dialog>
     <div class="white rounded-lg">
+      <div class="text-right" v-if="this.$store.state.auth.role == 'LOTTO'">
+        <v-btn color="primary" @click="openInsert()" rounded class="ma-3"
+          ><v-icon left>mdi-plus</v-icon>เพิ่มรอบหวย</v-btn
+        >
+      </div>
+
       <div class="rounded-lg white">
         <v-data-table
           :server-items-length="pagination.rowsNumber"
@@ -275,9 +402,13 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      menu: false,
-      menu2: false,
-      menu3: false,
+      sortBy: "",
+      validform: false,
+      sortDesc: false,
+      itemcategory: [],
+      selectType: "",
+      insertForm: {},
+      dlInsert: false,
       title_lotto: undefined,
       isLoading: true,
       pageSizes: [5, 10, 15, 25],
@@ -298,7 +429,8 @@ export default {
           value: "no",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "ชื่อหวย",
@@ -311,7 +443,8 @@ export default {
           text: "รอบหวย",
           value: "lotto_round",
           align: "left",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          sortable: false
         },
         {
           text: "วันที่เปิดแทง",
@@ -336,14 +469,16 @@ export default {
           value: "status",
           sort: false,
           align: "center",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          sortable: false
         },
         {
           text: "ดำเนินการ",
           value: "action",
           sort: false,
           align: "center",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
+          sortable: false
         }
       ],
       itemtypeaward: [],
@@ -419,8 +554,14 @@ export default {
       "getProgramLotto",
       "updateProgramLotto",
       "deleteProgramLotto",
-      "closeProgramLotto"
+      "closeProgramLotto",
+      "getTypeCategory",
+      "createProgramLotto"
     ]),
+    openInsert() {
+      this.dlInsert = true;
+    },
+
     async searchlotto(e) {
       this.isLoading = true;
       if (
@@ -431,10 +572,13 @@ export default {
         this.getdataRender();
       } else {
         try {
+          let order = this.getOptionalOrder();
           let params = {
             title: this.title_lotto ? this.title_lotto : undefined,
             currentPage: this.pagination.page,
-            limit: this.pagination.rowsPerPage
+            limit: this.pagination.rowsPerPage,
+            order_by: order == undefined ? undefined : order.sortBy,
+            order_mode: order == undefined ? undefined : order.sortDesc
           };
           let data = await this.getProgramLotto(params);
           this.pagination.rowsNumber = 0;
@@ -463,12 +607,65 @@ export default {
         }
       }
     },
+    async submitInsert() {
+      let body = {
+        bet_open_time: this.insertForm.bet_open_time,
+        bet_close_time: this.insertForm.bet_close_time,
+        bet_lotto_time: this.insertForm.bet_lotto_time,
+        lottotype_id: this.insertForm.lottotype_id,
+        typecategory_id: this.insertForm.typecategory_id,
+        lotto_round: this.insertForm.lotto_round
+      };
+      if (this.$refs.formcreate.validate()) {
+        try {
+          await this.createProgramLotto(body);
+          this.$swal({
+            icon: "success",
+            title: "สร้างรอบหวยเรียบร้อย",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.dlInsert = false;
+          this.$fetch();
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        this.$swal({
+          icon: "error",
+          title: "กรุณากรอกรายละเอียดให้ครบถ้วน",
+          showConfirmButton: false,
+          timer: 1000
+        });
+        console.log("nope");
+      }
+    },
+    getOptionalOrder() {
+      let order = {};
+      if (this.options.sortBy[0]) {
+        console.log("thissss");
+        order.sortBy = this.options.sortBy[0];
+        if (this.options.sortDesc[0] === false) {
+          order.sortDesc = "ASC";
+        } else {
+          order.sortDesc = "DESC";
+        }
+      } else {
+        order = undefined;
+        console.log("noooo");
+      }
+      return order;
+    },
     async getdataRender() {
+      let order = this.getOptionalOrder();
+      console.log(order, "asdasd");
       this.isLoading = true;
       try {
         let params = {
           currentPage: this.pagination.page,
-          limit: this.pagination.rowsPerPage
+          limit: this.pagination.rowsPerPage,
+          order_by: order == undefined ? undefined : order.sortBy,
+          order_mode: order == undefined ? undefined : order.sortDesc
         };
         let data = await this.getProgramLotto(params);
         this.itemtypeaward = data.result[0].data;
@@ -479,7 +676,23 @@ export default {
         this.isLoading = false;
       }
     },
+    async selectTypelotto(value) {
+      this.itemcategory = [];
+      this.selectTypeCategory = "";
 
+      try {
+        let params = {
+          type_id: value,
+          currentPage: 1,
+          limit: 500
+        };
+
+        const response = await this.getTypeCategory(params);
+        this.itemcategory = response.result[0].lottotype_id.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async handlePageSizeChange(size) {
       this.pagination.page = 1;
       this.pagination.rowsPerPage = size;
@@ -541,6 +754,11 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    closeCreateconfig() {
+      this.dlInsert = false;
+      this.$refs.formcreate.reset();
+      this.$refs.formcreate.resetValidation();
     },
     async closeConfig(item) {
       try {

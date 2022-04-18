@@ -387,7 +387,7 @@ export default {
           status: true
         },
         {
-          title: " ",
+          title: "รายการสมาชิก",
           to: "/reportAccount",
           icon: "mdi-account",
           status: true

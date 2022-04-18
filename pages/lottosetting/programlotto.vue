@@ -986,14 +986,16 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          width: "75px"
+          width: "75px",
+          sortable: false
         },
         {
           text: "ชื่อหวย",
           align: "center",
           filterable: false,
           value: "title",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "รอบหวย",

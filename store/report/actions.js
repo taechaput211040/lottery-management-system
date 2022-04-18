@@ -66,7 +66,8 @@ export async function getReportDetail(
     end_time: undefined,
     type_purchase: undefined,
     page: undefined,
-    limit: undefined
+    limit: undefined,
+    sort: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -77,7 +78,8 @@ export async function getReportDetail(
           params: {
             type_purchase: params.type_purchase,
             page: params.page,
-            limit: params.limit
+            limit: params.limit,
+            sort: params.sort
           }
         }
       );
@@ -95,7 +97,9 @@ export async function getReportNumber(
     start_date: undefined,
     end_date: undefined,
     currentPage: undefined,
-    limit: undefined
+    limit: undefined,
+    order_by: undefined,
+    order_mode: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -108,7 +112,9 @@ export async function getReportNumber(
             start_date: params.start_date,
             end_date: params.end_date,
             currentPage: params.currentPage,
-            limit: params.limit
+            limit: params.limit,
+            order_by: params.order_by,
+            order_mode: params.order_mode
           }
         }
       );

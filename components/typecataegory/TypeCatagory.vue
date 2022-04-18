@@ -38,7 +38,12 @@
           </template>
           <template #[`item.title`]="{item}">
             <div class="title_lotto">
-              <img v-if="item.lotto_flag" :src="item.lotto_flag" alt="" class="mx-2" />
+              <img
+                v-if="item.lotto_flag"
+                :src="item.lotto_flag"
+                alt=""
+                class="mx-2"
+              />
               <span>{{ item.title }}</span>
             </div>
           </template>
@@ -264,15 +269,16 @@ export default {
           value: "no",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
         {
           text: "ชื่อ",
           align: "center",
           filterable: false,
-          sortable: false,
           value: "title",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
+          sortable: false
         },
 
         {
@@ -283,11 +289,32 @@ export default {
           sortable: false,
           align: "center"
         },
-        { text: "สร้างเมื่อ ", value: "created_at", align: "center" },
-        { text: "สร้างโดย", value: "created_by", align: "center" },
-        { text: "แก้ไขเมื่อ", value: "updated_at", align: "center" },
-        { text: "แก้ไขโดย", value: "updated_by", align: "center" },
-        { text: "ดำเนินการ", value: "action", align: "center" }
+        {
+          text: "สร้างเมื่อ ",
+          value: "created_at",
+          align: "center",
+          sortable: false
+        },
+        {
+          text: "สร้างโดย",
+          value: "created_by",
+          align: "center",
+          sortable: false
+        },
+
+        {
+          text: "แก้ไขเมื่อ",
+          value: "updated_at",
+          align: "center",
+          sortable: false
+        },
+        {
+          text: "แก้ไขโดย",
+          value: "updated_by",
+          align: "center",
+          sortable: false
+        },
+        { text: "ดำเนินการ", value: "action", align: "center", sortable: false }
       ],
       itemexample: []
     };
@@ -361,6 +388,21 @@ export default {
       } else {
         this.$swal("กรุณากรอกรายละเอียดให้ครบถ้วน", "", "warning");
       }
+    },
+    getOptionalOrder() {
+      let order = {};
+      if (this.options.sortBy[0]) {
+        console.log("thissss");
+        order.sortBy = this.options.sortBy[0];
+        if (this.options.sortDesc[0] === false) {
+          order.sortDesc = "ASC";
+        } else {
+          order.sortDesc = "DESC";
+        }
+      } else {
+        order = undefined;
+      }
+      return order;
     },
     async getdataRender() {
       this.isLoading = true;
