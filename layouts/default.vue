@@ -168,7 +168,7 @@ export default {
               },
               {
                 icon: "mdi-clipboard-edit-outline",
-                text: "ยกเลิกโพย / รายการแทง",
+                text: "รายการแทง",
                 to: "/report/betReport",
                 status: true
               },
@@ -291,7 +291,7 @@ export default {
             },
             {
               icon: "mdi-clipboard-edit-outline",
-              text: "ยกเลิกโพย / รายการแทง",
+              text: "รายการแทง",
               to: "/report/betReport",
               status: true
             },

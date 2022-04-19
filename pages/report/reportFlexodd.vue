@@ -71,70 +71,153 @@
         </div>
       </div>
     </div>
-    <div class="pa-1 rounded-lg white my-3 pa-2">
-      <VueApexCharts
-        type="bar"
-        height="350"
-        :options="chartOptions"
-        :series="series"
-      ></VueApexCharts>
-    </div>
-    <div class="my-3 rounded-lg white">
-      <h3 class="pa-3">รายละเอียดน้ำไหล</h3>
-      <v-divider></v-divider>
-      <div class="row pa-3">
-        <div class="col-12 col-sm-3">
-          รายรับทั้งหมด
-          <v-text-field
-            placeholder="รายรับทั้งหมด"
-            hide-details="auto"
-            dense
-            filled
-            disabled
-            :value="this.maximumIncomeAmount || 10"
-          ></v-text-field>
+    <div v-if="numberType != null">
+      <div class="pa-1 rounded-lg white my-3 pa-2">
+        <div class="text-center py-3">
+          <h3>
+            อันดับหมายเลข :
+            <span class="primary--text">{{
+              this.payoutrate.lottonumbertype_name
+            }}</span>
+          </h3>
         </div>
-        <div class="col-12 col-sm-3">
-          กำไรขั้นต่ำ
-
-          <v-text-field
-            placeholder="รายรับทั้งหมด"
-            hide-details="auto"
-            dense
-            filled
-            :value="minimumProfit"
-            disabled
-          ></v-text-field>
-        </div>
-        <div class="col-12 col-sm-3">
-          อัตราจ่ายสูงสุด
-          <v-text-field
-            placeholder="อัตราจ่ายสูงสุด"
-            hide-details="auto"
-            dense
-            filled
-            disabled
-            :value="this.payoutrate.maximum_out_come_rate || 0"
-          ></v-text-field>
-        </div>
+        <VueApexCharts
+          ref="realtimeChart"
+          type="bar"
+          height="350"
+          :options="chartOptions"
+          :series="itemgraphshow"
+        ></VueApexCharts>
       </div>
-      <v-data-table :headers="headerReport" :items="itemRender.data">
-        <template #[`item.pay_out`]="{item}">
-          {{ profitNormal(item) }}
-        </template>
-        <template #[`item.payrate`]="{item}">
-          {{ calPayrate(item) }}
-        </template>
-        <template #[`item.profit`]="{item}">
-          {{ getWinloseAmount(profitNormal(item)) }}</template
+      <v-dialog v-model="dledit" max-width="300px" persistent>
+        <v-form v-model="validcongfig" ref="formconfig"
+          ><v-card class="pa-2">
+            <v-card-title><h3>เพิ่มข้อมูลจำลอง</h3></v-card-title>
+            <div class="pa-2 rounded-lg elevation-2 white">
+              <v-text-field
+                label="หมายเลข"
+                dense
+                filled
+                disabled
+                v-model="formEdit.lotto_number"
+                hide-details="auto"
+              ></v-text-field>
+              <v-text-field
+                label="ยอดอัตราจ่ายจำลอง"
+                outlined
+                placeholder="กรอกอัตราจ่ายจำลอง"
+                dense
+                :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
+                type="number"
+                class="my-2"
+                hide-details="auto"
+                v-model="formEdit.bet_fake"
+              ></v-text-field>
+            </div>
+            <v-card-actions class="justify-center">
+              <v-btn color="success" @click="submitConfig()">ยืนยัน</v-btn>
+              <v-btn color="error" @click="closeform()"
+                >ปิด</v-btn
+              ></v-card-actions
+            >
+          </v-card></v-form
         >
+      </v-dialog>
+      <div class="my-3 rounded-lg white">
+        <h3 class="pa-3">รายละเอียดน้ำไหล</h3>
+        <v-divider></v-divider>
+        <div class="row pa-3">
+          <div class="col-12 col-sm-3">
+            รายรับทั้งหมด
+            <v-text-field
+              placeholder="รายรับทั้งหมด"
+              hide-details="auto"
+              dense
+              filled
+              disabled
+              :value="this.maximumIncomeAmount || 10"
+            ></v-text-field>
+          </div>
+          <div class="col-12 col-sm-3">
+            กำไรขั้นต่ำ
 
-        <template #[`item.actions`]="{item}">
-          <v-btn small rounded color="primary" @click="editPay(item)"
-            >แก้ไขจำนวนเงิน</v-btn
+            <v-text-field
+              placeholder="รายรับทั้งหมด"
+              hide-details="auto"
+              dense
+              filled
+              :value="minimumProfit"
+              disabled
+            ></v-text-field>
+          </div>
+          <div class="col-12 col-sm-3">
+            อัตราจ่ายสูงสุด
+            <v-text-field
+              placeholder="อัตราจ่ายสูงสุด"
+              hide-details="auto"
+              dense
+              filled
+              disabled
+              :value="this.payoutrate.maximum_out_come_rate || 0"
+            ></v-text-field>
+          </div>
+        </div>
+        <v-data-table
+          :headers="headerReport"
+          :items="itemRender.data"
+          :server-items-length="pagination.rowsNumber"
+          :items-per-page.sync="pagination.rowsPerPage"
+          :page.sync="pagination.page"
+          :options.sync="options"
+          hide-default-footer
+        >
+          <!-- อัตราจ่าย -->
+          <template #[`item.payrate`]="{item}">
+            {{ numberWithCommas(calPayrate(item)) }}
+          </template>
+          <!-- อัตราจ่าย -->
+          <!-- จ่ายเงิน -->
+          <template #[`item.pay_out`]="{item}">
+            {{ numberWithCommas(profitNormal(item)) }}
+          </template>
+          <!-- จ่ายเงิน -->
+          <template #[`item.profit_flexodd`]="{item}">
+            {{ numberWithCommas(getWinloseFlex(item)) }}</template
           >
-        </template>
-      </v-data-table>
+          <!-- กำไรขาดทุนปกติ -->
+          <template #[`item.profit`]="{item}">
+            {{ numberWithCommas(getWinloseNormal(item)) }}
+          </template>
+          <!-- กำไรขาดทุนปกติ -->
+          <template #[`item.actions`]="{item}">
+            <v-btn small rounded color="primary" @click="editPay(item)"
+              >แก้ไข</v-btn
+            >
+          </template>
+        </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="2">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="pagination.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChange"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="10">
+            <v-pagination
+              v-model="pagination.page"
+              :total-visible="7"
+              :length="
+                Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+              "
+            ></v-pagination>
+          </v-col>
+        </v-row>
+      </div>
     </div>
   </div>
 </template>
@@ -145,17 +228,59 @@ import VueApexCharts from "vue-apexcharts";
 
 export default {
   components: { VueApexCharts },
+  comments: {
+    numberFormat() {
+      return (number, digit = 2, comma = true) => {
+        if (typeof number == "string") {
+          number = this.convertToFloat(number);
+        }
+        if (!number) {
+          return 0;
+        } else {
+          return new Intl.NumberFormat("en-US", {
+            minimumFractionDigits: digit,
+            maximumFractionDigits: digit,
+            useGrouping: comma
+          }).format(number);
+        }
+      };
+    }
+  },
+  watch: {
+    options: {
+      async handler() {
+        await this.getFlexoddReport();
+      },
+      deep: true
+    }
+  },
   data() {
     return {
-      maximumIncomeAmount: 300000,
+      validcongfig: false,
+      formEdit: {},
+      dledit: false,
+      pageSizes: [5, 10, 15, 25],
+      pagination: {
+        sortBy: "desc",
+        descending: false,
+        page: 1,
+        rowsPerPage: 10,
+        rowsNumber: 0
+      },
+      options: {},
+      maximumIncomeAmount: 161,
       per_flex_rate: 10,
       payoutrate: {
         maximum_out_come_rate: 999
       },
-      series: [
+      itemgraphshow: [
         {
-          name: "ยอดกำไร",
-          data: [31, 40, 28, 51, 42, 109, 100, 100, 22, 35, 11, 85]
+          data: [
+            { x: "asdasd", y: 40 },
+            { x: "asdasd", y: 12 },
+            { x: "asdasd", y: 10 },
+            { x: "asdasd", y: 50 }
+          ]
         }
       ],
       chartOptions: {
@@ -182,22 +307,6 @@ export default {
         colors: ["#00E396"],
         stroke: {
           curve: "smooth"
-        },
-        xaxis: {
-          categories: [
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Aug",
-            "Sep",
-            "Oct"
-          ]
         }
       },
       itemRender: {
@@ -312,11 +421,57 @@ export default {
     }
   },
   methods: {
+    async mapchart(item) {
+      this.itemgraphshow[0].data = [];
+      for (let i = 0; i < item.length; i++) {
+        this.itemgraphshow[0].data.push({
+          x: `เลข ${item[i].lotto_number}`,
+          y: item[i].bet
+        });
+      }
+      this.$refs.realtimeChart.updateSeries(this.itemgraphshow, false, true);
+    },
     getWinloseAmount(item) {
-      let outcomrateAmount = this.maximumIncomeAmount;
+      let outcomrateAmount = parseInt(this.maximumIncomeAmount);
       let winlose = outcomrateAmount - parseInt(item);
       return winlose;
     },
+    getRecieve_max() {
+      let Recieve_max =
+        parseInt(this.maximumIncomeAmount) - parseInt(this.minimumProfit);
+      return Recieve_max;
+    },
+    getWinloseNormal(item) {
+      let winlose = 0;
+      winlose =
+        parseInt(this.maximumIncomeAmount) -
+        item.bet * this.payoutrate.maximum_out_come_rate;
+
+      return winlose;
+    },
+    // เชค winloseflexood
+    checkFlex_odd(item) {
+      let Recieve_max = this.getRecieve_max();
+      if (item.bet * this.payoutrate.maximum_out_come_rate > Recieve_max) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // เชค winloseflexood
+
+    // colomn winloseflexood
+    getWinloseFlex(item) {
+      let wlflexodd = 0;
+      if (this.checkFlex_odd(item)) {
+        wlflexodd = this.minimumProfit;
+      } else {
+        wlflexodd = this.getWinloseAmount(this.profitNormal(item));
+      }
+      return wlflexodd;
+    },
+    // colomn winloseflexood
+
     async getPerFlex() {
       try {
         let { data } = await this.getPerflex();
@@ -326,10 +481,37 @@ export default {
         console.log(error);
       }
     },
+    //colomn จ่ายเงิน
+    numberWithCommas(x) {
+      var parts = x
+        .toFixed(2)
+        .toString()
+        .split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
+    },
     profitNormal(item) {
-      let profit = parseInt(item.bet * this.payoutrate.maximum_out_come_rate);
+      let profit;
+      if (this.checkFlex_odd(item)) {
+        profit = this.getRecieve_max();
+      } else {
+        profit = parseInt(item.bet * this.payoutrate.maximum_out_come_rate);
+      }
       return profit;
     },
+    //colomn จ่ายเงิน
+    //column payrate
+    calPayrate(item) {
+      let payrate = 0;
+      if (this.checkFlex_odd(item)) {
+        payrate = this.profitNormal(item) / item.bet;
+      } else {
+        payrate = this.payoutrate.maximum_out_come_rate;
+      }
+
+      return payrate;
+    },
+    //column payrate
     dateformat(date) {
       return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
     },
@@ -338,13 +520,13 @@ export default {
       "getTypeCategory",
       "getProgramLotto"
     ]),
-    ...mapActions("report", ["getNumberTypeReport", "getDetailNumberReport"]),
+    ...mapActions("report", [
+      "getNumberTypeReport",
+      "getDetailNumberReport",
+      "betFake"
+    ]),
     ...mapActions("flexodd", ["getOutcomerate", "getPerflex"]),
 
-    calPayrate(item) {
-      const payrate = this.payoutrate.maximum_out_come_rate;
-      return payrate;
-    },
     async selectTypelotto(value) {
       this.itemcategory = [];
       this.selectTypeCategory = "";
@@ -407,9 +589,16 @@ export default {
         program_id: this.toRound,
         lottonumbertype_id: this.numberType,
         page: this.pagination.page,
-        limit: this.pagination.rowsPerPage
+        limit: this.pagination.rowsPerPage,
+        sort: "bet=DESC",
+        type_purchase: 1
       };
       return params;
+    },
+    async handlePageSizeChange(size) {
+      this.pagination.page = 1;
+      this.pagination.rowsPerPage = size;
+      this.getFlexoddReport();
     },
     async getFlexoddReport() {
       let params = this.getParameter();
@@ -417,6 +606,9 @@ export default {
         let { data: response } = await this.getDetailNumberReport(params);
         console.log(response);
         this.itemRender = response;
+        this.maximumIncomeAmount = this.itemRender.sum.bet;
+        this.pagination.rowsNumber = this.itemRender.pagination.total;
+        this.mapchart(this.itemRender.data);
       } catch (error) {
         console.log(error);
       }
@@ -440,7 +632,59 @@ export default {
         console.log(this.itemPayrate);
       } catch (error) {}
     },
-    editPay(item) {}
+    editPay(item) {
+      this.dledit = true;
+      this.formEdit = Object.assign({}, item);
+    },
+    closeform() {
+      this.dledit = false;
+      this.$refs.formconfig.reset();
+      this.$refs.formconfig.resetValidation();
+    },
+    checkpositive(evt) {
+      evt = evt ? evt : window.event;
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    async submitConfig() {
+      let body = {
+        program_id: this.toRound,
+        typecategory_id: this.selectTypeCategory,
+        lottonumbertype_id: this.numberType,
+        bet_details: [
+          {
+            lotto_number: this.formEdit.number,
+            bet: this.formEdit.bet_fake
+          }
+        ]
+      };
+      if (this.$refs.formconfig.validate()) {
+        try {
+          await this.betFake(body);
+          this.$swal({
+            icon: "success",
+            title: "เเก้ไขเรียบร้อย",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.dledit = false;
+          this.getFlexoddReport();
+        } catch (error) {
+          console.log("faile");
+          console.log(error);
+        }
+      } else {
+        this.$swal("กรุณากรอกข้อมูลให้ครบถ้วน", "", "warning");
+      }
+    }
   }
 };
 </script>

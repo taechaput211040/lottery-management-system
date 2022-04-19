@@ -15,7 +15,7 @@
             <v-alert
               :value="true"
               border="left"
-               color="blue-grey"
+              color="blue-grey"
               type="error"
               icon="mdi-warning"
             >
@@ -121,7 +121,8 @@ export default {
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
           align: "center",
-          width: "80px"
+          width: "80px",
+          sortable: false
         },
         {
           text: "ชื่อ",
@@ -141,7 +142,8 @@ export default {
           value: "actions",
           class: "font-weight-bold",
           align: "center",
-          width: "200px"
+          width: "200px",
+          sortable: false
         }
       ],
       itemtypeaward: [],

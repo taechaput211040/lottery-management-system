@@ -552,7 +552,7 @@ export default {
         let { data } = await this.getGraphReport(params);
 
         this.graphRender = data.sort(function(a, b) {
-          return a.date - b.date;
+          return new Date(a.date) - new Date(b.date);
         });
         this.mapchart(this.graphRender);
       } catch (error) {

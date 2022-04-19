@@ -74,6 +74,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      fullPage: true,
       option: {},
       pageSizes: [5, 10, 15, 25],
       isLoading: true,
@@ -113,7 +114,6 @@ export default {
     };
   },
   async fetch() {
-   
     // this.isLoading = true;
     // try {
     //   const { result } = this.$store.state.lottosetting.lottotype;

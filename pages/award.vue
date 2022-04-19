@@ -332,7 +332,8 @@ export default {
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
           align: "center",
-          width: "80px"
+          width: "80px",
+          sortable: false
         },
         {
           text: "ชื่อหวย",

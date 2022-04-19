@@ -42,6 +42,7 @@
                 </template>
                 <v-date-picker
                   v-model.trim="filter.startDate"
+                  :max="filter.endDate"
                   no-title
                   scrollable
                   locale="th"
@@ -94,6 +95,7 @@
                   v-model.trim="filter.endDate"
                   no-title
                   scrollable
+                  :min="filter.startDate"
                   locale="th"
                 >
                   <v-spacer></v-spacer>

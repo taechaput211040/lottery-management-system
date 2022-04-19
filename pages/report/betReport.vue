@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>รายการแทง / ยกเลิกโพย</h2>
+    <h2>รายการแทง</h2>
 
     <div class="mt-6">
       <filter-search @search="searchfunction"></filter-search>
@@ -44,9 +44,9 @@
         <v-data-table
           :server-items-length="pagination.rowsNumber"
           :items-per-page.sync="pagination.rowsPerPage"
+          :page.sync="pagination.page"
           :options.sync="options"
           hide-default-footer
-          :page.sync="pagination.page"
           :headers="headersdatelotto"
           :items="itemReport"
           class="pb-2 elevation-1"
@@ -544,7 +544,7 @@ export default {
     getparameterDetail() {
       let params = {
         member_id: this.itemDetailOpen.member_id,
-        program_id: this.itemDetailOpen.program_id,
+        round_id : this.itemDetailOpen.id ,
         type_purchase: this.detailstype,
         page: this.paginationDetail.page,
         limit: this.paginationDetail.rowsPerPage

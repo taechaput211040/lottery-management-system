@@ -8471,6 +8471,11 @@ vue-loader@^15.9.7:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-loading-overlay@^3.0:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/vue-loading-overlay/-/vue-loading-overlay-3.4.2.tgz#34792a83218df1d35dff50121ce9fac2114f1c38"
+  integrity sha512-xcB+NPjl76eA0uggm707x3ZFgrNosZXpynHipyS3K+rrK1NztOV49R1LY+/4ij5W1KYANp7eRI2EIHrxCpmWAw==
+
 vue-meta@^2.4.0:
   version "2.4.0"
   resolved "https://registry.npmjs.org/vue-meta/-/vue-meta-2.4.0.tgz"
@@ -8536,6 +8541,11 @@ vue2-editor@^2.10.3:
   integrity sha512-99rWL93xfGeFRrq8NY5L7U+Cog/Uenx+UOOJragtxtbhBE9Rv5/C3P/YhJhjMECSbQyHFjUriqv1S3mghvU9Kg==
   dependencies:
     quill "^1.3.6"
+
+vue2-loading@^0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/vue2-loading/-/vue2-loading-0.0.16.tgz#1e99f98733fe8b941fe1f1bea7a9460a8ed60a6f"
+  integrity sha1-Hpn5hzP+i5Qf4fG+p6lGCo7WCm8=
 
 vue@^2.6.12:
   version "2.6.14"
