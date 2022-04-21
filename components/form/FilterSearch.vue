@@ -111,18 +111,17 @@
                   </v-btn>
                 </v-date-picker>
               </v-menu>
-              <!-- <el-date-picker
-                class="full-width"
-                v-model.trim="filter.endDate"
-                arrow-control
-                placeholder="เลือกวันที่ต้องการค้นหา"
-              >
-              </el-date-picker> -->
             </div>
           </div>
         </v-col>
-        <v-col cols="12">
-          <v-btn color="primary" @click="searchbyfillter">ค้นหา</v-btn>
+        <v-col cols="12 pt-1">
+          <v-btn
+            color="primary"
+            @click="searchbyfillter"
+            class="btn_search"
+            rounded
+            ><v-icon left>mdi-magnify</v-icon> ค้นหา</v-btn
+          >
         </v-col>
       </v-row>
     </div>

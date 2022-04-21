@@ -6,15 +6,17 @@
         - {{ thisUser }}</span
       >
     </h2>
-    <div class="white rounded-lg mt-3">
+    <div v-if="isLoading"><loading-page></loading-page></div>
+    <div v-else class="white rounded-lg mt-3">
       <v-btn
-        color="red"
+        color="red back_btn"
         class="ma-3"
         @click="backPrevpath()"
         v-if="showBackbtn()"
+        rounded
         small
         dark
-        ><v-icon left>mdi-code-less-than</v-icon> ย้อนกลับ</v-btn
+        ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
       >
       <v-data-table
         :options.sync="options"
@@ -36,6 +38,7 @@
             ไม่พบข้อมูล
           </v-alert>
         </template>
+
         <template #[`item.no`]="{index}"> {{ index + 1 }}</template>
         <template #[`item.actions`]="{item}">
           <v-btn color="black" dark small rounded @click="viewOther(item)"
@@ -69,9 +72,12 @@
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../components/form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
+      isLoading: false,
       pageSizes: [5, 10, 15, 25],
       options: {},
       thisUser: "",
@@ -157,6 +163,7 @@ export default {
       } else {
         this.thisUser = item;
       }
+      this.isLoading = false;
     },
     async handlePageSizeChange(size) {
       this.pagination.page = 1;
@@ -164,6 +171,7 @@ export default {
       this.getMember(this.thisUser);
     },
     async viewOther(item) {
+      this.isLoading = true;
       this.thisUser = item.username;
       if (!sessionStorage.getItem("userPrev")) {
         sessionStorage.setItem("userPrev", item.username);

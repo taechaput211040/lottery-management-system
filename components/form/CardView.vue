@@ -4,12 +4,16 @@
       <div class="col-8">
         <h2 :class="titleclass">{{ title }}</h2>
         <div class=" card-icontitle" v-if="condition == true">
-          <h2 v-if="value > 0" class="success--text">+{{ value }}</h2>
-          <h2 v-if="value < 0" class="red--text">{{ value }}</h2>
+          <h2 v-if="value > 0" class="success--text">
+            +{{ numberWithCommas(value) }} บาท
+          </h2>
+          <h2 v-if="value < 0" class="red--text">
+            {{ numberWithCommas(value) }} บาท
+          </h2>
         </div>
 
         <div class=" card-icontitle " :class="value_class" v-else>
-          <h2>{{ value }}</h2>
+          <h2>{{ numberWithCommas(value) }} บาท</h2>
         </div>
       </div>
       <div class="col-4 img_section">
@@ -31,6 +35,16 @@ export default {
     iconSrc: { type: String, default: "" },
     titleclass: "",
     value_class: ""
+  },
+  methods: {
+    numberWithCommas(x) {
+      var parts = parseInt(x)
+        .toFixed(2)
+        .toString()
+        .split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
+    }
   }
 };
 </script>

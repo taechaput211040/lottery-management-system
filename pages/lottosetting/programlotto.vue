@@ -49,146 +49,152 @@
             >
           </div>
         </v-row>
-        <v-card class="mx-auto  justify-center classtable">
-          <v-data-table
-            :server-items-length="pagination.rowsNumber"
-            :items-per-page.sync="pagination.rowsPerPage"
-            :page.sync="pagination.page"
-            :headers="headers"
-            :items="itemexample"
-            :options.sync="options"
-            hide-default-footer
-            :loading="isLoading"
-          >
-            <template v-slot:no-data>
-              <v-alert
-                :value="true"
-                border="left"
-                color="blue-grey"
-                type="error"
-                icon="mdi-warning"
-              >
-                ไม่พบข้อมูล
-              </v-alert>
-            </template>
-            <template #[`item.no`]="{index}">
-              {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
-            </template>
-            <template #[`item.action`]="{item}">
-              <div class="d-flex justify-center">
-                <v-tooltip bottom color="black">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      @click="showdetail(item)"
-                      v-bind="attrs"
-                      v-on="on"
-                      color="black"
-                      x-small
-                      outlined
-                      icon
-                      fab
-                      ><v-icon dark>
-                        mdi-magnify-plus
-                      </v-icon>
-                    </v-btn></template
-                  >
-                  <span>รายละเอียดตัวเลข</span>
-                </v-tooltip>
-                <v-tooltip bottom color="warning">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      color="warning"
-                      x-small
-                      outlined
-                      @click="editProgramlotto(item)"
-                      icon
-                      fab
-                      ><v-icon dark>
-                        mdi-pencil
-                      </v-icon>
-                    </v-btn></template
-                  >
-                  <span>แก้ไขโปรเเกรมหวย</span>
-                </v-tooltip>
-                <v-tooltip bottom color="red">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      color="red"
-                      x-small
-                      outlined
-                      icon
-                      fab
-                      @click="deleteProgramlotto(item)"
-                      ><v-icon dark>
-                        mdi-delete
-                      </v-icon>
-                    </v-btn></template
-                  >
-                  <span>ลบโปรเเกรมหวย</span>
-                </v-tooltip>
-                <v-tooltip bottom color="black">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                      color="black"
-                      x-small
-                      outlined
-                      icon
-                      fab
-                      @click="closeNumbertype(item)"
-                      ><v-icon dark>
-                        mdi-lock
-                      </v-icon>
-                    </v-btn></template
-                  >
-                  <span>ปิดโปรเเกรมหวย</span>
-                </v-tooltip>
-              </div>
-            </template>
-            <template #[`item.type`]="{item}">
-              <span v-if="item.TypeCategory_Id">{{
-                item.TypeCategory_Id.LottoType_Id.title
-              }}</span>
-            </template>
-            <template #[`item.status`]="{item}">
-              <v-chip color="success" v-if="item.status == 1" dark small>
-                <v-icon left small>mdi-circle-medium</v-icon>เปิดใช้งาน
-              </v-chip>
-              <v-chip v-else color="error" dark small>
-                <v-icon left small>mdi-circle-medium</v-icon>ปิดใช้งาน
-              </v-chip>
-            </template>
-            <template #[`item.permaxbet`]="{item}">
-              {{ item.permaxbet }} %
-            </template></v-data-table
-          >
-        </v-card>
-        <v-row align="baseline" class="ma-3 ">
-          <v-col cols="12" sm="2" lg="2" xl="1">
-            <v-select
-              dense
-              outlined
-              v-model="pagination.rowsPerPage"
-              :items="pageSizes"
-              @change="handlePageSizeChange"
-              label="รายการต่อหน้า"
-            ></v-select>
-          </v-col>
-          <v-col cols="12" sm="10" lg="10">
-            <v-pagination
-              v-model="pagination.page"
-              :total-visible="7"
-              :length="
-                Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
-              "
-            ></v-pagination>
-          </v-col>
-        </v-row>
+
+        <div v-if="isLoading"><loading-page></loading-page></div>
+        <div v-else>
+          <v-card class="mx-auto  justify-center classtable">
+            <v-data-table
+              :server-items-length="pagination.rowsNumber"
+              :items-per-page.sync="pagination.rowsPerPage"
+              :page.sync="pagination.page"
+              :headers="headers"
+              :items="itemexample"
+              :options.sync="options"
+              hide-default-footer
+              :loading="isLoading"
+            >
+              <template v-slot:no-data>
+                <v-alert
+                  :value="true"
+                  border="left"
+                  color="blue-grey"
+                  type="error"
+                  icon="mdi-warning"
+                >
+                  ไม่พบข้อมูล
+                </v-alert>
+              </template>
+              <template #[`item.no`]="{index}">
+                {{
+                  pagination.rowsPerPage * (pagination.page - 1) + (index + 1)
+                }}
+              </template>
+              <template #[`item.action`]="{item}">
+                <div class="d-flex justify-center">
+                  <v-tooltip bottom color="black">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        @click="showdetail(item)"
+                        v-bind="attrs"
+                        v-on="on"
+                        color="black"
+                        x-small
+                        outlined
+                        icon
+                        fab
+                        ><v-icon dark>
+                          mdi-magnify-plus
+                        </v-icon>
+                      </v-btn></template
+                    >
+                    <span>รายละเอียดตัวเลข</span>
+                  </v-tooltip>
+                  <v-tooltip bottom color="warning">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        color="warning"
+                        x-small
+                        outlined
+                        @click="editProgramlotto(item)"
+                        icon
+                        fab
+                        ><v-icon dark>
+                          mdi-pencil
+                        </v-icon>
+                      </v-btn></template
+                    >
+                    <span>แก้ไขโปรเเกรมหวย</span>
+                  </v-tooltip>
+                  <v-tooltip bottom color="red">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        color="red"
+                        x-small
+                        outlined
+                        icon
+                        fab
+                        @click="deleteProgramlotto(item)"
+                        ><v-icon dark>
+                          mdi-delete
+                        </v-icon>
+                      </v-btn></template
+                    >
+                    <span>ลบโปรเเกรมหวย</span>
+                  </v-tooltip>
+                  <v-tooltip bottom color="black">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        color="black"
+                        x-small
+                        outlined
+                        icon
+                        fab
+                        @click="closeNumbertype(item)"
+                        ><v-icon dark>
+                          mdi-lock
+                        </v-icon>
+                      </v-btn></template
+                    >
+                    <span>ปิดโปรเเกรมหวย</span>
+                  </v-tooltip>
+                </div>
+              </template>
+              <template #[`item.type`]="{item}">
+                <span v-if="item.TypeCategory_Id">{{
+                  item.TypeCategory_Id.LottoType_Id.title
+                }}</span>
+              </template>
+              <template #[`item.status`]="{item}">
+                <v-chip color="success" v-if="item.status == 1" dark small>
+                  <v-icon left small>mdi-circle-medium</v-icon>เปิดใช้งาน
+                </v-chip>
+                <v-chip v-else color="error" dark small>
+                  <v-icon left small>mdi-circle-medium</v-icon>ปิดใช้งาน
+                </v-chip>
+              </template>
+              <template #[`item.permaxbet`]="{item}">
+                {{ item.permaxbet }} %
+              </template></v-data-table
+            >
+          </v-card>
+          <v-row align="baseline" class="ma-3 ">
+            <v-col cols="12" sm="2" lg="2" xl="1">
+              <v-select
+                dense
+                outlined
+                v-model="pagination.rowsPerPage"
+                :items="pageSizes"
+                @change="handlePageSizeChange"
+                label="รายการต่อหน้า"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="10" lg="10">
+              <v-pagination
+                v-model="pagination.page"
+                :total-visible="7"
+                :length="
+                  Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+                "
+              ></v-pagination>
+            </v-col>
+          </v-row>
+        </div>
       </div>
     </div>
 
@@ -479,7 +485,9 @@
                 </div>
               </div>
             </div>
-            <v-btn color="success" @click="submitForm()">สร้าง</v-btn>
+            <v-btn color="success" @click="submitForm()" :loading="loading_btn"
+              >สร้าง</v-btn
+            >
             <v-btn color="error" @click="closeForm()">ยกเลิก</v-btn>
           </v-form>
 
@@ -754,7 +762,9 @@
                 </div>
               </div>
             </div>
-            <v-btn color="success" @click="EditForm()">แก้ไข</v-btn>
+            <v-btn color="success" :loading="loading_btn" @click="EditForm()"
+              >แก้ไข</v-btn
+            >
             <v-btn color="error" @click="modaledit = false">ยกเลิก</v-btn>
           </v-form>
 
@@ -806,12 +816,14 @@
 import { FormWizard, TabContent } from "vue-form-wizard";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import { mapActions } from "vuex";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 import ProgranlottoDetail from "../../components/ProgranlottoDetail.vue";
 export default {
   components: {
     FormWizard,
     TabContent,
-    ProgranlottoDetail
+    ProgranlottoDetail,
+    LoadingPage
   },
   computed: {
     start_day() {
@@ -824,6 +836,7 @@ export default {
   },
   data() {
     return {
+      loading_btn: false,
       value: 0,
       last_value: 0,
       validation: {
@@ -1039,6 +1052,7 @@ export default {
     };
   },
   async fetch() {
+    this.isLoading = true;
     this.getdataRender();
   },
   watch: {
@@ -1091,12 +1105,15 @@ export default {
       if (!this.$refs.form.validate()) {
         return false;
       } else {
+        this.loading_btn = true;
         try {
           await this.createTypeCategory(this.form);
           this.modal_add = false;
           this.$fetch();
+          this.loading_btn = false;
         } catch (error) {
           console.log(error);
+          this.loading_btn = false;
         }
       }
     },
@@ -1140,7 +1157,6 @@ export default {
       }
     },
     async searchlotto(e) {
-      this.isLoading = true;
       if (
         !this.title_search ||
         this.title_search === undefined ||
@@ -1182,7 +1198,6 @@ export default {
       }
     },
     async getdataRender() {
-      this.isLoading = true;
       try {
         let params = {
           currentPage: this.pagination.page,
@@ -1218,16 +1233,21 @@ export default {
       this.getdataRender();
     },
     async EditForm() {
+      this.loading_btn = true;
       try {
         await this.updateTypeCategoryDetail(this.Editform);
         this.modaledit = false;
+        this.loading_btn = false;
         if (this.title_search) {
+          this.loading_btn = false;
           this.searchlotto();
         } else {
           this.$fetch();
+          this.loading_btn = false;
         }
       } catch (error) {
         console.log(error);
+        this.loading_btn = false;
       }
     },
     async editProgramlotto(item) {

@@ -37,7 +37,7 @@ export async function changeStausDownline({ commit }, body) {
         `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/update_lotto_dowline`,
         body
       );
-    
+
       resolve(response);
     } catch (error) {
       reject(error);
@@ -51,7 +51,7 @@ export async function getLottoDownline({ commit }) {
       let response = await this.$axios.get(
         `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/get_member`
       );
-  
+
       resolve(response);
     } catch (error) {
       reject(error);
@@ -64,7 +64,7 @@ export async function getTypeByUser({ commit }, username) {
       let response = await this.$axios.get(
         `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/get_typecategory_by_user/${username}`
       );
-    
+
       resolve(response);
     } catch (error) {
       reject(error);
@@ -96,10 +96,28 @@ export async function changeStausType({ commit }, body) {
           seller: body.seller
         }
       );
-      
+
       resolve(response);
     } catch (error) {
       reject(error);
+    }
+  });
+}
+export async function recieveSellertofull({ state, commit }, context) {
+  return new Promise(async (resolve, reject) => {
+    console.log(state, "store");
+    if (!state.balance_top) {
+      try {
+        let response = await this.$axios.get(
+          `https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/get_balance_top?currentPage=1&limit=15`
+        );
+        commit("set_topseller", response.data);
+        resolve(response);
+      } catch (error) {
+        reject(error);
+      }
+    }else{
+      console.log('havestate')
     }
   });
 }

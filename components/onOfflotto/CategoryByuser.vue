@@ -1,7 +1,13 @@
 <template>
   <div>
-    <v-btn color="red" @click="$router.go(-1)" dark small class="ma-3"
-      >Back</v-btn
+    <v-btn
+      rounded
+      color="red back_btn"
+      class="ma-3"
+      @click="$router.go(-1)"
+      small
+      dark
+      ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
     >
     <div class="rounded-lg white">
       <v-data-table
@@ -11,12 +17,11 @@
         :loading="isLoading"
         :items="dataDetail"
       >
-     
         <template v-slot:no-data>
           <v-alert
             :value="true"
             border="left"
-              color="blue-grey"
+            color="blue-grey"
             type="error"
             icon="mdi-warning"
           >
@@ -25,10 +30,16 @@
         </template>
         <template #[`item.no`]="{index}">
           <!-- {{item.upline_status}} -->
-            {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
+          {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
         <template #[`item.actions`]="{item}">
-          <v-btn color="warning" rounded small @click="openEdit(item)"
+          <v-btn
+            dark
+            color="warning"
+            class="btn_edit text--white"
+            rounded
+            small
+            @click="openEdit(item)"
             ><v-icon small>mdi-pencil</v-icon> จัดการสถานะ</v-btn
           >
         </template>

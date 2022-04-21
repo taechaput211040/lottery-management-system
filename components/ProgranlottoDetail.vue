@@ -1,10 +1,19 @@
 <template>
   <div>
     <h1>รายละเอียดตัวเลข : {{ this.$route.query.title }}</h1>
-    <div class="mx-auto mt-5 justify-center classtable white rounded-lg">
+    <div v-if="isLoading">
+      <loading-page></loading-page>
+    </div>
+    <div v-else class="mx-auto mt-5 justify-center classtable white rounded-lg">
       <div class="d-flex justify-end align-baseline">
-        <v-btn small class="mx-2" color="error" @click="$router.go(-1)"
-          >back</v-btn
+        <v-btn
+          rounded
+          color="red back_btn"
+          class="ma-3"
+          @click="$router.go(-1)"
+          small
+          dark
+          ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
         >
         <v-spacer></v-spacer>
         <v-btn
@@ -196,9 +205,12 @@
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "./form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
+      isLoading: false,
       option: {},
       pageSizes: [5, 10, 15, 25],
       validform: false,
@@ -230,7 +242,7 @@ export default {
           text: "ชื่อ",
           align: "center",
           value: "name",
-          cellClass:"font-weight-bold"
+          cellClass: "font-weight-bold"
         },
         {
           text: "จำนวนตัวเลข",
@@ -282,6 +294,7 @@ export default {
   },
   async fetch() {
     try {
+      this.isLoading = true;
       let params = {
         typecategory_id: this.$route.query.id,
         currentPage: this.pagination.page,
@@ -293,10 +306,12 @@ export default {
         this.itemDetail = [];
       }
       this.modaladdType = false;
+      this.isLoading = false;
     } catch (error) {
       this.itemDetail = [];
       console.log(error);
       this.modaladdType = false;
+      this.isLoading = false;
     }
   },
   methods: {

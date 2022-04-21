@@ -67,7 +67,8 @@ export async function getReportDetail(
     type_purchase: undefined,
     page: undefined,
     limit: undefined,
-    sort: undefined
+    sort: undefined,
+    search: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -79,7 +80,8 @@ export async function getReportDetail(
             type_purchase: params.type_purchase,
             page: params.page,
             limit: params.limit,
-            sort: params.sort
+            sort: params.sort,
+            search: params.search
           }
         }
       );
@@ -169,7 +171,8 @@ export async function getReportWinlose(
     end_time: undefined,
     type_purchase: undefined,
     page: undefined,
-    limit: undefined
+    limit: undefined,
+    sort: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -180,7 +183,8 @@ export async function getReportWinlose(
           params: {
             type_purchase: params.type_purchase,
             page: params.page,
-            limit: params.limit
+            limit: params.limit,
+            sort: params.sort
           }
         }
       );
@@ -221,7 +225,7 @@ export async function getTransaction(
   { commit },
   params = {
     member_id: undefined,
-    round_id : undefined,
+    round_id: undefined,
     type_purchase: undefined,
     page: undefined,
     limit: undefined
@@ -230,7 +234,7 @@ export async function getTransaction(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Transaction/${params.round_id }/${params.member_id}`,
+        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Transaction/${params.round_id}/${params.member_id}`,
         {
           params: {
             type_purchase: params.type_purchase,
@@ -317,3 +321,4 @@ export async function betFake({ commit }, body) {
     }
   });
 }
+

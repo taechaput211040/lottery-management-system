@@ -1,10 +1,17 @@
 <template>
   <div>
     <h1 class="mt-2">ชนิดของหวย : {{ $route.query.type }}</h1>
-    <div class="ma-2  white rounded-lg">
+    <div v-if="isLoading"><loading-page></loading-page></div>
+    <div v-else class="ma-2  white rounded-lg">
       <div class="d-flex pa-2 align-center">
-        <v-btn color="red" @click="$router.go(-1)" small dark
-          ><v-icon left>mdi-code-less-than</v-icon> ย้อนกลับ</v-btn
+        <v-btn
+          color="red back_btn"
+          class="ma-3"
+          @click="$router.go(-1)"
+          small
+          dark
+          rounded
+          ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
         >
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded dark @click="openAdddialog()">
@@ -130,7 +137,7 @@
           </template>
         </v-data-table>
         <!-- add -->
-        <v-dialog full-width v-model="modal_add" max-width="600">
+        <v-dialog full-width v-model="modal_add" max-width="600" persistent>
           <v-form ref="formcreate" v-model="valid">
             <v-card class="pa-4">
               <v-card-title>
@@ -156,7 +163,12 @@
               </v-card>
               <v-row class="pa-2">
                 <v-spacer></v-spacer>
-                <v-btn color="success" small class="mx-2" @click="addCategpry()"
+                <v-btn
+                  color="success"
+                  small
+                  class="mx-2"
+                  @click="addCategpry()"
+                  :loading="loading_btn"
                   >เพิ่ม</v-btn
                 ><v-btn color="error" small @click="closeadddl()">ยกเลิก</v-btn>
                 <v-spacer></v-spacer>
@@ -202,7 +214,12 @@
             </v-card>
             <v-row class="pa-2">
               <v-spacer></v-spacer>
-              <v-btn color="success" small class="mx-2" @click="confirmEdit()"
+              <v-btn
+                color="success"
+                small
+                class="mx-2"
+                :loading="loading_btn"
+                @click="confirmEdit()"
                 >แก้ไขชนิดของหวย</v-btn
               ><v-btn color="error" small @click="modal_edit = false"
                 >ยกเลิก</v-btn
@@ -239,9 +256,12 @@
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
+      loading_btn: false,
       content: "",
       valid: false,
       formCreate: {
@@ -329,6 +349,7 @@ export default {
     }
   },
   async fetch() {
+    this.isLoading = true;
     this.getdataRender();
   },
 
@@ -370,6 +391,7 @@ export default {
     },
     async addCategpry() {
       if (this.$refs.formcreate.validate()) {
+        this.loading_btn = true;
         try {
           let body = {
             title: this.formCreate.title,
@@ -379,10 +401,12 @@ export default {
           };
           await this.createType(body);
           this.modal_add = false;
+          this.loading_btn = false;
           this.$fetch();
         } catch (error) {
           console.log(error);
           this.modal_add = false;
+          this.loading_btn = false;
           this.$fetch();
         }
       } else {
@@ -405,7 +429,6 @@ export default {
       return order;
     },
     async getdataRender() {
-      this.isLoading = true;
       try {
         let params = {
           type_id: this.$route.query.id,
@@ -439,6 +462,7 @@ export default {
       this.modal_add = true;
     },
     async confirmEdit() {
+      this.loading_btn = true;
       try {
         let body = {
           id: this.dataEdit.id,
@@ -450,9 +474,11 @@ export default {
         };
         await this.updateTypeCategory(body);
         this.$fetch();
+        this.loading_btn = false;
         this.modal_edit = false;
       } catch (error) {
         console.log(error);
+        this.loading_btn = false;
         this.modal_edit = false;
         this.$fetch();
       }

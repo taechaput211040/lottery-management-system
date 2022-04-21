@@ -39,7 +39,7 @@
 
       <div class="white rounded-lg ">
         <h3 class="pa-4">ผลรางวัล</h3>
-        <v-divider></v-divider>
+     
         <div class=" rounded-lg">
           <v-data-table
             :server-items-length="pagination.rowsNumber"

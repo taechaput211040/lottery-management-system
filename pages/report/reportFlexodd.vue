@@ -336,7 +336,7 @@ export default {
         },
         {
           text: "จำนวนเงิน",
-          value: "bet",
+          value: "bet_amount",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
@@ -426,7 +426,7 @@ export default {
       for (let i = 0; i < item.length; i++) {
         this.itemgraphshow[0].data.push({
           x: `เลข ${item[i].lotto_number}`,
-          y: item[i].bet
+          y: item[i].bet_amount
         });
       }
       this.$refs.realtimeChart.updateSeries(this.itemgraphshow, false, true);
@@ -445,14 +445,14 @@ export default {
       let winlose = 0;
       winlose =
         parseInt(this.maximumIncomeAmount) -
-        item.bet * this.payoutrate.maximum_out_come_rate;
+        item.bet_amount * this.payoutrate.maximum_out_come_rate;
 
       return winlose;
     },
     // เชค winloseflexood
     checkFlex_odd(item) {
       let Recieve_max = this.getRecieve_max();
-      if (item.bet * this.payoutrate.maximum_out_come_rate > Recieve_max) {
+      if (item.bet_amount * this.payoutrate.maximum_out_come_rate > Recieve_max) {
         return true;
       } else {
         return false;
@@ -495,7 +495,7 @@ export default {
       if (this.checkFlex_odd(item)) {
         profit = this.getRecieve_max();
       } else {
-        profit = parseInt(item.bet * this.payoutrate.maximum_out_come_rate);
+        profit = parseInt(item.bet_amount * this.payoutrate.maximum_out_come_rate);
       }
       return profit;
     },
@@ -504,7 +504,7 @@ export default {
     calPayrate(item) {
       let payrate = 0;
       if (this.checkFlex_odd(item)) {
-        payrate = this.profitNormal(item) / item.bet;
+        payrate = this.profitNormal(item) / item.bet_amount;
       } else {
         payrate = this.payoutrate.maximum_out_come_rate;
       }
@@ -590,7 +590,7 @@ export default {
         lottonumbertype_id: this.numberType,
         page: this.pagination.page,
         limit: this.pagination.rowsPerPage,
-        sort: "bet=DESC",
+        sort: "bet_amount=DESC",
         type_purchase: 1
       };
       return params;
@@ -606,7 +606,7 @@ export default {
         let { data: response } = await this.getDetailNumberReport(params);
         console.log(response);
         this.itemRender = response;
-        this.maximumIncomeAmount = this.itemRender.sum.bet;
+        this.maximumIncomeAmount = this.itemRender.sum.bet_amount;
         this.pagination.rowsNumber = this.itemRender.pagination.total;
         this.mapchart(this.itemRender.data);
       } catch (error) {
@@ -661,7 +661,7 @@ export default {
         lottonumbertype_id: this.numberType,
         bet_details: [
           {
-            lotto_number: this.formEdit.number,
+            lotto_number: this.formEdit.lotto_number,
             bet: this.formEdit.bet_fake
           }
         ]

@@ -6,7 +6,7 @@
           ><card-view
             title="รวมยอดแทง"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/edit.png"
-            :value="this.betValue + ` บาท`"
+            :value="this.betValue"
             value_class="primary--text font-weight-bold"
           ></card-view
         ></v-col>
@@ -14,16 +14,17 @@
           ><card-view
             title="รวมยอดรางวัล"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/reward.png"
-            :value="this.payoutValue + ` บาท`"
+            :value="this.payoutValue"
             value_class="success--text font-weight-bold"
           ></card-view
         ></v-col>
         <v-col cols="12" sm="4"
           ><card-view
             title="กำไรขาดทุน"
+            :condition="true"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/profit.png"
-            :value="parseInt(this.betValue - this.payoutValue) + ` บาท`"
-            value_class="warning--text font-weight-bold"
+            :value="parseInt(this.betValue - this.payoutValue)"
+            value_class="font-weight-bold"
           ></card-view
         ></v-col>
       </v-row>
@@ -35,24 +36,27 @@
             >
               <h2>ยอดกำไร/ขาดทุน</h2>
               <v-spacer></v-spacer>
-              <div class="text-center ">
+              <div class="text-center mt-5 mt-md-0">
                 <v-btn
-                  class="mx-1 font-weight-bold"
-                  small
+                  class="mx-1 font-weight-bold btn_style"
+                  :class="{ active_btnstyle: typeOverview === 'day' }"
+                  rounded
                   color="primary"
                   @click="changDatefillter('findate')"
                   >วัน</v-btn
                 ><v-btn
+                  :class="{ active_btnstyle: typeOverview === 'week' }"
                   @click="changDatefillter('week')"
-                  class="mx-1 font-weight-bold"
-                  small
+                  class="mx-1 font-weight-bold btn_style"
                   color="primary"
+                  rounded
                   >สัปดาห์</v-btn
                 ><v-btn
+                  :class="{ active_btnstyle: typeOverview === 'month' }"
                   @click="changDatefillter('thismounth')"
-                  class="mx-1 font-weight-bold"
-                  small
+                  class="mx-1 font-weight-bold btn_style"
                   color="primary"
+                  rounded
                   >เดือน</v-btn
                 >
               </div>
@@ -119,7 +123,7 @@
                       </div>
                     </template>
                     <template #[`item.bet`]="{item}">
-                      {{ item.bet }} บาท
+                      {{ numberWithCommas(item.bet) }} บาท
                     </template>
                   </v-data-table>
                 </div>
@@ -174,7 +178,7 @@
                       </div>
                     </template>
                     <template #[`item.bet`]="{item}">
-                      {{ item.payout }} บาท
+                      {{ numberWithCommas(item.payout) }} บาท
                     </template>
                   </v-data-table>
                 </div>
@@ -185,7 +189,11 @@
         <v-col cols="12" lg="6" xl="7">
           <div class="rounded-lg white pb-2">
             <div class="title_card align-center pa-4 font-weight-bold d-flex">
-              <h2>จัดอันดับรับของใกล้จะเต็ม</h2>
+              <h2>
+                จัดอันดับรับของใกล้จะเต็ม
+                <span class="success--text"> {{ itemrecieved.length }} </span>
+                อันดับ
+              </h2>
               <v-spacer></v-spacer>
               <img
                 src="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/parcel%201.png"
@@ -194,6 +202,7 @@
             </div>
             <div>
               <v-data-table
+                :items-per-page="20"
                 :headers="header_recieve"
                 :items="itemrecieved"
                 hide-default-footer
@@ -210,6 +219,12 @@
                   </v-alert>
                 </template>
                 <template #[`item.no`]="{index}"> {{ index + 1 }}. </template>
+                <template #[`item.self_receive_amount`]="{item}">
+                  {{ numberWithCommas(item.self_receive_amount) }}
+                </template>
+                <template #[`item.self_receive_balance`]="{item}">
+                  {{ numberWithCommas(item.self_receive_balance) }}
+                </template>
               </v-data-table>
             </div>
           </div>
@@ -260,10 +275,10 @@ export default {
         start_date: "2022-03-01T00:00:00.000Z",
         end_date: "2022-04-30T23:59:59.999Z"
       },
-      betValue: "",
+      betValue: 0,
       itempayout: [],
-      payoutValue: "",
-      winloseValue: "",
+      payoutValue: 0,
+      winloseValue: 0,
       dateTo: "",
       dateFrom: "",
       startTime: "",
@@ -331,76 +346,39 @@ export default {
           cellClass: "font-weight-bold"
         },
         {
-          text: "ประเภทหวย",
-          value: "type",
+          text: "ชื่อหวย",
+          value: "title",
           sortable: false,
           filterable: false,
           align: "center",
           cellClass: "font-weight-bold"
         },
         {
-          text: "ชนิดหวย",
-          value: "category",
+          text: "ชนิดตัวเลข",
+          value: "lottonumbertype_name",
           sortable: false,
           filterable: false,
           align: "center",
           cellClass: "font-weight-bold"
         },
         {
-          text: "รับของ",
-          value: "recieve",
+          text: "รับของปัจจุบัน",
+          value: "self_receive_balance",
           sortable: false,
           filterable: false,
           align: "center",
           cellClass: "font-weight-bold"
         },
         {
-          text: "ยอดเเทง(บาท)",
-          value: "bet",
+          text: "ยอดรับของทั้งหมด",
+          value: "self_receive_amount",
           sortable: false,
           filterable: false,
           align: "center",
           cellClass: "font-weight-bold"
         }
       ],
-      itemrecieved: [
-        {
-          type: "หวยรัฐบาล",
-          category: "2ตัวบน",
-          recieve: "42,000",
-          bet: "35,000"
-        },
-        {
-          type: "หวยรัฐบาล",
-          category: "2ตัวบน",
-          recieve: "42,000",
-          bet: "35,000"
-        },
-        {
-          type: "หวยรัฐบาล",
-          category: "2ตัวบน",
-          recieve: "42,000",
-          bet: "35,000"
-        },
-        {
-          type: "หวยรัฐบาล",
-          category: "2ตัวบน",
-          recieve: "42,000",
-          bet: "35,000"
-        },
-        {
-          type: "หวยรัฐบาล",
-          category: "2ตัวบน",
-          recieve: "42,000",
-          bet: "35,000"
-        },
-        {
-          type: "หวยรัฐบาล",
-          category: "2ตัวบน",
-          recieve: "42,000",
-          bet: "35,000"
-        }
-      ],
+      itemrecieved: [],
       isLoading: false,
 
       itemgraphshow: [
@@ -446,12 +424,22 @@ export default {
   async fetch() {
     this.getDashboarddata();
     this.getDataGraph();
+    this.gettoprecieve();
   },
   methods: {
+    ...mapActions("seller", ["recieveSellertofull"]),
     getDateTime(date) {
       return this.$moment(date).format("YYYY-MM-DDTHH:mm:ss" + "Z");
     },
-
+    async gettoprecieve() {
+      if (!this.$store.state.seller.balance_top) {
+        await this.recieveSellertofull();
+      }
+      try {
+        let { result: response } = this.$store.state.seller.balance_top;
+        this.itemrecieved = response.data;
+      } catch (error) {}
+    },
     async mapchart(item) {
       this.itemgraphshow[0].data = [];
       this.itemgraphshow[1].data = [];
@@ -467,14 +455,20 @@ export default {
           });
         }
       } else {
-        for (let i = 0; i < item.length; i++) {
+        let dateRender = item.sort((a, b) => a.date - b.date);
+        console.log(dateRender, "datarender grapht");
+        for (let i = 0; i < dateRender.length; i++) {
           this.itemgraphshow[0].data.push({
-            x: this.$moment(item[i].date.toString(), "LT").format("HH:mm"),
-            y: item[i].bet
+            x: this.$moment(dateRender[i].date.toString(), "LT").format(
+              "HH:mm"
+            ),
+            y: dateRender[i].bet
           });
           this.itemgraphshow[1].data.push({
-            x: this.$moment(item[i].date.toString(), "LT").format("HH:mm"),
-            y: item[i].payout
+            x: this.$moment(dateRender[i].date.toString(), "LT").format(
+              "HH:mm"
+            ),
+            y: dateRender[i].payout
           });
         }
       }
@@ -597,6 +591,14 @@ export default {
         colorprogress = "warning";
       }
       return colorprogress;
+    },
+    numberWithCommas(x) {
+      var parts = parseInt(x)
+        .toFixed(2)
+        .toString()
+        .split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
     }
   }
 };

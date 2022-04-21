@@ -66,14 +66,14 @@
         </template>
         <template #[`item.action`]="{item}">
           <v-btn
-            class="mx-1"
             dark
             rounded
             small
+            class="btn_setting"
             color="warning"
             @click="openDlupdate(item)"
-            ><v-icon dark>
-              mdi-pencil
+            ><v-icon dark left>
+              mdi-cog
             </v-icon>
             ตั้งค่า
           </v-btn>
@@ -119,7 +119,12 @@
           </div>
 
           <v-card-actions class="justify-center">
-            <v-btn color="success" small @click="submitsetting()">ยืนยัน</v-btn
+            <v-btn
+              color="success"
+              :loading="loading_btn"
+              small
+              @click="submitsetting()"
+              >ยืนยัน</v-btn
             ><v-btn color="error" small @click="updateDialog = false"
               >ยกเลิก</v-btn
             >
@@ -135,6 +140,7 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
+      loading_btn: false,
       option: {},
       pageSizes: [5, 10, 15, 25],
       pagination: {
@@ -191,6 +197,7 @@ export default {
       this.updateDialog = true;
     },
     async submitsetting() {
+      this.loading_btn = true;
       try {
         let body = {};
         body = {
@@ -200,10 +207,12 @@ export default {
         };
 
         await this.changeStausType(body);
+        this.loading_btn = false;
         this.updateDialog = false;
         this.$fetch();
       } catch (error) {
         console.log(error);
+        this.loading_btn = false;
         this.updateDialog = false;
         this.$fetch();
       }

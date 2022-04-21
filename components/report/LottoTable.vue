@@ -153,13 +153,30 @@ export default {
       }
       this.getReportdata();
     },
+    getOptionalOrder() {
+      let order = {};
+      if (this.options.sortBy[0]) {
+        order.sortBy = this.options.sortBy[0];
+        if (this.options.sortDesc[0] === false) {
+          order.sortDesc = "ASC";
+        } else {
+          order.sortDesc = "DESC";
+        }
+      } else {
+        order = undefined;
+      }
+      return order;
+    },
     getParameter() {
+      let order = this.getOptionalOrder();
       let params = {
         start_time: this.datefilter.startDate,
         end_time: this.datefilter.endDate,
         type_purchase: this.type,
         page: this.pagination.page,
-        limit: this.pagination.rowsPerPage
+        limit: this.pagination.rowsPerPage,
+        sort:
+          order == undefined ? undefined : `${order.sortBy}=${order.sortDesc}`
       };
       return params;
     },

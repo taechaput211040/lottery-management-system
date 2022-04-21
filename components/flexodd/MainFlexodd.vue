@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class=" my-3 pa-3" v-if="!isLoading">
+    <div class=" my-3 pa-3">
       <v-row class="pa-1 ">
         <v-col cols="12" sm="6">
           <div class="rounded-lg white " style="height:100%">
@@ -44,7 +44,7 @@
             <div class="success--text font-weight-bold pa-2">
               ตั้งค่ากำไรและอัตราน้ำไหล
             </div>
-            <v-divider v-model="valid" ref="formprofit"></v-divider>
+            <v-divider></v-divider>
             <v-form
               ><div class="row pa-2">
                 <div class="col-6">
@@ -87,109 +87,133 @@
         </v-col>
       </v-row>
     </div>
-    <div v-if="selectCate != null" class="rounded-lg white pa-3">
-      <div class="d-flex">
-        <h4 class="my-2">หวยของตัวเอง</h4>
+    <div v-if="isLoading">
+      <loading-page></loading-page>
+    </div>
+    <div v-else>
+      <div v-if="selectCate != null" class="rounded-lg white pa-3">
+        <div class="d-flex">
+          <h4 class="my-2">หวยของตัวเอง</h4>
+        </div>
+
+        <v-data-table
+          class="elevation-2"
+          hide-default-footer
+          :options.sync="option"
+          :headers="headersdatelotto"
+          :loading="isLoading"
+          :items="dataOutcome"
+        >
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+              color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
+          <template #[`item.no`]="{index}">
+            {{ index + 1 }}
+          </template>
+          <template #[`item.maximum_out_come_rate`]="{item}">
+            {{ numberWithCommas(item.maximum_out_come_rate) }}
+          </template>
+          <template #[`item.minimum_bet_prize`]="{item}">
+            {{ numberWithCommas(item.minimum_bet_prize) }}
+          </template>
+          <template #[`item.maximum_bet_prize`]="{item}">
+            {{ numberWithCommas(item.maximum_bet_prize) }}
+          </template>
+          <template #[`item.action`]="{item}">
+            <v-btn
+              rounded
+              class="btn_setting"
+              color="black"
+              dark
+              small
+              @click="openupdateComerate(item)"
+              ><v-icon left>mdi-cog</v-icon> ตั้งค่า
+            </v-btn>
+          </template>
+        </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="2" xl="1">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="option.itemsPerPage"
+              :items="pageSizes"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="10">
+            <v-pagination
+              v-model="option.page"
+              :total-visible="7"
+              :length="Math.ceil(dataOutcome.length / option.itemsPerPage)"
+            ></v-pagination>
+          </v-col>
+        </v-row>
       </div>
 
-      <v-data-table
-        class="elevation-2"
-        hide-default-footer
-        :options.sync="option"
-        :headers="headersdatelotto"
-        :loading="isLoading"
-        :items="dataOutcome"
-      >
-        <template v-slot:no-data>
-          <v-alert
-            :value="true"
-            border="left"
-            color="blue-grey"
-            type="error"
-            icon="mdi-warning"
-          >
-            ไม่พบข้อมูล
-          </v-alert>
-        </template>
-        <template #[`item.no`]="{index}">
-          {{ index + 1 }}
-        </template>
-        <template #[`item.action`]="{item}">
-          <v-btn
-            rounded
-            color="black"
-            dark
-            small
-            @click="openupdateComerate(item)"
-            ><v-icon left>mdi-cog</v-icon> ตั้งค่า
-          </v-btn>
-        </template>
-      </v-data-table>
-      <v-row align="baseline" class="ma-3 ">
-        <v-col cols="12" sm="2" lg="2" xl="1">
-          <v-select
-            outlined
-            hide-details="auto "
-            dense
-            v-model="option.itemsPerPage"
-            :items="pageSizes"
-            label="รายการต่อหน้า"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="10" lg="10">
-          <v-pagination
-            v-model="option.page"
-            :total-visible="7"
-            :length="Math.ceil(dataOutcome.length / option.itemsPerPage)"
-          ></v-pagination>
-        </v-col>
-      </v-row>
-    </div>
-
-    <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
-      <h4 class="my-2">หวยของ upline</h4>
-      <v-data-table
-        class="elevation-2"
-        :headers="headersUpline"
-        :loading="isLoading"
-        :items="dataUpline"
-        hide-default-footer
-        :options.sync="optionupline"
-      >
-        <template v-slot:no-data>
-          <v-alert
-            :value="true"
-            border="left"
-            color="blue-grey"
-            type="error"
-            icon="mdi-warning"
-          >
-            ไม่พบข้อมูล
-          </v-alert>
-        </template>
-        <template #[`item.no`]="{index}">
-          {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
-        </template>
-      </v-data-table>
-      <v-row align="baseline" class="ma-3 ">
-        <v-col cols="12" sm="2" lg="2" xl="1">
-          <v-select
-            outlined
-            hide-details="auto "
-            dense
-            v-model="optionupline.itemsPerPage"
-            :items="pageSizesupline"
-            label="รายการต่อหน้า"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="10" lg="10">
-          <v-pagination
-            v-model="optionupline.page"
-            :total-visible="7"
-            :length="Math.ceil(dataUpline.length / optionupline.itemsPerPage)"
-          ></v-pagination>
-        </v-col>
-      </v-row>
+      <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
+        <h4 class="my-2">หวยของ upline</h4>
+        <v-data-table
+          class="elevation-2"
+          :headers="headersUpline"
+          :loading="isLoading"
+          :items="dataUpline"
+          hide-default-footer
+          :options.sync="optionupline"
+        >
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+              color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
+          <template #[`item.maximum_out_come_rate`]="{item}">
+            {{ numberWithCommas(item.maximum_out_come_rate) }}
+          </template>
+          <template #[`item.minimum_bet_prize`]="{item}">
+            {{ numberWithCommas(item.minimum_bet_prize) }}
+          </template>
+          <template #[`item.maximum_bet_prize`]="{item}">
+            {{ numberWithCommas(item.maximum_bet_prize) }}
+          </template>
+          <template #[`item.no`]="{index}">
+            {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
+          </template>
+        </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="2" xl="1">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="optionupline.itemsPerPage"
+              :items="pageSizesupline"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="10">
+            <v-pagination
+              v-model="optionupline.page"
+              :total-visible="7"
+              :length="Math.ceil(dataUpline.length / optionupline.itemsPerPage)"
+            ></v-pagination>
+          </v-col>
+        </v-row>
+      </div>
     </div>
 
     <v-dialog max-width="400px" v-model="dlupdate">
@@ -243,7 +267,11 @@
             ></v-text-field>
           </div>
           <v-card-actions class="justify-center">
-            <v-btn color="success" @click="submitEdit(formupdate)"
+            <v-btn
+              class="btn_setting"
+              color="success"
+              :loading="loading_btn"
+              @click="submitEdit(formupdate)"
               >ตั้งค่า</v-btn
             >
             <v-btn color="error" @click="closeEdit()">ยกเลิก</v-btn>
@@ -251,21 +279,17 @@
         </v-card></v-form
       >
     </v-dialog>
-    <div v-if="isLoading" class="text-center">
-      <v-progress-circular
-        :size="50"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
-    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
+      loading_btn: false,
       valid: false,
       option: {},
       pageSizes: [5, 10, 15, 25],
@@ -434,11 +458,14 @@ export default {
       this.getUplinebyid(value);
     },
     async getOutComeratebyid(id) {
+      this.isLoading = true;
       try {
         const { data } = await this.getOutcomerate(id);
         this.dataOutcome = data.result;
+        this.isLoading = false;
       } catch (error) {
         console.log(error);
+        this.isLoading = false;
       }
     },
     async getUplinebyid(id) {
@@ -470,6 +497,7 @@ export default {
     async submitEdit(item) {
       item = JSON.parse(JSON.stringify(item));
       console.log(item);
+      this.loading_btn = true;
       try {
         let body = {
           typecategory_id: this.selectCate,
@@ -483,11 +511,27 @@ export default {
           ]
         };
         await this.updateFlexOutcomerate(body);
+        this.loading_btn = false;
         this.dlupdate = false;
         await this.selectFlexodd(this.selectCate);
       } catch (error) {
+        this.$swal({
+          icon: "error",
+          title: `กรุณากรอกข้อมูลให้ถูกต้องและครบถ้วน`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.loading_btn = false;
         this.dlupdate = false;
       }
+    },
+    numberWithCommas(x) {
+      var parts = x
+        .toFixed(2)
+        .toString()
+        .split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
     }
   }
 };

@@ -75,8 +75,12 @@
             </v-btn>
           </template>
           <template #[`item.calculate`]="{item}">
+            <!-- เงื่อนไข -->
+            <!-- :disabled="
+                item.status_lotto == false || item.status_calculate == true
+              " -->
             <v-btn
-              :disabled="item.calculate == true"
+              
               color="black"
               text
               outlined
@@ -206,7 +210,11 @@
               ></v-text-field>
             </div>
             <v-card-actions class="justify-center">
-              <v-btn color="success" @click="confirmCalculate()">บันทึก</v-btn
+              <v-btn
+                color="success"
+                :loading="loading_btn"
+                @click="confirmCalculate()"
+                >บันทึก</v-btn
               ><v-btn color="error" @click="alertdl = false">ยกเลิก</v-btn>
             </v-card-actions>
           </v-card></v-form
@@ -284,7 +292,11 @@
             </div>
 
             <v-card-actions class="justify-center">
-              <v-btn color="success" @click="submitnumber()">บันทึก</v-btn
+              <v-btn
+                color="success"
+                :loading="loading_btn"
+                @click="submitnumber()"
+                >บันทึก</v-btn
               ><v-btn color="error" @click="closeDl()">ยกเลิก</v-btn>
             </v-card-actions>
           </v-card>
@@ -309,6 +321,7 @@ export default {
 
   data() {
     return {
+      loading_btn: false,
       value: String,
       formCalculate: {},
       validatePravity: false,
@@ -472,6 +485,7 @@ export default {
   },
   methods: {
     serchAward() {
+      this.pagination.page = 1;
       if (this.searchtext === "") {
         this.searchtex = undefined;
       }
@@ -586,6 +600,7 @@ export default {
     },
     async confirmCalculate() {
       if (this.$refs.alertForm.validate()) {
+        this.loading_btn = true;
         let body = {
           program_id: this.progranlottoID,
           passcode: this.formCalculate.passcode
@@ -601,21 +616,23 @@ export default {
           });
           this.alertdl = false;
           this.dlcalculate = false;
+          this.getAwardList();
+          this.loading_btn = false;
         } catch (error) {
           this.$swal({
             icon: "error",
-            title: "กรุณากรอกรหัสความปลดภัยให้ถุกต้อง",
+            title: "กรุณากรอกรหัสความปลดภัยให้ถูกต้อง",
             showConfirmButton: false,
             timer: 1500
           });
           console.log(error);
+          this.loading_btn = false;
         }
       } else {
         this.$swal("กรุณากรอกรหัสความปลดภัยให้ถุกต้อง", "", "warning");
       }
     },
     async submitnumber() {
-      console.log(this.itemNumber, "asdasdsads");
       let body = {
         program_id: this.progranlottoID,
         lottonumbertype_details: []

@@ -2,40 +2,56 @@
   <div>
     <h2>รายการแทง</h2>
 
-    <div class="mt-6">
-      <filter-search @search="searchfunction"></filter-search>
+    <div class="row  rounded-lg white ma-0 mb-3">
+      <div class=" col-12  col-md-4 pa-0">
+        <div class=" my-3 rounded-lg white">
+          <h3 class="pa-3">การแทง</h3>
+          <v-divider></v-divider>
+          <div class="pa-3 col-12 col-sm-6 col-md-12 col-lg-12">
+            <v-text-field
+              dense
+              solo-inverted
+              hide-details="auto"
+              label="ค้นหา"
+              v-model="searchInput"
+              class="mb-3"
+              @keyup.enter="searchReport()"
+            ></v-text-field>
+            <v-radio-group
+              v-model="selectgroup"
+              @change="renderbyselecttype"
+              hide-details="auto"
+              row
+            >
+              <v-radio label="ทั้งหมด" value="0"></v-radio>
+              <v-radio label="น้ำไหล" value="1"></v-radio>
+              <v-radio label="เพลา" value="2"></v-radio>
+            </v-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class=" col-12 col-md-8  pa-0">
+        <filter-search @search="searchfunction"></filter-search>
+      </div>
     </div>
 
     <div class="white rounded-lg">
       <div class="rounded-lg white mt-5">
         <div class="my-3">
-          <h3 class="pa-3">รายการแทง</h3>
+          <h3 class="pa-3">ยอดรายการแทง</h3>
+          <v-divider></v-divider>
           <div class=" row align-center px-4 pt-3 pb-4">
-            <div class="col-12 col-sm-6 pa-0">
-              <v-radio-group
-                v-model="selectgroup"
-                @change="renderbyselecttype"
-                hide-details="auto"
-                row
-              >
-                <v-radio label="ทั้งหมด" value="0"></v-radio>
-                <v-radio label="น้ำไหล" value="1"></v-radio>
-                <v-radio label="เพลา" value="2"></v-radio>
-              </v-radio-group>
-            </div>
-            <div class="col-12 pa-0 col-sm-6 text-center">
-              <div class="row pt-3 justify-end">
-                <div class=" col-6 col-sm-5 col-md-5">
-                  <div class="elevation-2 rounded-lg pa-2">
-                    ยอดเเทงรวม
-                    <h4>{{ summary.bet }} บาท</h4>
-                  </div>
+            <div class="row pt-3  text-center">
+              <div class=" col-6 col-sm-3 col-md-2">
+                <div class="elevation-2 rounded-lg pa-2">
+                  ยอดเเทงรวม
+                  <h4>{{ numberWithCommas(summary.bet) }} บาท</h4>
                 </div>
-                <div class="col-6 col-sm-5 col-md-5">
-                  <div class="elevation-2 rounded-lg pa-2">
-                    ยอดรวมแพ้/ชนะ
-                    <h4>{{ summary.winlose }} บาท</h4>
-                  </div>
+              </div>
+              <div class="col-6 col-sm-3 col-md-2">
+                <div class="elevation-2 rounded-lg pa-2">
+                  ยอดรวมแพ้/ชนะ
+                  <h4>{{ numberWithCommas(summary.winlose) }} บาท</h4>
                 </div>
               </div>
             </div>
@@ -106,6 +122,7 @@
                 >
                 <span>ดูรายละเอียดโพยรับของ</span>
               </v-tooltip>
+
               <!-- <v-tooltip bottom color="error" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -126,6 +143,12 @@
               </v-tooltip> -->
             </div>
             <v-card cl></v-card>
+          </template>
+          <template #[`item.winlose`]="{item}">
+            {{ numberWithCommas(item.winlose) }}
+          </template>
+          <template #[`item.bet`]="{item}">
+            {{ numberWithCommas(item.bet) }}
           </template>
         </v-data-table>
         <v-row align="baseline" class="ma-3 ">
@@ -207,6 +230,18 @@
               paginationDetail.rowsPerPage * (paginationDetail.page - 1) +
                 (index + 1)
             }}
+          </template>
+          <template #[`item.winlose`]="{item}">
+            {{ numberWithCommas(item.winlose) }}
+          </template>
+          <template #[`item.bet`]="{item}">
+            {{ numberWithCommas(item.bet) }}
+          </template>
+          <template #[`item.payout`]="{item}">
+            {{ numberWithCommas(item.payout) }}
+          </template>
+          <template #[`item.discount`]="{item}">
+            {{ numberWithCommas(item.discount) }}
           </template>
         </v-data-table>
         <v-row align="baseline" class="ma-3 ">
@@ -449,7 +484,8 @@ export default {
         rowsNumber: 0
       },
       detailstype: "",
-      itemDetailOpen: {}
+      itemDetailOpen: {},
+      searchInput: ""
     };
   },
   watch: {
@@ -510,6 +546,10 @@ export default {
       }
       return order;
     },
+    searchReport() {
+      this.getReportdata();
+      this.pagination.page = 1;
+    },
     getparameter() {
       let order = this.getOptionalOrder();
       let params = {
@@ -518,6 +558,7 @@ export default {
         type_purchase: this.type,
         page: this.pagination.page,
         limit: this.pagination.rowsPerPage,
+        search: this.searchInput,
         sort:
           order == undefined ? undefined : `${order.sortBy}=${order.sortDesc}`
       };
@@ -544,7 +585,7 @@ export default {
     getparameterDetail() {
       let params = {
         member_id: this.itemDetailOpen.member_id,
-        round_id : this.itemDetailOpen.id ,
+        round_id: this.itemDetailOpen.id,
         type_purchase: this.detailstype,
         page: this.paginationDetail.page,
         limit: this.paginationDetail.rowsPerPage
@@ -575,6 +616,14 @@ export default {
       this.detailstype = value;
       this.getRenderNumberlotto();
       this.dialogdetail = true;
+    },
+    numberWithCommas(x) {
+      var parts = parseInt(x)
+        .toFixed(2)
+        .toString()
+        .split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
     }
   }
 };

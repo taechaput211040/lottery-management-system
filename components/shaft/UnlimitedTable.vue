@@ -1,8 +1,14 @@
 <template>
   <div class="">
     <div class="d-flex align-baseline">
-      <v-btn color="red" @click="$router.go(-1)" small dark
-        ><v-icon left>mdi-code-less-than</v-icon> ย้อนกลับ</v-btn
+      <v-btn
+        color="red back_btn"
+        class="ma-3"
+        @click="$router.go(-1)"
+        small
+        rounded
+        dark
+        ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
       >
       <h3 class="font-weight-bold my-4">
         <span class="purple--text ">{{ this.$route.query.title }}</span> :
@@ -13,7 +19,8 @@
         ><v-icon>mdi-plus</v-icon>เพิ่มเลขอั้น</v-btn
       >
     </div>
-    <div class="rounded-lg white">
+    <div v-if="isLoading"><loading-page></loading-page></div>
+    <div v-else class="rounded-lg white">
       <v-data-table
         class="elevation-2"
         hide-default-footer
@@ -98,7 +105,7 @@
                 <v-alert
                   :value="true"
                   border="left"
-                 color="blue-grey"
+                  color="blue-grey"
                   type="error"
                   icon="mdi-warning"
                 >
@@ -173,7 +180,9 @@
           </div>
 
           <v-card-actions class="mt-3 justify-center">
-            <v-btn color="success" @click="submitForm()">เพิ่มเลขอั้น</v-btn>
+            <v-btn color="success" @click="submitForm()" :loading="loading_btn"
+              >เพิ่มเลขอั้น</v-btn
+            >
             <v-btn color="error" @click="closeForm()">ยกเลิก</v-btn>
           </v-card-actions>
         </v-card></v-form
@@ -236,9 +245,12 @@
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
+      loading_btn: false,
       option: {},
       pageSizes: [5, 10, 15, 25],
       validEditform: false,
@@ -445,12 +457,16 @@ export default {
       };
 
       if (this.$refs.formlimit.validate()) {
+        this.loading_btn = true;
         try {
           await this.Addlimited(body);
-          this.addlimitedDialog = false;
+          this.loading_btn = false;
+          this.closeForm();
           this.$fetch();
         } catch (error) {
+          this.loading_btn = false;
           this.addlimitedDialog = false;
+          this.closeForm();
           console.log(error);
           this.$fetch();
         }
@@ -462,9 +478,7 @@ export default {
       this.addlimitedDialog = false;
       this.$refs.formlimit.reset();
       this.$refs.formlimit.resetValidation();
-      this.inputformlimit = [
-        { lottonumber_name: "", out_come_rate: "", self_receive_amount: "" }
-      ];
+      this.inputformlimit = [{}];
     },
     openEdit(item) {
       console.log(item);

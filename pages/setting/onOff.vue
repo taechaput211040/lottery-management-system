@@ -39,8 +39,14 @@
           </template>
 
           <template #[`item.actions`]="{item}">
-            <v-btn color="warning" rounded small @click="configStatus(item)"
-              ><v-icon>mdi-pencil</v-icon> จัดการสถานะ</v-btn
+            <v-btn
+              dark
+              color="warning"
+              class="btn_edit text--white"
+              rounded
+              small
+              @click="configStatus(item)"
+              ><v-icon left>mdi-pencil</v-icon> จัดการสถานะ</v-btn
             >
           </template>
         </v-data-table>
@@ -94,7 +100,12 @@
 
         <!-- button -->
         <v-card-actions class="justify-center">
-          <v-btn color="success" @click="updatesatatus(editItem)">แก้ไข</v-btn>
+          <v-btn
+            color="success"
+            :loading="loading_btn"
+            @click="updatesatatus(editItem)"
+            >แก้ไข</v-btn
+          >
           <v-btn color="error" @click="dialogConfig = false">ยกเลิก</v-btn>
         </v-card-actions>
       </v-card>
@@ -107,6 +118,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      loading_btn: false,
       option: {},
       pageSizes: [5, 10, 15, 25],
       isLoading: false,
@@ -173,11 +185,14 @@ export default {
       this.dialogConfig = true;
     },
     async updatesatatus(item) {
+      this.loading_btn = true;
       try {
         await this.changeStaussetting(item);
+        this.loading_btn = false;
         this.dialogConfig = false;
         this.$fetch();
       } catch (error) {
+        this.loading_btn = false;
         console.log(error);
       }
     }

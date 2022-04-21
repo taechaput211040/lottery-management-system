@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon large @click.stop="drawer = !drawer" color="black" />
-      <v-toolbar-title v-text="title" class="font-weight-bold" />
+      <v-toolbar-title v-text="title" class="font-weight-bold ClassTextBar" />
       <v-spacer />
       <v-chip outlined color="success" class="mx-3 font-weight-bold"
         ><v-icon left>mdi-account-circle</v-icon>{{ this.showUser }}</v-chip
@@ -13,18 +13,39 @@
             <v-icon large center>mdi-account-circle </v-icon>
           </v-btn>
         </template>
-        <v-btn
-          fab
-          dark
-          small
-          color="orange"
-          @click="$router.push('/changepassword')"
-        >
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
-        <v-btn @click="logout" fab dark small color="red">
-          <v-icon>mdi-logout</v-icon>
-        </v-btn>
+        <v-tooltip left color="orange">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              fab
+              dark
+              small
+              color="orange"
+              @click="$router.push('/changepassword')"
+            >
+              <v-icon>mdi-repeat-variant</v-icon>
+            </v-btn></template
+          >
+          <span>เปลี่ยนรหัสผ่าน</span>
+        </v-tooltip>
+
+        <v-tooltip left color="red">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              @click="logout"
+              fab
+              dark
+              small
+              color="red"
+            >
+              <v-icon>mdi-logout</v-icon>
+            </v-btn></template
+          >
+          <span>เปลี่ยนรหัสผ่าน</span>
+        </v-tooltip>
       </v-speed-dial>
     </v-app-bar>
 
@@ -37,9 +58,11 @@
       width="300"
       ><v-toolbar-title class="font-weight-bold  text-center" align-center>
         <v-img
+          style="cursor:pointer;"
+          @click="$router.push('/')"
           height="65"
           contain
-          class="ma-auto my-5"
+          class="ma-auto my-5 pointer"
           src="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/smart-lotto-final3D%201.png"
         ></v-img>
       </v-toolbar-title>
@@ -408,11 +431,10 @@ export default {
 
     // await this.checkauthen();
   },
-  mounted() {
-    console.log(this.$store.state.lottosetting.lottotype);
-  },
+  async mounted() {},
   methods: {
     ...mapActions("lottosetting", ["getLottotype"]),
+
     async logout() {
       try {
         localStorage.clear();

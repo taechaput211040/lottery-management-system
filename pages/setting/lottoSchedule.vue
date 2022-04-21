@@ -21,7 +21,7 @@
           ></v-text-field>
         </div>
         <div class="pa-2 col-12 col-sm-6 col-lg-4">
-          <v-btn color="primary" class="mx-2" @click="searchlotto()"
+          <v-btn color="primary" rounded class="mx-2 btn_search" @click="searchlotto()"
             ><v-icon left>mdi-magnify</v-icon> ค้นหา</v-btn
           >
         </div>
@@ -141,7 +141,12 @@
           </v-container>
 
           <v-card-actions class="justify-center">
-            <v-btn color="success" @click="submitInsert()">แก้ไข</v-btn>
+            <v-btn
+              color="success"
+              :loading="loading_btn"
+              @click="submitInsert()"
+              >แก้ไข</v-btn
+            >
             <v-btn color="error" @click="closeCreateconfig()"
               >ยกเลิก</v-btn
             ></v-card-actions
@@ -385,7 +390,12 @@
           </v-row>
         </v-container>
         <v-card-actions class="justify-center "
-          ><v-btn color="success" @click="editRoundlotto()">แก้ไข</v-btn>
+          ><v-btn
+            color="success"
+            @click="editRoundlotto()"
+            :loading="loading_btn"
+            >แก้ไข</v-btn
+          >
           <v-btn color="error" @click="dialogdetail = false"
             >ยกเลิก</v-btn
           ></v-card-actions
@@ -402,6 +412,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      loading_btn: false,
       sortBy: "",
       validform: false,
       sortDesc: false,
@@ -563,6 +574,7 @@ export default {
     },
 
     async searchlotto(e) {
+      this.pagination.page = 1;
       this.isLoading = true;
       if (
         !this.title_lotto ||
@@ -617,6 +629,7 @@ export default {
         lotto_round: this.insertForm.lotto_round
       };
       if (this.$refs.formcreate.validate()) {
+        this.loading_btn = true;
         try {
           await this.createProgramLotto(body);
           this.$swal({
@@ -625,9 +638,11 @@ export default {
             showConfirmButton: false,
             timer: 1500
           });
+          this.loading_btn = false;
           this.dlInsert = false;
           this.$fetch();
         } catch (error) {
+          this.loading_btn = false;
           console.log(error);
         }
       } else {
@@ -637,6 +652,7 @@ export default {
           showConfirmButton: false,
           timer: 1000
         });
+        this.loading_btn = false;
         console.log("nope");
       }
     },
@@ -706,8 +722,10 @@ export default {
       this.dialogdetail = true;
     },
     async editRoundlotto() {
+      this.loading_btn = true;
       try {
         await this.updateProgramLotto(this.editing);
+        this.loading_btn = false;
         this.dialogdetail = false;
         this.$swal({
           icon: "success",
@@ -716,12 +734,15 @@ export default {
           timer: 1500
         });
         if (this.title_lotto) {
+          this.loading_btn = false;
           this.searchlotto();
         } else {
+          this.loading_btn = false;
           this.$fetch();
         }
       } catch (error) {
         console.log(error);
+        this.loading_btn = false;
         this.dialogdetail = false;
         if (this.title_lotto) {
           this.searchlotto();

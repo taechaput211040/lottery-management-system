@@ -35,3 +35,18 @@ export async function gettoken(context, params) {
     }
   });
 }
+export async function changePassword(context, password) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.patch(
+        `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/users/reset-password`,
+        {
+          password: password
+        }
+      );
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

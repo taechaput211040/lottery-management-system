@@ -2,7 +2,10 @@
   <div>
     <div v-if="!this.$route.query.id">
       <h1 class="mt-2">ประเภทของหวย</h1>
-      <div class="white rounded-lg ma-2 py-2">
+      <div v-if="isLoading">
+        <loading-page></loading-page>
+      </div>
+      <div v-else class="white rounded-lg ma-2 py-2">
         <div class="d-flex ma-3">
           <v-spacer></v-spacer
           ><v-btn color="primary" rounded dark @click="modal_add = true">
@@ -21,7 +24,7 @@
               <v-alert
                 :value="true"
                 border="left"
-               color="blue-grey"
+                color="blue-grey"
                 type="error"
                 icon="mdi-warning"
               >
@@ -146,7 +149,12 @@
               ></v-card>
               <v-row class="pa-2">
                 <v-spacer></v-spacer>
-                <v-btn color="success" small class="mx-2" @click="addConfig()"
+                <v-btn
+                  color="success"
+                  :loading="loading_btn"
+                  small
+                  class="mx-2"
+                  @click="addConfig()"
                   >เพิ่ม</v-btn
                 ><v-btn color="error" small @click="closeCreateconfig()"
                   >ยกเลิก</v-btn
@@ -189,6 +197,7 @@
               <v-spacer></v-spacer>
               <v-btn
                 color="success"
+                :loading="loading_btn"
                 small
                 class="mx-2"
                 @click="editConfig(dataEdit)"
@@ -209,9 +218,10 @@
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 import TypeCatagory from "../../components/typecataegory/TypeCatagory.vue";
 export default {
-  components: { TypeCatagory },
+  components: { TypeCatagory, LoadingPage },
   watch: {
     modal_add: {
       handler() {
@@ -224,6 +234,7 @@ export default {
   },
   data() {
     return {
+      loading_btn: false,
       titleRules: [v => !!v || "กรุรากรอกชื่อหวย"],
       valid: true,
       select_status: "0",
@@ -282,10 +293,12 @@ export default {
       this.modal_edit = true;
     },
     async editConfig(item) {
+      this.loading_btn = true;
       try {
         let response = await this.updateLottotype(item);
         console.log(response);
         this.modal_edit = false;
+        this.loading_btn = false;
         this.$swal({
           icon: "success",
           title: "แก้ไขเรียบร้อย",
@@ -295,6 +308,7 @@ export default {
         this.$fetch();
       } catch (error) {
         console.log(error);
+        this.loading_btn = false;
       }
     },
     closeEditconfig() {
@@ -349,6 +363,7 @@ export default {
     },
     async addConfig() {
       if (this.$refs.formcreate.validate()) {
+        this.loading_btn = true;
         try {
           await this.createLottotype(this.formCreate);
           this.$swal({
@@ -357,9 +372,11 @@ export default {
             showConfirmButton: false,
             timer: 1500
           });
+          this.loading_btn = false;
           this.modal_add = false;
           this.$fetch();
         } catch (error) {
+          this.loading_btn = false;
           this.$swal({
             icon: "error",
             title: "สร้างผิดพลาด",

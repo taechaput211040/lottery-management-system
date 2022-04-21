@@ -16,6 +16,13 @@ span {
 .v-toolbar__content {
   background-size: cover;
 }
+@media only screen and (max-width: 992px) {
+  .ClassTextBar {
+    font-size: 14px !important;
+    font-weight: bold;
+    padding-left: 0 !important;
+  }
+}
 @media only screen and (min-width: 992px) {
   .size-card {
     width: 88%;
@@ -129,12 +136,12 @@ table thead > tr > th > i {
 
 table thead > tr > th:nth-child(even),
 table thead > tr > th:nth-child(even).active {
-  background: #1a68d3;
+  background: linear-gradient(to bottom , #1a68d3 0%, #1993f4 100%);
 }
 
 table thead > tr > th:nth-child(odd),
 table thead > tr > th:nth-child(odd).active {
-  background: #1a68d3;
+  background: linear-gradient(to bottom , #1a68d3 0%, #1993f4 100%);
 }
 
 table tbody tr:nth-child(even) {
@@ -197,4 +204,68 @@ table.v-table thead th:not(:first-child) {
     height: 30px;
   }
   justify-content: center;
+}
+.btn_style {
+  background: linear-gradient(to bottom right, #1a68d3 0%, #1993f4 100%);
+  color: white;
+  border-radius: 10px;
+  font-size: 12px;
+  /* margin: auto; */
+  /* padding: 5px; */
+  /* -webkit-box-shadow: 0px 5px 9px 0px rgb(120 116 116 / 75%); */
+  transition: none;
+
+  box-shadow: 1px 3px 4px 0px rgba(54, 38, 38, 0.75);
+}
+.btn_style:hover,
+.active_btnstyle {
+  background: linear-gradient(
+    to bottom right,
+    #04f300 0%,
+    #01b799 100%
+  ) !important;
+}
+.btn_search {
+  background: linear-gradient(to bottom right, #1a68d3 0%, #1993f4 100%);
+  opacity: 0.8;
+  transition: 0.3s;
+}
+.btn_search:hover {
+  background: linear-gradient(to bottom right, #134c9c 0%, #1472be 100%);
+  opacity: 1;
+}
+
+.btn_setting {
+  background: linear-gradient(
+    to bottom right,
+    #515151 0%,
+    #000000 100%
+  ) !important;
+  color: white;
+  border-radius: 10px;
+  font-size: 12px;
+  transition: none;
+  box-shadow: 1px 3px 4px 0px rgb(120 116 116 / 75%);
+}
+
+.v-data-table__wrapper {
+  border-radius: 10px 10px 0px 0px !important;
+}
+.theme--light.v-data-table {
+  border-radius: 20px 20px 0px 0px !important;
+}
+.btn_edit {
+  background: linear-gradient(
+    to bottom right,
+    #ffd900 0%,
+    #ff8947 100%
+  ) !important;
+  color: white;
+  border-radius: 10px;
+  font-size: 12px;
+  transition: none;
+  box-shadow: 1px 3px 4px 0px rgb(120 116 116 / 75%);
+}
+.back_btn {
+  background: linear-gradient(to bottom right, #a80101 0%, #ff7171 100%);
 }

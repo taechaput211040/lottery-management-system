@@ -2,7 +2,15 @@
   <div>
     <h1 class="mt-2">Type Category Detail</h1>
 
-    <v-btn class="ma-2" color="error" @click="$router.go(-1)">back</v-btn>
+    <v-btn
+      rounded
+      color="red back_btn"
+      class="ma-3"
+      @click="$router.go(-1)"
+      small
+      dark
+      ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
+    >
     <div class="ma-2 pa-6 white rounded-lg">
       <v-row class="select-item "
         ><v-select class="col-6 col-md-2" label="Type Category"></v-select>
@@ -31,7 +39,7 @@
             <v-alert
               :value="true"
               border="left"
-               color="blue-grey"
+              color="blue-grey"
               type="error"
               icon="mdi-warning"
             >

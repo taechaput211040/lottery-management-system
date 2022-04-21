@@ -30,8 +30,8 @@
             {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
           </template>
           <template #[`item.actions`]="{item}">
-            <v-btn color="warning" rounded small @click="showdetial(item)"
-              ><v-icon>mdi-pencil</v-icon> จัดการสถานะ</v-btn
+            <v-btn class="btn_edit" rounded small @click="showdetial(item)"
+              ><v-icon left>mdi-pencil</v-icon> จัดการสถานะ</v-btn
             >
           </template>
         </v-data-table>
