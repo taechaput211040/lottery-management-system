@@ -44,7 +44,7 @@
               <v-icon>mdi-logout</v-icon>
             </v-btn></template
           >
-          <span>เปลี่ยนรหัสผ่าน</span>
+          <span>ออกจากระบบ</span>
         </v-tooltip>
       </v-speed-dial>
     </v-app-bar>
@@ -195,12 +195,12 @@ export default {
                 to: "/report/betReport",
                 status: true
               },
-              {
-                icon: "mdi-numeric",
-                text: "รายงานตัวเลข",
-                to: "/report/reportnumber",
-                status: true
-              },
+              // {
+              //   icon: "mdi-numeric",
+              //   text: "รายงานตัวเลข",
+              //   to: "/report/reportnumber",
+              //   status: true
+              // },
               {
                 icon: "mdi-file-table-box-outline",
                 text: "รายงานน้ำไหล ปัจจุบัน",
@@ -254,12 +254,12 @@ export default {
               }
             ]
           },
-          {
-            title: "เพลา",
-            to: "/pay_rate/rate",
-            icon: "mdi-tune-variant",
-            status: true
-          },
+          // {
+          //   title: "เพลา",
+          //   to: "/pay_rate/rate",
+          //   icon: "mdi-tune-variant",
+          //   status: true
+          // },
           {
             title: "น้ำไหล",
             to: "/flexodd",
@@ -318,12 +318,12 @@ export default {
               to: "/report/betReport",
               status: true
             },
-            {
-              icon: "mdi-numeric",
-              text: "รายงานตัวเลข",
-              to: "/report/reportnumber",
-              status: true
-            },
+            // {
+            //   icon: "mdi-numeric",
+            //   text: "รายงานตัวเลข",
+            //   to: "/report/reportnumber",
+            //   status: true
+            // },
             {
               icon: "mdi-file-table-box-outline",
               text: "รายงานน้ำไหล ปัจจุบัน",
@@ -397,12 +397,12 @@ export default {
             }
           ]
         },
-        {
-          title: "เพลา",
-          to: "/pay_rate/rate",
-          icon: "mdi-tune-variant",
-          status: true
-        },
+        // {
+        //   title: "เพลา",
+        //   to: "/pay_rate/rate",
+        //   icon: "mdi-tune-variant",
+        //   status: true
+        // },
         {
           title: "น้ำไหล",
           to: "/flexodd",

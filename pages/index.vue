@@ -74,9 +74,9 @@
         ></v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" lg="6" xl="5">
+        <v-col cols="12">
           <v-row>
-            <v-col cols="12" sm="6" md="6" lg="12"
+            <v-col cols="12" sm="6" md="6"
               ><div class="rounded-lg white pb-2">
                 <div
                   class="title_card align-center pa-4 font-weight-bold d-flex"
@@ -129,7 +129,7 @@
                 </div>
               </div></v-col
             >
-            <v-col cols="12" sm="6" md="6" lg="12">
+            <v-col cols="12" sm="6" md="6" >
               <div class="rounded-lg white pb-2">
                 <div
                   class="title_card align-center pa-4 font-weight-bold d-flex"
@@ -186,7 +186,7 @@
             >
           </v-row>
         </v-col>
-        <v-col cols="12" lg="6" xl="7">
+        <!-- <v-col cols="12" lg="6" xl="7">
           <div class="rounded-lg white pb-2">
             <div class="title_card align-center pa-4 font-weight-bold d-flex">
               <h2>
@@ -228,7 +228,7 @@
               </v-data-table>
             </div>
           </div>
-        </v-col>
+        </v-col> -->
       </v-row>
     </div>
     <div v-if="isLoading" class="text-center">
@@ -378,7 +378,7 @@ export default {
           cellClass: "font-weight-bold"
         }
       ],
-      itemrecieved: [],
+      // itemrecieved: [],
       isLoading: false,
 
       itemgraphshow: [
@@ -424,22 +424,22 @@ export default {
   async fetch() {
     this.getDashboarddata();
     this.getDataGraph();
-    this.gettoprecieve();
+    // this.gettoprecieve();
   },
   methods: {
     ...mapActions("seller", ["recieveSellertofull"]),
     getDateTime(date) {
       return this.$moment(date).format("YYYY-MM-DDTHH:mm:ss" + "Z");
     },
-    async gettoprecieve() {
-      if (!this.$store.state.seller.balance_top) {
-        await this.recieveSellertofull();
-      }
-      try {
-        let { result: response } = this.$store.state.seller.balance_top;
-        this.itemrecieved = response.data;
-      } catch (error) {}
-    },
+    // async gettoprecieve() {
+    //   if (!this.$store.state.seller.balance_top) {
+    //     await this.recieveSellertofull();
+    //   }
+    //   try {
+    //     let { result: response } = this.$store.state.seller.balance_top;
+    //     this.itemrecieved = response.data;
+    //   } catch (error) {}
+    // },
     async mapchart(item) {
       this.itemgraphshow[0].data = [];
       this.itemgraphshow[1].data = [];

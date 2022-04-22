@@ -38,8 +38,20 @@
           >
             ไม่พบข้อมูล
           </v-alert>
-        </template></v-data-table
-      >
+        </template>
+        <template #[`item.payout`]="{item}">
+          {{ numberWithCommas(item.payout) }}
+        </template>
+        <template #[`item.winlose`]="{item}">
+          {{ numberWithCommas(item.winlose) }}
+        </template>
+        <template #[`item.turnover`]="{item}">
+          {{ numberWithCommas(item.turnover) }}</template
+        >
+        <template #[`item.bet_amount`]="{item}">
+          {{ numberWithCommas(item.bet_amount) }}
+        </template>
+      </v-data-table>
       <v-row align="baseline" class="ma-3 ">
         <v-col cols="12" sm="2" lg="2" xl="1">
           <v-select
@@ -96,7 +108,7 @@ export default {
           width: "300px"
         },
         {
-          text: "Bet(บาท)",
+          text: "ยอด(บาท)",
           value: "bet_amount",
           align: "center",
           class: "font-weight-bold",
@@ -202,6 +214,14 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    numberWithCommas(x) {
+      var parts = parseInt(x)
+        .toFixed(2)
+        .toString()
+        .split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
     }
   }
 };

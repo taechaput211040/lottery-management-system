@@ -128,7 +128,7 @@
         <v-divider></v-divider>
         <div class="row pa-3">
           <div class="col-12 col-sm-3">
-            รายรับทั้งหมด
+            รายรับทั้งหมด(บาท)
             <v-text-field
               placeholder="รายรับทั้งหมด"
               hide-details="auto"
@@ -139,8 +139,7 @@
             ></v-text-field>
           </div>
           <div class="col-12 col-sm-3">
-            กำไรขั้นต่ำ
-
+            กำไรขั้นต่ำ(บาท)
             <v-text-field
               placeholder="รายรับทั้งหมด"
               hide-details="auto"
@@ -151,7 +150,7 @@
             ></v-text-field>
           </div>
           <div class="col-12 col-sm-3">
-            อัตราจ่ายสูงสุด
+            อัตราจ่ายสูงสุด(บาท)
             <v-text-field
               placeholder="อัตราจ่ายสูงสุด"
               hide-details="auto"
@@ -275,6 +274,7 @@ export default {
       },
       itemgraphshow: [
         {
+          name: "จำนวนเงิน",
           data: [
             { x: "asdasd", y: 40 },
             { x: "asdasd", y: 12 },
@@ -452,7 +452,10 @@ export default {
     // เชค winloseflexood
     checkFlex_odd(item) {
       let Recieve_max = this.getRecieve_max();
-      if (item.bet_amount * this.payoutrate.maximum_out_come_rate > Recieve_max) {
+      if (
+        item.bet_amount * this.payoutrate.maximum_out_come_rate >
+        Recieve_max
+      ) {
         return true;
       } else {
         return false;
@@ -495,7 +498,9 @@ export default {
       if (this.checkFlex_odd(item)) {
         profit = this.getRecieve_max();
       } else {
-        profit = parseInt(item.bet_amount * this.payoutrate.maximum_out_come_rate);
+        profit = parseInt(
+          item.bet_amount * this.payoutrate.maximum_out_come_rate
+        );
       }
       return profit;
     },

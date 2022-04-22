@@ -164,9 +164,9 @@ export default {
           cellClass: "font-weight-bold"
         },
         { text: "น้ำไหล", value: "self_flex", align: "center" },
-        { text: "เพลา", value: "self_seller", align: "center" },
+        // { text: "เพลา", value: "self_seller", align: "center" },
         { text: "Upline น้ำไหล", value: "upline_flex_odd", align: "center" },
-        { text: "Upline เพลา", value: "upline_seller", align: "center" },
+        // { text: "Upline เพลา", value: "upline_seller", align: "center" },
         { text: "ดำเนินการ", value: "action", align: "center" }
       ]
     };

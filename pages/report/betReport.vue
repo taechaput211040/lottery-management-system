@@ -45,7 +45,7 @@
               <div class=" col-6 col-sm-3 col-md-2">
                 <div class="elevation-2 rounded-lg pa-2">
                   ยอดเเทงรวม
-                  <h4>{{ numberWithCommas(summary.bet) }} บาท</h4>
+                  <h4>{{ numberWithCommas(summary.bet_amount) }} บาท</h4>
                 </div>
               </div>
               <div class="col-6 col-sm-3 col-md-2">
@@ -103,7 +103,8 @@
                 >
                 <span>ดูรายละเอียดโพยแทง</span>
               </v-tooltip>
-              <v-tooltip bottom color="warning" dark>
+              <!-- /*เพลา -->
+              <!-- <v-tooltip bottom color="warning" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -121,7 +122,7 @@
                   </v-btn></template
                 >
                 <span>ดูรายละเอียดโพยรับของ</span>
-              </v-tooltip>
+              </v-tooltip> -->
 
               <!-- <v-tooltip bottom color="error" dark>
                 <template v-slot:activator="{ on, attrs }">
@@ -142,7 +143,6 @@
                 <span>ยกเลิกโพย</span>
               </v-tooltip> -->
             </div>
-            <v-card cl></v-card>
           </template>
           <template #[`item.winlose`]="{item}">
             {{ numberWithCommas(item.winlose) }}
