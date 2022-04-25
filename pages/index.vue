@@ -15,7 +15,7 @@
             title="รวมยอดรางวัล"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/reward.png"
             :value="this.payoutValue"
-            value_class="success--text font-weight-bold"
+            value_class="orange--text font-weight-bold"
           ></card-view
         ></v-col>
         <v-col cols="12" sm="4"
@@ -129,7 +129,7 @@
                 </div>
               </div></v-col
             >
-            <v-col cols="12" sm="6" md="6" >
+            <v-col cols="12" sm="6" md="6">
               <div class="rounded-lg white pb-2">
                 <div
                   class="title_card align-center pa-4 font-weight-bold d-flex"
@@ -447,11 +447,11 @@ export default {
         for (let i = 0; i < item.length; i++) {
           this.itemgraphshow[0].data.push({
             x: this.$moment(item[i].date).format("YYYY-MM-DD"),
-            y: item[i].bet
+            y: parseInt(item[i].bet).toFixed(2)
           });
           this.itemgraphshow[1].data.push({
             x: this.$moment(item[i].date).format("YYYY-MM-DD"),
-            y: item[i].payout
+            y: parseInt(item[i].payout).toFixed(2)
           });
         }
       } else {
@@ -462,13 +462,13 @@ export default {
             x: this.$moment(dateRender[i].date.toString(), "LT").format(
               "HH:mm"
             ),
-            y: dateRender[i].bet
+            y: parseInt(dateRender[i].bet).toFixed(2)
           });
           this.itemgraphshow[1].data.push({
             x: this.$moment(dateRender[i].date.toString(), "LT").format(
               "HH:mm"
             ),
-            y: dateRender[i].payout
+            y: parseInt(dateRender[i].payout).toFixed(2)
           });
         }
       }

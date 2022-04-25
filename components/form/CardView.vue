@@ -5,10 +5,13 @@
         <h2 :class="titleclass">{{ title }}</h2>
         <div class=" card-icontitle" v-if="condition == true">
           <h2 v-if="value > 0" class="success--text">
-            +{{ numberWithCommas(value) }} บาท
+            {{ numberWithCommas(value) }} บาท
           </h2>
           <h2 v-if="value < 0" class="red--text">
             {{ numberWithCommas(value) }} บาท
+          </h2>
+          <h2 v-if="value == 0 || !value" class="grey--text">
+            0.00 บาท
           </h2>
         </div>
 
@@ -31,7 +34,7 @@ export default {
       default: false
     },
     title: { type: String, default: "" },
-    value: { type: [Number, String], default: "" },
+    value: { type: [Number, String], default: 0 },
     iconSrc: { type: String, default: "" },
     titleclass: "",
     value_class: ""

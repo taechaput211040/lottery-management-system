@@ -1,7 +1,10 @@
 <template>
   <div>
     <h2>ประเภทการแทง</h2>
-    <div class="mt-2 white rounded-lg classtable">
+    <div v-if="isLoading">
+      <loading-page></loading-page>
+    </div>
+    <div v-else class="mt-2 white rounded-lg classtable">
       <v-data-table
         hide-default-footer
         :options.sync="option"
@@ -111,11 +114,11 @@
               v-model="updateform.self_flex"
               hide-details="auto"
             ></v-switch>
-            <v-switch
+            <!-- <v-switch
               label="เพลา"
               v-model="updateform.self_seller"
               hide-details="auto"
-            ></v-switch>
+            ></v-switch> -->
           </div>
 
           <v-card-actions class="justify-center">
@@ -137,7 +140,9 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
       loading_btn: false,

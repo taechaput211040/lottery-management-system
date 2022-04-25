@@ -25,7 +25,7 @@
             >
               <v-radio label="ทั้งหมด" value="0"></v-radio>
               <v-radio label="น้ำไหล" value="1"></v-radio>
-              <v-radio label="เพลา" value="2"></v-radio>
+              <!-- <v-radio label="เพลา" value="2"></v-radio> -->
             </v-radio-group>
           </div>
         </div>
@@ -353,15 +353,15 @@ export default {
           cellClass: "font-weight-bold",
           sortable: false
         },
-        {
-          text: "Agent รับของ",
-          value: "agent_selfrecaive_name",
-          align: "center",
-          class: "font-weight-bold",
-          cellClass: "font-weight-bold",
+        // {
+        //   text: "Agent รับของ",
+        //   value: "agent_selfrecaive_name",
+        //   align: "center",
+        //   class: "font-weight-bold",
+        //   cellClass: "font-weight-bold",
 
-          sortable: false
-        },
+        //   sortable: false
+        // },
         {
           text: "สถานะ",
           value: "status",

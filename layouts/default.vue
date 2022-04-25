@@ -207,12 +207,12 @@ export default {
                 to: "/report/reportFlexodd",
                 status: true
               },
-              {
-                icon: "mdi-currency-usd",
-                text: "รายงานส่วนต่างอัตราจ่าย",
-                to: "/report/reportOutcomerate",
-                status: true
-              }
+              // {
+              //   icon: "mdi-currency-usd",
+              //   text: "รายงานส่วนต่างอัตราจ่าย",
+              //   to: "/report/reportOutcomerate",
+              //   status: true
+              // }
             ]
           },
           {

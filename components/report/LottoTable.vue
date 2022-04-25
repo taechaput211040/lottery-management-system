@@ -14,7 +14,7 @@
         >
           <v-radio label="ทั้งหมด" value="0"></v-radio>
           <v-radio label="น้ำไหล" value="1"></v-radio>
-          <v-radio label="เพลา" value="2"></v-radio>
+          <!-- <v-radio label="เพลา" value="2"></v-radio> -->
         </v-radio-group>
       </div>
       <v-data-table
@@ -48,8 +48,8 @@
         <template #[`item.turnover`]="{item}">
           {{ numberWithCommas(item.turnover) }}</template
         >
-        <template #[`item.bet_amount`]="{item}">
-          {{ numberWithCommas(item.bet_amount) }}
+        <template #[`item.bet`]="{item}">
+          {{ numberWithCommas(item.bet) }}
         </template>
       </v-data-table>
       <v-row align="baseline" class="ma-3 ">
@@ -109,7 +109,7 @@ export default {
         },
         {
           text: "ยอด(บาท)",
-          value: "bet_amount",
+          value: "bet",
           align: "center",
           class: "font-weight-bold",
           sortable: false

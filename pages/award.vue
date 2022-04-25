@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!isLoading">
+    <div>
       <h2>บันทึกผลรางวัล</h2>
       <filter-search @search="searchfunction"></filter-search>
       <v-radio-group
@@ -14,7 +14,10 @@
         <v-radio label="ออกผลมาแล้ว" value="success"></v-radio>
         <v-radio label="ผลยังไม่ออก" value="unsuccess"></v-radio>
       </v-radio-group>
-      <div class="rounded-lg mt-5 pa-3 white">
+      <div v-if="isLoading">
+        <loading-page></loading-page>
+      </div>
+      <div v-else class="rounded-lg mt-5 pa-3 white">
         <div class="col-12 col-sm-6 col-md-6 col-lg-4  pa-0">
           <v-text-field
             v-model="searchtext"
@@ -40,6 +43,7 @@
         <v-data-table
           class="mt-3"
           :headers="setheader"
+          :loading="isLoading"
           hide-default-footer
           :items="dataAwardrender.data"
           :search="search"
@@ -80,7 +84,6 @@
                 item.status_lotto == false || item.status_calculate == true
               " -->
             <v-btn
-              
               color="black"
               text
               outlined
@@ -242,7 +245,7 @@
                     >
                       <v-text-field
                         outlined
-                        type="number"
+                        @keypress="e => checkpositive(e)"
                         hide-details="auto"
                         dense
                         v-model="item.lotto_number[n_key]"
@@ -267,8 +270,8 @@
                     <div class="col-6 col-sm-4 col-md-4 pa-1 text-center">
                       <v-text-field
                         outlined
-                        type="number"
                         v-model="item.lotto_number"
+                        @keypress="e => checkpositive(e)"
                         @keydown="
                           e =>
                             rangeInput(
@@ -303,21 +306,15 @@
         </v-form>
       </v-dialog>
     </div>
-    <div v-if="isLoading" class="text-center">
-      <v-progress-circular
-        :size="50"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
-    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import FilterSearch from "../components/form/FilterSearch.vue";
+import LoadingPage from "../components/form/LoadingPage.vue";
 export default {
-  components: { FilterSearch },
+  components: { FilterSearch, LoadingPage },
 
   data() {
     return {
@@ -481,11 +478,13 @@ export default {
       deep: true
     }
   },
-  async fetch() {
+  async mounted() {
+    this.isLoading = true;
     this.selectSection();
   },
   methods: {
     serchAward() {
+      this.isLoading = true;
       this.pagination.page = 1;
       if (this.searchtext === "") {
         this.searchtex = undefined;
@@ -519,7 +518,7 @@ export default {
       } else {
         order = undefined;
       }
-      return order;
+      return order ? order : undefined;
     },
     getParameter() {
       let order = this.getOptionalOrder();
@@ -557,6 +556,7 @@ export default {
     },
     async getAwardList() {
       let params = this.getParameter();
+
       try {
         const data = await this.getawardlotto(params);
         if (this.statusforsearch == undefined && !this.searchtext) {
@@ -569,8 +569,10 @@ export default {
           this.dataAwardrender = data.result[0].result_status_lotto;
           this.pagination.rowsNumber = this.dataAwardrender.total;
         }
+        this.isLoading = false;
       } catch (error) {
         console.log(error);
+        this.isLoading = false;
       }
     },
     async openDlupdate(item, type) {
@@ -655,6 +657,7 @@ export default {
             showConfirmButton: false,
             timer: 1500
           });
+          this.selectSection();
           this.dlSavenumber = false;
         } catch (error) {
           this.$swal({
@@ -681,7 +684,21 @@ export default {
         self.preventDefault();
       }
     },
+    checkpositive(evt) {
+      evt = evt ? evt : window.event;
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
     async handlePageSizeChange(size) {
+      this.isLoading = true;
       this.pagination.page = 1;
       this.pagination.rowsPerPage = size;
       this.selectSection();

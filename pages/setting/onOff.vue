@@ -1,8 +1,10 @@
 <template>
   <div>
     <h2>เปิดปิดหวย</h2>
-
-    <div class="white rounded-lg mt-2">
+    <div v-if="isLoading">
+      <loading-page></loading-page>
+    </div>
+    <div v-else class="white rounded-lg mt-2">
       <div class="rounded-lg white">
         <v-data-table
           hide-default-footer
@@ -115,7 +117,9 @@
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
       loading_btn: false,

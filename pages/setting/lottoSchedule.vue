@@ -1,6 +1,7 @@
 <template>
   <div>
     <div><h2>รอบหวย</h2></div>
+
     <div class="d-flex justify-end">
       <h4 v-if="select2Date" class="pr-2 red--text">
         {{ getStartDate() }} - {{ getEndDate() }}
@@ -21,7 +22,11 @@
           ></v-text-field>
         </div>
         <div class="pa-2 col-12 col-sm-6 col-lg-4">
-          <v-btn color="primary" rounded class="mx-2 btn_search" @click="searchlotto()"
+          <v-btn
+            color="primary"
+            rounded
+            class="mx-2 btn_search"
+            @click="searchlotto()"
             ><v-icon left>mdi-magnify</v-icon> ค้นหา</v-btn
           >
         </div>
@@ -49,7 +54,6 @@
                   v-model="insertForm.lottotype_id"
                   hide-details="auto"
                   @change="selectTypelotto"
-                  :loading="isLoading"
                   outlined
                   dense
                   placeholder="กรุณาเลือกประเภทหวย"
@@ -154,7 +158,10 @@
         >
       </v-card>
     </v-dialog>
-    <div class="white rounded-lg">
+    <div v-if="isLoading">
+      <loading-page></loading-page>
+    </div>
+    <div v-else class="white rounded-lg">
       <div class="text-right" v-if="this.$store.state.auth.role == 'LOTTO'">
         <v-btn color="primary" @click="openInsert()" rounded class="ma-3"
           ><v-icon left>mdi-plus</v-icon>เพิ่มรอบหวย</v-btn
@@ -409,7 +416,9 @@
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
       loading_btn: false,
@@ -421,7 +430,7 @@ export default {
       insertForm: {},
       dlInsert: false,
       title_lotto: undefined,
-      isLoading: true,
+      isLoading: false,
       pageSizes: [5, 10, 15, 25],
       options: {},
       pagination: {
@@ -558,7 +567,7 @@ export default {
     }
   },
   async fetch() {
-    this.getdataRender();
+    await this.getdataRender();
   },
   methods: {
     ...mapActions("lottosetting", [
@@ -574,17 +583,15 @@ export default {
     },
 
     async searchlotto(e) {
-      this.pagination.page = 1;
-      this.isLoading = true;
+      let order = this.getOptionalOrder();
       if (
         !this.title_lotto ||
         this.title_lotto === undefined ||
         this.title_lotto === ""
       ) {
-        this.getdataRender();
+        await this.getdataRender();
       } else {
         try {
-          let order = this.getOptionalOrder();
           let params = {
             title: this.title_lotto ? this.title_lotto : undefined,
             currentPage: this.pagination.page,
@@ -606,10 +613,9 @@ export default {
             this.itemtypeaward = data.result[0].title.data;
             this.pagination.rowsNumber = data.result[0].title.total;
           }
-          this.isLoading = false;
         } catch (err) {
           console.log(err);
-          this.isLoading = false;
+
           this.$swal({
             icon: "warning",
             title: "กรุณากรอกชื่อหวยให้ถูกต้อง",
@@ -618,6 +624,7 @@ export default {
           });
         }
       }
+      this.isLoading = false;
     },
     async submitInsert() {
       let body = {
@@ -659,7 +666,6 @@ export default {
     getOptionalOrder() {
       let order = {};
       if (this.options.sortBy[0]) {
-        console.log("thissss");
         order.sortBy = this.options.sortBy[0];
         if (this.options.sortDesc[0] === false) {
           order.sortDesc = "ASC";
@@ -674,8 +680,7 @@ export default {
     },
     async getdataRender() {
       let order = this.getOptionalOrder();
-      console.log(order, "asdasd");
-      this.isLoading = true;
+      console.log(order, "oreder");
       try {
         let params = {
           currentPage: this.pagination.page,
@@ -689,8 +694,8 @@ export default {
         this.isLoading = false;
       } catch (error) {
         console.log(error);
-        this.isLoading = false;
       }
+      this.isLoading = false;
     },
     async selectTypelotto(value) {
       this.itemcategory = [];
@@ -708,6 +713,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      this.isLoading = false;
     },
     async handlePageSizeChange(size) {
       this.pagination.page = 1;

@@ -6,58 +6,63 @@
         - {{ $route.query.username }}</span
       >
     </h2>
-    <div class="white rounded-lg mt-2" v-if="!this.$route.query.username">
-      <div class="rounded-lg white">
-        <v-data-table
-          hide-default-footer
-          :options.sync="option"
-          :headers="headerOnOff"
-          :items="itemtypeaward"
-          :loading="isLoading"
-        >
-          <template v-slot:no-data>
-            <v-alert
-              :value="true"
-              border="left"
-              color="blue-grey"
-              type="error"
-              icon="mdi-warning"
-            >
-              ไม่พบข้อมูล
-            </v-alert>
-          </template>
-          <template #[`item.no`]="{index}">
-            {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
-          </template>
-          <template #[`item.actions`]="{item}">
-            <v-btn class="btn_edit" rounded small @click="showdetial(item)"
-              ><v-icon left>mdi-pencil</v-icon> จัดการสถานะ</v-btn
-            >
-          </template>
-        </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
-          <v-col cols="12" sm="2" lg="2" xl="1">
-            <v-select
-              outlined
-              hide-details="auto "
-              dense
-              v-model="option.itemsPerPage"
-              :items="pageSizes"
-              label="รายการต่อหน้า"
-            ></v-select>
-          </v-col>
-          <v-col cols="12" sm="10" lg="10">
-            <v-pagination
-              v-model="option.page"
-              :total-visible="7"
-              :length="Math.ceil(itemtypeaward.length / option.itemsPerPage)"
-            ></v-pagination>
-          </v-col>
-        </v-row>
-      </div>
+    <div v-if="isLoading">
+      <loading-page></loading-page>
     </div>
-    <div class="white rounded-lg" v-else>
-      <category-byuser></category-byuser>
+    <div v-else>
+      <div class="white rounded-lg mt-2" v-if="!this.$route.query.username">
+        <div class="rounded-lg white">
+          <v-data-table
+            hide-default-footer
+            :options.sync="option"
+            :headers="headerOnOff"
+            :items="itemtypeaward"
+            :loading="isLoading"
+          >
+            <template v-slot:no-data>
+              <v-alert
+                :value="true"
+                border="left"
+                color="blue-grey"
+                type="error"
+                icon="mdi-warning"
+              >
+                ไม่พบข้อมูล
+              </v-alert>
+            </template>
+            <template #[`item.no`]="{index}">
+              {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
+            </template>
+            <template #[`item.actions`]="{item}">
+              <v-btn class="btn_edit" rounded small @click="showdetial(item)"
+                ><v-icon left>mdi-pencil</v-icon> จัดการสถานะ</v-btn
+              >
+            </template>
+          </v-data-table>
+          <v-row align="baseline" class="ma-3 ">
+            <v-col cols="12" sm="2" lg="2" xl="1">
+              <v-select
+                outlined
+                hide-details="auto "
+                dense
+                v-model="option.itemsPerPage"
+                :items="pageSizes"
+                label="รายการต่อหน้า"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="10" lg="10">
+              <v-pagination
+                v-model="option.page"
+                :total-visible="7"
+                :length="Math.ceil(itemtypeaward.length / option.itemsPerPage)"
+              ></v-pagination>
+            </v-col>
+          </v-row>
+        </div>
+      </div>
+      <div class="white rounded-lg" v-else>
+        <category-byuser></category-byuser>
+      </div>
     </div>
 
     <!-- edit modal card-->
@@ -94,9 +99,10 @@
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 import CategoryByuser from "../../components/onOfflotto/CategoryByuser.vue";
 export default {
-  components: { CategoryByuser },
+  components: { CategoryByuser, LoadingPage },
   data() {
     return {
       option: {},
