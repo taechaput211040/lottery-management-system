@@ -78,7 +78,7 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
   router: {
-    // mode: "history"
-    base: "/backoffice/"
+    mode: "history"
+    // base: "/backoffice/"
   }
 };

@@ -542,7 +542,7 @@ export default {
           order.sortDesc = "DESC";
         }
       } else {
-        order = undefined;
+        order = "date=DESC";
       }
       return order;
     },
@@ -560,7 +560,7 @@ export default {
         limit: this.pagination.rowsPerPage,
         search: this.searchInput,
         sort:
-          order == undefined ? undefined : `${order.sortBy}=${order.sortDesc}`
+          order == 'date=DESC' ? 'date=DESC' : `${order.sortBy}=${order.sortDesc}`
       };
       return params;
     },

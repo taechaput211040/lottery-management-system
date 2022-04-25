@@ -41,8 +41,14 @@
 
         <template #[`item.no`]="{index}"> {{ index + 1 }}</template>
         <template #[`item.actions`]="{item}">
-          <v-btn color="black" dark small rounded @click="viewOther(item)"
-            >ดูรายการสมาชิกใน{{ item.position }}</v-btn
+          <v-btn
+            color="black white--text"
+            small
+            rounded
+            @click="viewOther(item)"
+            :disabled="item.level == 6"
+          >
+            ดูรายการสมาชิกใน{{ item.position }}</v-btn
           ></template
         >
       </v-data-table>
@@ -77,10 +83,12 @@ export default {
   components: { LoadingPage },
   data() {
     return {
+      prevUser: null,
       isLoading: false,
       pageSizes: [5, 10, 15, 25],
       options: {},
       thisUser: "",
+      currentUser: "",
       accountRendering: [],
       pagination: {
         sortBy: "desc",
@@ -126,6 +134,7 @@ export default {
   async fetch() {
     sessionStorage.removeItem("pathPrev");
     sessionStorage.removeItem("userPrev");
+
     this.getMember();
   },
   watch: {
@@ -137,6 +146,16 @@ export default {
     }
   },
   methods: {
+    showBackbtn() {
+      if (
+        !sessionStorage.getItem("userPrev") ||
+        JSON.parse(sessionStorage.getItem("userPrev")).length <= 1
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     ...mapActions("report", ["getAccountReport"]),
     getParameter(value) {
       let params = {
@@ -173,68 +192,38 @@ export default {
     async viewOther(item) {
       this.isLoading = true;
       this.thisUser = item.username;
-      if (!sessionStorage.getItem("userPrev")) {
-        sessionStorage.setItem("userPrev", item.username);
-      }
-      sessionStorage.setItem("pathPrev", item.position);
       this.getMember(item.username);
-    },
-    backPrevpath() {
-      let preavpath = sessionStorage.getItem("pathPrev");
-      let userPrev = sessionStorage.getItem("userPrev");
-      if (preavpath == "COMPANY") {
-        sessionStorage.removeItem("pathPrev");
-        sessionStorage.removeItem("userPrev");
-        this.getMember();
-      } else if (preavpath == "AGENT") {
-        sessionStorage.removeItem("pathPrev");
-        sessionStorage.removeItem("userPrev");
-        if (this.$store.state.auth.role == "COMPANY") {
-          this.getMember();
-        } else {
-          sessionStorage.setItem("pathPrev", "COMPANY");
-          this.getMember(userPrev);
-        }
-      }
-    },
-    showBackbtn() {
       if (
-        !sessionStorage.getItem("userPrev") &&
-        !sessionStorage.getItem("pathPrev")
+        !sessionStorage.getItem(`userPrev`) ||
+        JSON.parse(sessionStorage.getItem(`userPrev`)).length <= 0
       ) {
-        return false;
+        this.prevUser = this.$store.state.auth.username;
+        let form_path = [
+          { username: this.$store.state.auth.username },
+          { username: item.username }
+        ];
+        sessionStorage.setItem(`userPrev`, JSON.stringify(form_path));
       } else {
-        return true;
+        let form_path = JSON.parse(sessionStorage.getItem("userPrev"));
+        form_path.push({ username: this.thisUser });
+        sessionStorage.setItem(`userPrev`, JSON.stringify(form_path));
       }
     },
     headertable() {
-      let pathPrev = sessionStorage.getItem("pathPrev");
-      if (pathPrev === "AGENT" || this.$store.state.auth.role == "AGENT") {
-        let header = [
-          {
-            text: "ลำดับ",
-            value: "no",
-            class: "font-weight-bold",
-            align: "center",
-            width: "100px"
-          },
-          {
-            text: "Username",
-            value: "username",
-            class: "font-weight-bold",
-            cellClass: "primary--text font-weight-bold",
-            align: "center"
-          },
-          {
-            text: "ระดับตำเเหน่ง",
-            value: "position",
-            align: "center"
-          }
-        ];
-        return header;
+      return this.headerAccount;
+    },
+    async backPrevpath() {
+      const form_path = JSON.parse(sessionStorage.getItem("userPrev"));
+      const prevUsers = form_path.slice(0, form_path.length - 1);
+      let userdata = prevUsers[prevUsers.length - 1];
+      if (userdata) {
+        this.getMember(userdata.username);
       } else {
-        return this.headerAccount;
+        this.getMember(form_path[0]?.username);
       }
+      console.log("form", form_path.length - 1);
+      console.log("prev", prevUsers.length);
+      sessionStorage.setItem("userPrev", JSON.stringify(prevUsers));
     }
   }
 };

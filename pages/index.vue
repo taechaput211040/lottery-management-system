@@ -23,7 +23,7 @@
             title="กำไรขาดทุน"
             :condition="true"
             iconSrc="https://image.smart-ai-api.com/public/image-storage/smartlotto/newdesign/profit.png"
-            :value="parseInt(this.betValue - this.payoutValue)"
+            :value="this.winloseValue"
             value_class="font-weight-bold"
           ></card-view
         ></v-col>
