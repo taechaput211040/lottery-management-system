@@ -24,6 +24,32 @@ export async function getAccountReport(
     }
   });
 }
+export async function getMemberReportByUser(
+  { commit },
+  params = {
+    username: undefined,
+    currentPage: undefined,
+    limit: undefined
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/users/get_member_by_user`,
+        {
+          params: {
+            username: params.username,
+            currentPage: params.currentPage,
+            limit: params.limit
+          }
+        }
+      );
+      resolve(response.data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 export async function getBetReport(
   { commit },
   params = {
@@ -172,7 +198,8 @@ export async function getReportWinlose(
     type_purchase: undefined,
     page: undefined,
     limit: undefined,
-    sort: undefined
+    sort: undefined,
+    agent_name: undefined
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -181,6 +208,7 @@ export async function getReportWinlose(
         `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Winlose/${params.start_time}/${params.end_time}`,
         {
           params: {
+            agent_name: params.agent_name,
             type_purchase: params.type_purchase,
             page: params.page,
             limit: params.limit,

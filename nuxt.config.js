@@ -9,7 +9,12 @@ export default {
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "" },
+      { hid: "og:url", property: "og:url", content: "agent.sm-lotto.com" },
+      {
+        hid: "og:description",
+        property: "og:description",
+        content: "Smart Lotto - เว็ปหวยครบวงจร"
+      },
       { name: "format-detection", content: "telephone=no" }
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
@@ -78,7 +83,7 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
   router: {
-    mode: "history"
-    // base: "/backoffice/"
+    // mode: "history"
+    base: "/backoffice/"
   }
 };

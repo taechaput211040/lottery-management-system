@@ -495,6 +495,7 @@ export default {
       return this.$moment(String(date)).format("YYYY/MM/DD เวลา HH:mm:ss");
     },
     searchfunction(filter) {
+      this.isLoading = true;
       this.filter = filter;
       this.selectSection();
     },

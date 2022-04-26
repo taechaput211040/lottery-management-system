@@ -26,6 +26,7 @@
           v-model="password"
           prepend-inner-icon="mdi-lock"
           type="password"
+          @keyup.enter="auth()"
           placeholder="Password"
           class="password  mb-3"
         />
@@ -84,7 +85,7 @@ export default {
         const { data: response } = await this.login({
           username: this.username,
           password: this.password
-        }); 
+        });
         if (response.hash) {
           let params = {
             hash: response.hash,
@@ -93,6 +94,7 @@ export default {
           let { data: datatoken } = await this.gettoken(params);
           if (this.checkonline) {
             localStorage.clear();
+            localStorage.setItem("level", datatoken.level);
             localStorage.setItem("hash", response.hash);
             localStorage.setItem("username", datatoken.username);
             localStorage.setItem("token", datatoken.token);

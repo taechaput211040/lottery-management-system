@@ -7,71 +7,160 @@
       >
     </h2>
     <div v-if="isLoading"><loading-page></loading-page></div>
-    <div v-else class="white rounded-lg mt-3">
+    <div v-else>
       <v-btn
         color="red back_btn"
         class="ma-3"
         @click="backPrevpath()"
         v-if="showBackbtn()"
         rounded
+        :loading="loading_btn"
         small
         dark
         ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
       >
-      <v-data-table
-        :options.sync="options"
-        :headers="headertable()"
-        :items="accountRendering"
-        :server-items-length="pagination.rowsNumber"
-        :items-per-page.sync="pagination.rowsPerPage"
-        :page.sync="pagination.page"
-        hide-default-footer
-      >
-        <template v-slot:no-data>
-          <v-alert
-            :value="true"
-            border="left"
-            color="blue-grey"
-            type="error"
-            icon="mdi-warning"
-          >
-            ไม่พบข้อมูล
-          </v-alert>
-        </template>
-
-        <template #[`item.no`]="{index}"> {{ index + 1 }}</template>
-        <template #[`item.actions`]="{item}">
-          <v-btn
-            color="black white--text"
-            small
-            rounded
-            @click="viewOther(item)"
-            :disabled="item.level == 6"
-          >
-            ดูรายการสมาชิกใน{{ item.position }}</v-btn
-          ></template
+      <div class="white rounded-lg mt-3">
+        <v-data-table
+          :options.sync="options"
+          :headers="headertable()"
+          :items="accountRendering"
+          :server-items-length="pagination.rowsNumber"
+          :items-per-page.sync="pagination.rowsPerPage"
+          :page.sync="pagination.page"
+          hide-default-footer
         >
-      </v-data-table>
-      <v-row align="baseline" class="ma-3 ">
-        <v-col cols="12" sm="2" lg="2" xl="1">
-          <v-select
-            outlined
-            hide-details="auto "
-            dense
-            v-model="pagination.rowsPerPage"
-            :items="pageSizes"
-            @change="handlePageSizeChange"
-            label="รายการต่อหน้า"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="10" lg="10">
-          <v-pagination
-            v-model="pagination.page"
-            :total-visible="7"
-            :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
-          ></v-pagination>
-        </v-col>
-      </v-row>
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+              color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
+
+          <template #[`item.no`]="{index}"> {{ index + 1 }}</template>
+          <template #[`item.actions`]="{item}">
+            <v-btn
+              color="black white--text"
+              small
+              rounded
+              @click="viewOther(item, 'viewAgent')"
+              :disabled="item.level == 6"
+            >
+              ดูรายการสมาชิกใน{{ item.position }}</v-btn
+            >
+            <v-btn
+              color="black white--text"
+              small
+              v-if="item.level == 3 && $store.state.auth.level != 3"
+              rounded
+              @click="viewOther(item, 'viewMember')"
+              :disabled="item.level == 6"
+            >
+              ดูรายชื่อ Member</v-btn
+            ></template
+          >
+        </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="2" xl="1">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="pagination.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChange"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="10">
+            <v-pagination
+              v-model="pagination.page"
+              :total-visible="7"
+              :length="
+                Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+              "
+            ></v-pagination>
+          </v-col>
+        </v-row>
+      </div>
+
+      <div class="mt-5 white" v-show="$store.state.auth.level == 3">
+        <h3 class="pa-3">
+          รายการ member ใน {{ this.$store.state.auth.username }}
+        </h3>
+        <v-data-table
+          :options.sync="optionsMember"
+          :headers="headertable()"
+          :items="memberRender"
+          :server-items-length="paginationMember.rowsNumber"
+          :items-per-page.sync="paginationMember.rowsPerPage"
+          :page.sync="paginationMember.page"
+          hide-default-footer
+        >
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+              color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
+
+          <template #[`item.no`]="{index}"> {{ index + 1 }}</template>
+          <template #[`item.actions`]="{item}">
+            <v-btn
+              color="black white--text"
+              small
+              rounded
+              @click="viewOther(item, 'viewAgent')"
+              :disabled="item.level == 6"
+            >
+              ดูรายการสมาชิกใน{{ item.position }}</v-btn
+            >
+            <v-btn
+              color="black white--text"
+              small
+              v-if="item.level >= 3"
+              rounded
+              @click="viewOther(item, 'viewMember')"
+              :disabled="item.level == 6"
+            >
+              ดูรายชื่อ Member</v-btn
+            ></template
+          >
+        </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="2" xl="1">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="paginationMember.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChangeMember"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="10">
+            <v-pagination
+              v-model="paginationMember.page"
+              :total-visible="7"
+              :length="
+                Math.ceil(
+                  paginationMember.rowsNumber / paginationMember.rowsPerPage
+                )
+              "
+            ></v-pagination>
+          </v-col>
+        </v-row>
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +172,10 @@ export default {
   components: { LoadingPage },
   data() {
     return {
+      loading_btn: false,
+      optionsMember: {},
+      memberRender: [],
+      typeForRender: "viewAgent",
       prevUser: null,
       isLoading: false,
       pageSizes: [5, 10, 15, 25],
@@ -91,6 +184,13 @@ export default {
       currentUser: "",
       accountRendering: [],
       pagination: {
+        sortBy: "desc",
+        descending: false,
+        page: 1,
+        rowsPerPage: 15,
+        rowsNumber: 0
+      },
+      paginationMember: {
         sortBy: "desc",
         descending: false,
         page: 1,
@@ -130,17 +230,24 @@ export default {
       ]
     };
   },
-
+  beforeCreate() {},
   async fetch() {
     sessionStorage.removeItem("pathPrev");
     sessionStorage.removeItem("userPrev");
-
+    this.thisUser = this.$store.state.auth.username;
     this.getMember();
+    if (this.$store.state.auth.level == 3) {
+      this.getMemberUserbylevel3();
+    }
   },
   watch: {
     options: {
       async handler() {
-        await this.getMember(this.thisUser);
+        if (this.typeForRender === "viewAgent") {
+          await this.getMember(this.thisUser);
+        } else if (this.typeForRender === "viewMember") {
+          await this.getMemberByuser(this.thisUser);
+        }
       },
       deep: true
     }
@@ -149,14 +256,14 @@ export default {
     showBackbtn() {
       if (
         !sessionStorage.getItem("userPrev") ||
-        JSON.parse(sessionStorage.getItem("userPrev")).length <= 1
+        JSON.parse(sessionStorage.getItem("userPrev")).length < 1
       ) {
         return false;
       } else {
         return true;
       }
     },
-    ...mapActions("report", ["getAccountReport"]),
+    ...mapActions("report", ["getAccountReport", "getMemberReportByUser"]),
     getParameter(value) {
       let params = {
         username: value,
@@ -172,8 +279,29 @@ export default {
       } else {
         params = this.getParameter(item);
       }
+      try {
+        let { result } = await this.getAccountReport(params);
 
-      let { result } = await this.getAccountReport(params);
+        this.accountRendering = result.data;
+        this.pagination.rowsNumber = result.total;
+
+        this.isLoading = false;
+      } catch (error) {
+        console.log(error);
+        this.isLoading = false;
+      }
+      if (!item) {
+        this.thisUser = "";
+      } else {
+        this.thisUser = item;
+      }
+      this.loading_btn = false;
+    },
+    async getMemberByuser(item) {
+      let params = undefined;
+      params = this.getParameter(item);
+
+      let { result } = await this.getMemberReportByUser(params);
 
       this.accountRendering = result.data;
       this.pagination.rowsNumber = result.total;
@@ -183,16 +311,44 @@ export default {
         this.thisUser = item;
       }
       this.isLoading = false;
+      this.loading_btn = false;
+    },
+    getParameterByMember() {
+      let params = {
+        username: this.$store.state.auth.username,
+        currentPage: this.paginationMember.page,
+        limit: this.paginationMember.rowsPerPage
+      };
+      return params;
+    },
+    async getMemberUserbylevel3() {
+      let params = undefined;
+      params = this.getParameterByMember();
+
+      let { result } = await this.getMemberReportByUser(params);
+
+      this.memberRender = result.data;
+      this.paginationMember.rowsNumber = result.total;
+      this.isLoading = false;
     },
     async handlePageSizeChange(size) {
       this.pagination.page = 1;
       this.pagination.rowsPerPage = size;
       this.getMember(this.thisUser);
     },
-    async viewOther(item) {
-      this.isLoading = true;
+    handlePageSizeChangeMember(size) {
+      this.paginationMember.page = 1;
+      this.paginationMember.rowsPerPage = size;
+      this.getMemberUserbylevel3();
+    },
+    async viewOther(item, type) {
       this.thisUser = item.username;
-      this.getMember(item.username);
+      if (type == "viewAgent") {
+        await this.getMember(item.username);
+      } else if (type == "viewMember") {
+        await this.getMemberByuser(item.username);
+      }
+
       if (
         !sessionStorage.getItem(`userPrev`) ||
         JSON.parse(sessionStorage.getItem(`userPrev`)).length <= 0
@@ -213,6 +369,7 @@ export default {
       return this.headerAccount;
     },
     async backPrevpath() {
+      this.loading_btn = true;
       const form_path = JSON.parse(sessionStorage.getItem("userPrev"));
       const prevUsers = form_path.slice(0, form_path.length - 1);
       let userdata = prevUsers[prevUsers.length - 1];
@@ -224,7 +381,18 @@ export default {
       console.log("form", form_path.length - 1);
       console.log("prev", prevUsers.length);
       sessionStorage.setItem("userPrev", JSON.stringify(prevUsers));
-    }
+      this.loading_btn = false;
+    },
+     showBackbtn() {
+      if (
+        !sessionStorage.getItem("userPrev") ||
+        JSON.parse(sessionStorage.getItem("userPrev")).length <= 1
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   }
 };
 </script>

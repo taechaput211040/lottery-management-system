@@ -1,5 +1,10 @@
 export default function() {
   return {
+    level:
+      localStorage.getItem("level") ||
+      sessionStorage.getItem("level") ||
+      null,
+
     username:
       localStorage.getItem("username") ||
       sessionStorage.getItem("username") ||

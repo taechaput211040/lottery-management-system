@@ -74,6 +74,7 @@
     <div v-if="numberType != null">
       <div class="pa-1 rounded-lg white my-3 pa-2">
         <div class="text-center py-3">
+          {{ payoutrate.lottonumbertype_name }}
           <h3>
             อันดับหมายเลข :
             <span class="primary--text">{{
@@ -90,7 +91,7 @@
         ></VueApexCharts>
       </div>
       <v-dialog v-model="dledit" max-width="300px" persistent>
-        <v-form v-model="validcongfig" ref="formconfig"
+        <v-form v-model="valid" ref="formconfig"
           ><v-card class="pa-2">
             <v-card-title><h3>เพิ่มข้อมูลจำลอง</h3></v-card-title>
             <div class="pa-2 rounded-lg elevation-2 white">
@@ -111,7 +112,7 @@
                 type="number"
                 class="my-2"
                 hide-details="auto"
-                v-model="formEdit.bet_fake"
+                v-model="formEdit.fakeValue"
               ></v-text-field>
             </div>
             <v-card-actions class="justify-center">
@@ -170,6 +171,9 @@
           :options.sync="options"
           hide-default-footer
         >
+          <template #[`item.bet_amount`]="{item}">
+            {{ numberWithCommas(item.bet_amount + item.bet_fake) }}
+          </template>
           <!-- อัตราจ่าย -->
           <template #[`item.payrate`]="{item}">
             {{ numberWithCommas(calPayrate(item)) }}
@@ -255,7 +259,7 @@ export default {
   },
   data() {
     return {
-      validcongfig: false,
+      valid: false,
       formEdit: {},
       dledit: false,
       pageSizes: [5, 10, 15, 25],
@@ -426,26 +430,27 @@ export default {
       for (let i = 0; i < item.length; i++) {
         this.itemgraphshow[0].data.push({
           x: `เลข ${item[i].lotto_number}`,
-          y: item[i].bet_amount
+          y: item[i].bet_amount + item[i].bet_fake
         });
       }
       this.$refs.realtimeChart.updateSeries(this.itemgraphshow, false, true);
     },
     getWinloseAmount(item) {
-      let outcomrateAmount = parseInt(this.maximumIncomeAmount);
-      let winlose = outcomrateAmount - parseInt(item);
+      let outcomrateAmount = parseFloat(this.maximumIncomeAmount);
+      let winlose = outcomrateAmount - parseFloat(item);
       return winlose;
     },
     getRecieve_max() {
       let Recieve_max =
-        parseInt(this.maximumIncomeAmount) - parseInt(this.minimumProfit);
+        parseFloat(this.maximumIncomeAmount) - parseFloat(this.minimumProfit);
       return Recieve_max;
     },
     getWinloseNormal(item) {
       let winlose = 0;
       winlose =
-        parseInt(this.maximumIncomeAmount) -
-        item.bet_amount * this.payoutrate.maximum_out_come_rate;
+        parseFloat(this.maximumIncomeAmount) -
+        (item.bet_amount + item.bet_fake) *
+          this.payoutrate.maximum_out_come_rate;
 
       return winlose;
     },
@@ -453,7 +458,8 @@ export default {
     checkFlex_odd(item) {
       let Recieve_max = this.getRecieve_max();
       if (
-        item.bet_amount * this.payoutrate.maximum_out_come_rate >
+        (item.bet_amount + item.bet_fake) *
+          this.payoutrate.maximum_out_come_rate >
         Recieve_max
       ) {
         return true;
@@ -479,7 +485,6 @@ export default {
       try {
         let { data } = await this.getPerflex();
         this.per_flex_rate = data.result.profit;
-        console.log(this.per_flex_rate);
       } catch (error) {
         console.log(error);
       }
@@ -493,14 +498,63 @@ export default {
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
     },
+    checkDupicatenumber(number) {
+      const res = [];
+      const result = [];
+      const count = {};
+      let counByDupicate;
+      for (let i = 0; i < number.length; i++) {
+        res.push(number[i]);
+      }
+
+      res.forEach(item => {
+        if (count[item]) {
+          count[item] += 1;
+          return;
+        }
+        count[item] = 1;
+      });
+
+      for (let prop in count) {
+        if (count[prop] >= 2) {
+          result.push(prop);
+        }
+      }
+      counByDupicate = Object.keys(count).length;
+      return counByDupicate;
+    },
     profitNormal(item) {
       let profit;
+      let countNum = this.checkDupicatenumber(item.lotto_number);
+
       if (this.checkFlex_odd(item)) {
         profit = this.getRecieve_max();
       } else {
-        profit = parseInt(
-          item.bet_amount * this.payoutrate.maximum_out_come_rate
+        profit = parseFloat(
+          (item.bet_amount + item.bet_fake) *
+            this.payoutrate.maximum_out_come_rate
         );
+      }
+      if (this.payoutrate.lottonumbertype_name === "สามตัวหน้า") {
+        if (parseInt(countNum) >= 2) {
+          profit = profit / 4;
+        } else {
+          profit = profit;
+        }
+      } else if (this.payoutrate.lottonumbertype_name === "สามตัวโต๊ด") {
+        if (parseInt(countNum) === 1) {
+          profit = profit;
+        } else if (parseInt(countNum) === 2) {
+          profit = profit / 4;
+        } else {
+          profit = profit / 6;
+        }
+      } else if (this.payoutrate.lottonumbertype_name === "สามตัวล่าง") {
+        profit = profit / 2;
+      } else if (this.payoutrate.lottonumbertype_name === "วิ่งบน") {
+        profit = profit / 3;
+      } else if (this.payoutrate.lottonumbertype_name === "วิ่งล่าง") {
+        profit = profit / 2;
       }
       return profit;
     },
@@ -509,7 +563,7 @@ export default {
     calPayrate(item) {
       let payrate = 0;
       if (this.checkFlex_odd(item)) {
-        payrate = this.profitNormal(item) / item.bet_amount;
+        payrate = this.profitNormal(item) / (item.bet_amount + item.bet_fake);
       } else {
         payrate = this.payoutrate.maximum_out_come_rate;
       }
@@ -566,6 +620,7 @@ export default {
     },
     async selectRound(value) {
       this.toRound = "";
+      let round;
       let params = {
         currentPage: 1,
         limit: 1000,
@@ -578,10 +633,12 @@ export default {
         TypeCategoryId: value
       };
       try {
-        console.log(params);
         let { result } = await this.getProgramLotto(params);
-        this.itemRound = result[0].TypeCategoryId.data.sort(function(b, a) {
-          return a.bet_lotto_time.localeCompare(b.bet_lotto_time);
+        round = result[0].TypeCategoryId.data.sort(function(b, a) {
+          return b.bet_lotto_time.localeCompare(a.bet_lotto_time);
+        });
+        this.itemRound = round.filter(x => {
+          return x.status_calculate != true;
         });
       } catch (error) {
         console.log(error);
@@ -609,7 +666,7 @@ export default {
       let params = this.getParameter();
       try {
         let { data: response } = await this.getDetailNumberReport(params);
-        console.log(response);
+
         this.itemRender = response;
         this.maximumIncomeAmount = this.itemRender.sum.bet_amount;
         this.pagination.rowsNumber = this.itemRender.pagination.total;
@@ -634,7 +691,6 @@ export default {
           this.selectTypeCategory
         );
         this.itemPayrate = response.result;
-        console.log(this.itemPayrate);
       } catch (error) {}
     },
     editPay(item) {
@@ -667,7 +723,7 @@ export default {
         bet_details: [
           {
             lotto_number: this.formEdit.lotto_number,
-            bet: this.formEdit.bet_fake
+            bet: this.formEdit.fakeValue
           }
         ]
       };
@@ -681,7 +737,7 @@ export default {
             timer: 1500
           });
           this.dledit = false;
-          this.getFlexoddReport();
+          await this.getFlexoddReport();
         } catch (error) {
           console.log("faile");
           console.log(error);

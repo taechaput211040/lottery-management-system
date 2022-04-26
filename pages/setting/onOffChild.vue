@@ -11,9 +11,21 @@
     </div>
     <div v-else>
       <div class="white rounded-lg mt-2" v-if="!this.$route.query.username">
+        <div class="col-12 col-md-4 ">
+          <v-text-field
+            v-model="search"
+            label="ค้นหาชื่อในสายงาน"
+            class="m-4"
+            outlined
+            dense
+            hide-details="auto"
+          ></v-text-field>
+        </div>
+
         <div class="rounded-lg white">
           <v-data-table
             hide-default-footer
+            :search="search"
             :options.sync="option"
             :headers="headerOnOff"
             :items="itemtypeaward"
@@ -34,7 +46,7 @@
               {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
             </template>
             <template #[`item.actions`]="{item}">
-              <v-btn class="btn_edit" rounded small @click="showdetial(item)"
+              <v-btn class="btn_edit white--text" rounded small @click="showdetial(item)"
                 ><v-icon left>mdi-pencil</v-icon> จัดการสถานะ</v-btn
               >
             </template>
@@ -105,6 +117,7 @@ export default {
   components: { CategoryByuser, LoadingPage },
   data() {
     return {
+      search: "",
       option: {},
       pageSizes: [5, 10, 15, 25],
       itemdetail: [],

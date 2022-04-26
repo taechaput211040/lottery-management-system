@@ -3,75 +3,96 @@
     <div class="mt-3">
       <filter-search @search="searchfunction"> </filter-search>
     </div>
-    <div class="white rounded-lg">
+    <div v-if="isLoading"><loading-page></loading-page></div>
+    <div v-else class="white rounded-lg">
       <div class="pa-3">
-        <h3>รายการแทง</h3>
-        <v-radio-group
-          v-model="selectgroup"
-          @change="renderbyselecttype"
-          hide-details="auto"
-          row
-        >
-          <v-radio label="ทั้งหมด" value="0"></v-radio>
-          <v-radio label="น้ำไหล" value="1"></v-radio>
-          <!-- <v-radio label="เพลา" value="2"></v-radio> -->
-        </v-radio-group>
+        <h3>รายงานกำไรขาดทุน</h3>
       </div>
-      <v-data-table
-        :headers="headerTable"
-        :items="datarender"
-        :items-per-page.sync="pagination.rowsPerPage"
-        :page.sync="pagination.page"
-        hide-default-footer
-        :options.sync="options"
-      >
-        <template #[`item.no`]="{index}">
-          {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
-        </template>
-        <template v-slot:no-data>
-          <v-alert
-            :value="true"
-            border="left"
-            color="blue-grey"
-            type="error"
-            icon="mdi-warning"
-          >
-            ไม่พบข้อมูล
-          </v-alert>
-        </template>
-        <template #[`item.payout`]="{item}">
-          {{ numberWithCommas(item.payout) }}
-        </template>
-        <template #[`item.winlose`]="{item}">
-          {{ numberWithCommas(item.winlose) }}
-        </template>
-        <template #[`item.turnover`]="{item}">
-          {{ numberWithCommas(item.turnover) }}</template
+      <div class="white rounded-lg ">
+        <v-btn
+          color="red back_btn"
+          class="ma-2"
+          v-show="showBackbtn()"
+          @click="backPrevpath()"
+          rounded
+          small
+          dark
+          ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
         >
-        <template #[`item.bet`]="{item}">
-          {{ numberWithCommas(item.bet) }}
-        </template>
-      </v-data-table>
-      <v-row align="baseline" class="ma-3 ">
-        <v-col cols="12" sm="2" lg="2" xl="1">
-          <v-select
-            outlined
-            hide-details="auto "
-            dense
-            v-model="pagination.rowsPerPage"
-            :items="pageSizes"
-            @change="handlePageSizeChange"
-            label="รายการต่อหน้า"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="10" lg="10">
-          <v-pagination
-            v-model="pagination.page"
-            :total-visible="7"
-            :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
-          ></v-pagination>
-        </v-col>
-      </v-row>
+        <v-data-table
+          :headers="headerTable"
+          :items="datarender"
+          :items-per-page.sync="pagination.rowsPerPage"
+          :page.sync="pagination.page"
+          hide-default-footer
+          :options.sync="options"
+        >
+          <template #[`item.no`]="{index}">
+            {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
+          </template>
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+              color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
+          <template #[`item.payout`]="{item}">
+            {{ numberWithCommas(item.payout) }}
+          </template>
+          <template #[`item.agent_name`]="{item}">
+            <v-tooltip bottom color="primary">
+              <template v-slot:activator="{ on, attrs }">
+                <div
+                  v-bind="attrs"
+                  v-on="on"
+                  class="primary--text font-weight-bold"
+                  style="cursor:pointer;"
+                  @click="handleClickUsername(item.agent_name)"
+                >
+                  {{ item.agent_name }}
+                </div></template
+              >
+              <span>คลิกเพื่อดูรายละเอียด</span>
+            </v-tooltip>
+          </template>
+          <template #[`item.winlose`]="{item}">
+            {{ numberWithCommas(item.winlose) }}
+          </template>
+          <template #[`item.turnover`]="{item}">
+            {{ numberWithCommas(item.turnover) }}</template
+          >
+          <template #[`item.bet`]="{item}">
+            {{ numberWithCommas(item.bet) }}
+          </template>
+        </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="2" xl="1">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="pagination.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChange"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="10">
+            <v-pagination
+              v-model="pagination.page"
+              :total-visible="7"
+              :length="
+                Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+              "
+            ></v-pagination>
+          </v-col>
+        </v-row>
+      </div>
     </div>
   </div>
 </template>
@@ -79,10 +100,13 @@
 <script>
 import { mapActions } from "vuex";
 import FilterSearch from "../../components/form/FilterSearch.vue";
+import LoadingPage from "../form/LoadingPage.vue";
 export default {
-  components: { FilterSearch },
+  components: { FilterSearch, LoadingPage },
   data() {
     return {
+      isLoading: false,
+      prevUser: null,
       options: {},
       type: undefined,
       datarender: [],
@@ -143,7 +167,8 @@ export default {
         page: 1,
         rowsPerPage: 10,
         rowsNumber: 0
-      }
+      },
+      agent_name: undefined
     };
   },
   watch: {
@@ -154,7 +179,21 @@ export default {
       deep: true
     }
   },
+  mounted() {
+    sessionStorage.removeItem("pathPrev");
+    sessionStorage.removeItem("userPrev");
+  },
   methods: {
+    showBackbtn() {
+      if (
+        !sessionStorage.getItem("userPrev") ||
+        JSON.parse(sessionStorage.getItem("userPrev")).length < 1
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     ...mapActions("report", ["getReportWinlose"]),
     async renderbyselecttype(value) {
       this.pagination.page = 1;
@@ -182,6 +221,7 @@ export default {
     getParameter() {
       let order = this.getOptionalOrder();
       let params = {
+        agent_name: this.agent_name ? this.agent_name : undefined,
         start_time: this.datefilter.startDate,
         end_time: this.datefilter.endDate,
         type_purchase: this.type,
@@ -198,6 +238,7 @@ export default {
       this.getReportdata();
     },
     searchfunction(value) {
+      this.isLoading = true;
       this.pagination.page = 1;
       this.datefilter = value;
       console.log(value);
@@ -211,8 +252,10 @@ export default {
         console.log(response);
         this.datarender = response.data;
         this.pagination.rowsNumber = response.pagination.total;
+        this.isLoading = false;
       } catch (error) {
         console.log(error);
+        this.isLoading = false;
       }
     },
     numberWithCommas(x) {
@@ -222,6 +265,35 @@ export default {
         .split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
+    },
+    handleClickUsername(user) {
+      this.isLoading = true;
+      this.agent_name = user;
+      console.log(user);
+      this.getReportdata();
+      if (!sessionStorage.getItem("userPrev")) {
+        let ArrayNull = [];
+        sessionStorage.setItem(`userPrev`, JSON.stringify(ArrayNull));
+      }
+      let form_path = JSON.parse(sessionStorage.getItem("userPrev"));
+      form_path.push({ username: user });
+      sessionStorage.setItem(`userPrev`, JSON.stringify(form_path));
+    },
+    backPrevpath() {
+      this.isLoading = true;
+      const form_path = JSON.parse(sessionStorage.getItem("userPrev"));
+      const prevUsers = form_path.slice(0, form_path.length - 1);
+      let userdata = prevUsers[prevUsers.length - 1];
+      if (userdata) {
+        this.agent_name = userdata.username;
+        this.getReportdata();
+      } else {
+        this.agent_name = undefined;
+        this.getReportdata();
+      }
+      console.log("form", form_path.length - 1);
+      console.log("prev", prevUsers.length);
+      sessionStorage.setItem("userPrev", JSON.stringify(prevUsers));
     }
   }
 };
