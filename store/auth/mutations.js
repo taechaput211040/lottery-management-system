@@ -1,8 +1,8 @@
 export function set_hash(state, payload) {
   sessionStorage.clear();
   localStorage.clear();
-  state.hash = payload.hash;
-  sessionStorage.setItem("hash", payload.hash);
+  state.hash = payload;
+  sessionStorage.setItem("hash", payload);
 }
 export function set_login(state, payload) {
   state.username = payload.username;

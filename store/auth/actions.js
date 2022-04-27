@@ -1,4 +1,21 @@
 //Lotto set hash//
+export async function loginWithMemberHash(context, token) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = token
+
+      // let response = await this.$axios.post(
+      //   `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/auth/user/hash`,
+      //   token
+      // );
+      // context.commit("set_hash", response.data.hash);
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+//Lotto set hash//
 export async function login(context, { username, password }) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -9,7 +26,7 @@ export async function login(context, { username, password }) {
           password
         }
       );
-      context.commit("set_hash", response.data);
+      context.commit("set_hash", response.data.hash);
       resolve(response);
     } catch (error) {
       reject(error);

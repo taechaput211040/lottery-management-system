@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2>หวยน้ำไหล / รายงานตัวเลขสูงสุด</h2>
+
     <div class="pa-1 rounded-lg white my-3 pa-2">
       <div class="row py-3">
         <div class="col-12 col-sm-6 col-md-3">
@@ -278,39 +279,43 @@ export default {
       },
       itemgraphshow: [
         {
-          name: "จำนวนเงิน",
-          data: [
-            { x: "asdasd", y: 40 },
-            { x: "asdasd", y: 12 },
-            { x: "asdasd", y: 10 },
-            { x: "asdasd", y: 50 }
-          ]
+          name: "ยอดเเทงจริง",
+          data: []
+        },
+        {
+          name: "ยอดเเทงจำลอง",
+          data: []
+        },
+        {
+          name: "ยอดเเทงรวม",
+          data: []
         }
       ],
       chartOptions: {
+        chart: {
+          type: "bar",
+          height: 350
+        },
         plotOptions: {
           bar: {
             horizontal: false,
-            columnWidth: "40%"
+            columnWidth: "55%",
+            endingShape: "rounded"
           }
         },
-        chart: {
-          height: 350,
-          type: "bar",
-          foreColor: "#999",
-          stacked: true
-        },
-        fill: {
-          type: "solid",
-          fillOpacity: 0.7
-        },
-
         dataLabels: {
           enabled: false
         },
-        colors: ["#00E396"],
         stroke: {
-          curve: "smooth"
+          curve: "smooth",
+          show: true,
+          width: 2,
+          colors: ["transparent"]
+        },
+
+        fill: {
+          type: "solid",
+          fillOpacity: 0.7
         }
       },
       itemRender: {
@@ -341,6 +346,14 @@ export default {
         {
           text: "จำนวนเงิน",
           value: "bet_amount",
+          align: "center",
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold",
+          sortable: false
+        },
+        {
+          text: "จำนวนเงินจำลอง",
+          value: "bet_fake",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
@@ -427,13 +440,23 @@ export default {
   methods: {
     async mapchart(item) {
       this.itemgraphshow[0].data = [];
+      this.itemgraphshow[1].data = [];
+      this.itemgraphshow[2].data = [];
       for (let i = 0; i < item.length; i++) {
         this.itemgraphshow[0].data.push({
+          x: `เลข ${item[i].lotto_number}`,
+          y: item[i].bet_amount
+        });
+        this.itemgraphshow[1].data.push({
+          x: `เลข ${item[i].lotto_number}`,
+          y: item[i].bet_fake
+        });
+        this.itemgraphshow[2].data.push({
           x: `เลข ${item[i].lotto_number}`,
           y: item[i].bet_amount + item[i].bet_fake
         });
       }
-      this.$refs.realtimeChart.updateSeries(this.itemgraphshow, false, true);
+      this.$refs.realtimeChart.updateSeries(this.itemgraphshow, true);
     },
     getWinloseAmount(item) {
       let outcomrateAmount = parseFloat(this.maximumIncomeAmount);
@@ -587,6 +610,9 @@ export default {
     ...mapActions("flexodd", ["getOutcomerate", "getPerflex"]),
 
     async selectTypelotto(value) {
+      this.selectTypeCategory = null;
+      this.toRound = null;
+      this.numberType = null;
       this.itemcategory = [];
       this.selectTypeCategory = "";
       try {
@@ -605,6 +631,7 @@ export default {
       }
     },
     async getNumberreport(value, type) {
+      this.numberType = null;
       let params = {
         program_id: value,
         type_purchase: type,
@@ -619,7 +646,8 @@ export default {
       }
     },
     async selectRound(value) {
-      this.toRound = "";
+      this.toRound = null;
+      this.numberType = null;
       let round;
       let params = {
         currentPage: 1,
@@ -670,7 +698,7 @@ export default {
         this.itemRender = response;
         this.maximumIncomeAmount = this.itemRender.sum.bet_amount;
         this.pagination.rowsNumber = this.itemRender.pagination.total;
-        this.mapchart(this.itemRender.data);
+        await this.mapchart(this.itemRender.data);
       } catch (error) {
         console.log(error);
       }
@@ -734,10 +762,14 @@ export default {
             icon: "success",
             title: "เเก้ไขเรียบร้อย",
             showConfirmButton: false,
-            timer: 1500
+            timer: 2000
+          }).then(result => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === this.$swal.DismissReason.timer) {
+              this.getFlexoddReport();
+            }
           });
           this.dledit = false;
-          await this.getFlexoddReport();
         } catch (error) {
           console.log("faile");
           console.log(error);

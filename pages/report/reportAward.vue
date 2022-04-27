@@ -37,9 +37,9 @@
         </div>
       </div>
 
-      <div class="white rounded-lg ">
+      <div class="white rounded-lg "  v-show="selectType != ''">
         <h3 class="pa-4">ผลรางวัล</h3>
-     
+
         <div class=" rounded-lg">
           <v-data-table
             :server-items-length="pagination.rowsNumber"
@@ -126,15 +126,16 @@
                 </div>
                 <div v-else>
                   <div
-                    class="font-weight-bold success--text"
-                    v-if="Array.isArray(JSON.parse(item.lotto_number)) === true"
+                    class="font-weight-bold success--text d-flex justify-center"
+                    v-if="Array.isArray(item.lotto_number) === true"
                   >
-                    <span
-                      v-for="(item, i) in JSON.parse(item.lotto_number)"
+                    <div
+                      v-for="(item, i) in item.lotto_number"
                       :key="i"
+                      class="mx-2"
                     >
-                      {{ item }}
-                    </span>
+                      {{ `${item}` }}
+                    </div>
                   </div>
                   <div v-else class="font-weight-bold success--text">
                     {{ item.lotto_number }}
