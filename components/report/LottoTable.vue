@@ -20,12 +20,11 @@
           ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
         >
         <v-data-table
+          class="elevation-1"
           :headers="headerTable"
-          :items="datarender"
-          :items-per-page.sync="pagination.rowsPerPage"
-          :page.sync="pagination.page"
+          :items="datarender.agents"
+          :options.sync="optionsRender"
           hide-default-footer
-          :options.sync="options"
         >
           <template #[`item.no`]="{index}">
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
@@ -70,28 +69,113 @@
             {{ numberWithCommas(item.bet) }}
           </template>
         </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
+        <v-row
+          align="baseline"
+          class="ma-3 "
+          v-if="(datarender.agents || []).length != 0"
+        >
           <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               outlined
               hide-details="auto "
               dense
-              v-model="pagination.rowsPerPage"
+              v-model="optionsRender.itemsPerPage"
               :items="pageSizes"
-              @change="handlePageSizeChange"
               label="รายการต่อหน้า"
             ></v-select>
           </v-col>
           <v-col cols="12" sm="10" lg="10">
             <v-pagination
-              v-model="pagination.page"
+              v-model="optionsRender.page"
               :total-visible="7"
               :length="
-                Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+                Math.ceil(datarender.agents.length / optionsRender.itemsPerPage)
               "
             ></v-pagination>
           </v-col>
         </v-row>
+
+        <div v-show="(datarender.members || []).length != 0">
+          <div class="mt-5 pa-3">
+            <h3>รายงานสมาชิก</h3>
+          </div>
+
+          <v-data-table
+            class="elevation-1"
+            :items-per-page.sync="pagination.rowsPerPage"
+            :server-items-length="pagination.rowsNumber"
+            :headers="memberTable"
+            :items="datarender.members"
+            :page.sync="pagination.page"
+            :options.sync="options"
+            hide-default-footer
+          >
+            <template #[`item.no`]="{index}">
+              {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
+            </template>
+            <template v-slot:no-data>
+              <v-alert
+                :value="true"
+                border="left"
+                color="blue-grey"
+                type="error"
+                icon="mdi-warning"
+              >
+                ไม่พบข้อมูล
+              </v-alert>
+            </template>
+            <template #[`item.member_username`]="{item}">
+              <div class="purple--text font-weight-bold">
+                {{ item.member_username }}
+              </div></template
+            >
+            <template #[`item.payout`]="{item}">
+              {{ numberWithCommas(item.payout) }}
+            </template>
+
+            <template #[`item.winlose`]="{item}">
+              {{ numberWithCommas(item.winlose) }}
+            </template>
+            <template #[`item.turnover`]="{item}">
+              {{ numberWithCommas(item.turnover) }}</template
+            >
+            <template #[`item.bet`]="{item}">
+              {{ numberWithCommas(item.bet) }}
+            </template>
+            <template #[`item.action`]="{item}">
+              <v-btn
+                color="black"
+                dark
+                small
+                rounded
+                @click="showBillDetail(item)"
+                ><v-icon left>mdi-clipboard-text</v-icon>ดูรายละเอียด
+              </v-btn>
+            </template>
+          </v-data-table>
+          <v-row align="baseline" class="ma-3 ">
+            <v-col cols="12" sm="2" lg="2" xl="1">
+              <v-select
+                outlined
+                hide-details="auto "
+                dense
+                v-model="pagination.rowsPerPage"
+                :items="pageSizes"
+                @change="handlePageSizeChange"
+                label="รายการต่อหน้า"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="10" lg="10">
+              <v-pagination
+                v-model="pagination.page"
+                :total-visible="7"
+                :length="
+                  Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+                "
+              ></v-pagination>
+            </v-col>
+          </v-row>
+        </div>
       </div>
     </div>
   </div>
@@ -105,6 +189,7 @@ export default {
   components: { FilterSearch, LoadingPage },
   data() {
     return {
+      optionsRender: {},
       isLoading: false,
       prevUser: null,
       options: {},
@@ -126,9 +211,9 @@ export default {
         {
           text: "Username",
           value: "agent_name",
-          align: "center",
+          align: "left",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold",
+          cellClass: "font-weight-bold text-left",
           width: "300px"
         },
         {
@@ -161,6 +246,61 @@ export default {
           sortable: false
         }
       ],
+      memberTable: [
+        {
+          text: "ลำดับ",
+          value: "no",
+          align: "center",
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold",
+          sortable: false,
+          width: "75px"
+        },
+        {
+          text: "Username",
+          value: "member_username",
+          align: "left",
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold text-left",
+          width: "300px"
+        },
+        {
+          text: "ยอด(บาท)",
+          value: "bet",
+          align: "center",
+          class: "font-weight-bold",
+          sortable: false
+        },
+        {
+          text: "Turnover(บาท)",
+          value: "turnover",
+          align: "center",
+          class: "font-weight-bold",
+          sortable: false
+        },
+        {
+          text: "Payout(บาท)",
+          value: "payout",
+          align: "center",
+          class: "font-weight-bold",
+          sortable: false
+        },
+
+        {
+          text: "ยอดได้เสีย(บาท)",
+          value: "winlose",
+          align: "center",
+          class: "font-weight-bold",
+          sortable: false
+        },
+        {
+          text: "ดูรายการแทง",
+          value: "action",
+          align: "center",
+          class: "font-weight-bold",
+          sortable: false
+        }
+      ],
       pagination: {
         sortBy: "desc",
         descending: false,
@@ -184,6 +324,9 @@ export default {
     sessionStorage.removeItem("userPrev");
   },
   methods: {
+    showBillDetail(item) {
+      this.$router.push(`${this.$route.fullPath}&memberid=${item.member_id}`);
+    },
     showBackbtn() {
       if (
         !sessionStorage.getItem("userPrev") ||
@@ -241,15 +384,15 @@ export default {
       this.isLoading = true;
       this.pagination.page = 1;
       this.datefilter = value;
-      console.log(value);
+
       this.getReportdata();
     },
     async getReportdata() {
       let params = this.getParameter();
-      console.log(params);
+
       try {
         let { data: response } = await this.getReportWinlose(params);
-        console.log(response);
+
         this.datarender = response.data;
         this.pagination.rowsNumber = response.pagination.total;
         this.isLoading = false;
@@ -267,9 +410,10 @@ export default {
       return parts.join(".");
     },
     handleClickUsername(user) {
+      this.$router.push(`?agentId=${user}`);
       this.isLoading = true;
       this.agent_name = user;
-      console.log(user);
+
       this.getReportdata();
       if (!sessionStorage.getItem("userPrev")) {
         let ArrayNull = [];
@@ -280,6 +424,7 @@ export default {
       sessionStorage.setItem(`userPrev`, JSON.stringify(form_path));
     },
     backPrevpath() {
+      this.$router.go(-1);
       this.isLoading = true;
       const form_path = JSON.parse(sessionStorage.getItem("userPrev"));
       const prevUsers = form_path.slice(0, form_path.length - 1);
@@ -291,8 +436,6 @@ export default {
         this.agent_name = undefined;
         this.getReportdata();
       }
-      console.log("form", form_path.length - 1);
-      console.log("prev", prevUsers.length);
       sessionStorage.setItem("userPrev", JSON.stringify(prevUsers));
     }
   }

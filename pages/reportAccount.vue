@@ -12,7 +12,7 @@
         color="red back_btn"
         class="ma-3"
         @click="backPrevpath()"
-        v-if="showBackbtn()"
+        v-show="showBackbtn()"
         rounded
         :loading="loading_btn"
         small
@@ -50,7 +50,7 @@
               @click="viewOther(item, 'viewAgent')"
               :disabled="item.level == 6"
             >
-              ดูรายการสมาชิกใน{{ item.position }}</v-btn
+              ดูรายชื่อใน {{ item.position }}</v-btn
             >
             <v-btn
               color="black white--text"
@@ -172,6 +172,8 @@ export default {
   components: { LoadingPage },
   data() {
     return {
+      Backbtn: false,
+      getPrevPath: [],
       loading_btn: false,
       optionsMember: {},
       memberRender: [],
@@ -180,7 +182,7 @@ export default {
       isLoading: false,
       pageSizes: [5, 10, 15, 25],
       options: {},
-      thisUser: "",
+      thisUser: this.$store.state.auth.username,
       currentUser: "",
       accountRendering: [],
       pagination: {
@@ -230,7 +232,6 @@ export default {
       ]
     };
   },
-  beforeCreate() {},
   async fetch() {
     sessionStorage.removeItem("pathPrev");
     sessionStorage.removeItem("userPrev");
@@ -252,11 +253,15 @@ export default {
       deep: true
     }
   },
+  async mounted() {
+    sessionStorage.removeItem("pathPrev");
+    sessionStorage.removeItem("userPrev");
+  },
   methods: {
     showBackbtn() {
       if (
-        !sessionStorage.getItem("userPrev") ||
-        JSON.parse(sessionStorage.getItem("userPrev")).length < 1
+        (!sessionStorage.getItem("userPrev") && this.thisUser == "") ||
+        this.thisUser == this.$store.state.auth.username
       ) {
         return false;
       } else {
@@ -364,6 +369,7 @@ export default {
         form_path.push({ username: this.thisUser });
         sessionStorage.setItem(`userPrev`, JSON.stringify(form_path));
       }
+      await this.showBackbtn();
     },
     headertable() {
       return this.headerAccount;
@@ -378,21 +384,10 @@ export default {
       } else {
         this.getMember(form_path[0]?.username);
       }
-      console.log("form", form_path.length - 1);
-      console.log("prev", prevUsers.length);
+
       sessionStorage.setItem("userPrev", JSON.stringify(prevUsers));
       this.loading_btn = false;
-    },
-     showBackbtn() {
-      if (
-        !sessionStorage.getItem("userPrev") ||
-        JSON.parse(sessionStorage.getItem("userPrev")).length <= 1
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    },
+    }
   }
 };
 </script>
