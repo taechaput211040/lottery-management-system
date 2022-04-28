@@ -665,9 +665,7 @@ export default {
         round = result[0].TypeCategoryId.data.sort(function(b, a) {
           return b.bet_lotto_time.localeCompare(a.bet_lotto_time);
         });
-        this.itemRound = round.filter(x => {
-          return x.status_calculate != true;
-        });
+        this.itemRound = round;
       } catch (error) {
         console.log(error);
         this.isLoading = false;
@@ -771,6 +769,13 @@ export default {
           });
           this.dledit = false;
         } catch (error) {
+          this.$swal({
+            icon: "warning",
+            title: "เพิ่มยอดเเทงจำลองไม่ได้เนื่องจากหวยออกผลเเล้ว",
+            showConfirmButton: false,
+            timer: 2000
+          });
+          this.dledit = false;
           console.log("faile");
           console.log(error);
         }
