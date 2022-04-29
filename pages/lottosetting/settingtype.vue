@@ -114,11 +114,11 @@
               v-model="updateform.self_flex"
               hide-details="auto"
             ></v-switch>
-            <!-- <v-switch
+            <v-switch
               label="เพลา"
               v-model="updateform.self_seller"
               hide-details="auto"
-            ></v-switch> -->
+            ></v-switch>
           </div>
 
           <v-card-actions class="justify-center">
@@ -169,9 +169,9 @@ export default {
           cellClass: "font-weight-bold"
         },
         { text: "น้ำไหล", value: "self_flex", align: "center" },
-        // { text: "เพลา", value: "self_seller", align: "center" },
+        { text: "เพลา", value: "self_seller", align: "center" },
         { text: "Upline น้ำไหล", value: "upline_flex_odd", align: "center" },
-        // { text: "Upline เพลา", value: "upline_seller", align: "center" },
+        { text: "Upline เพลา", value: "upline_seller", align: "center" },
         { text: "ดำเนินการ", value: "action", align: "center" }
       ]
     };

@@ -25,7 +25,7 @@
             >
               <v-radio label="ทั้งหมด" value="0"></v-radio>
               <v-radio label="น้ำไหล" value="1"></v-radio>
-              <!-- <v-radio label="เพลา" value="2"></v-radio> -->
+              <v-radio label="เพลา" value="2"></v-radio>
             </v-radio-group>
           </div>
         </div>
@@ -104,7 +104,7 @@
                 <span>ดูรายละเอียดโพยแทง</span>
               </v-tooltip>
               <!-- /*เพลา -->
-              <!-- <v-tooltip bottom color="warning" dark>
+              <v-tooltip bottom color="warning" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -122,9 +122,9 @@
                   </v-btn></template
                 >
                 <span>ดูรายละเอียดโพยรับของ</span>
-              </v-tooltip> -->
+              </v-tooltip>
 
-              <!-- <v-tooltip bottom color="error" dark>
+              <v-tooltip bottom color="error" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -141,7 +141,7 @@
                   </v-btn></template
                 >
                 <span>ยกเลิกโพย</span>
-              </v-tooltip> -->
+              </v-tooltip>
             </div>
           </template>
           <template #[`item.winlose`]="{item}">
@@ -560,7 +560,9 @@ export default {
         limit: this.pagination.rowsPerPage,
         search: this.searchInput,
         sort:
-          order == 'date=DESC' ? 'date=DESC' : `${order.sortBy}=${order.sortDesc}`
+          order == "date=DESC"
+            ? "date=DESC"
+            : `${order.sortBy}=${order.sortDesc}`
       };
       return params;
     },

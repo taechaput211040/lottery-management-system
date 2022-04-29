@@ -349,3 +349,34 @@ export async function betFake({ commit }, body) {
     }
   });
 }
+
+export async function getRoundBymemberid(
+  { commit },
+  params = {
+    agent_id: undefined,
+    member_id: undefined,
+    start_time: undefined,
+    end_time: undefined,
+    page: undefined,
+    limit: undefined,
+    sort: undefined
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Round/${params.agent_id}/${params.member_id}/${params.start_time}/${params.end_time}`,
+        {
+          params: {
+            page: params.page,
+            limit: params.limit,
+            sort: params.sort
+          }
+        }
+      );
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

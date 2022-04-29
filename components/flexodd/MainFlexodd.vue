@@ -187,6 +187,10 @@
           <template #[`item.minimum_bet_prize`]="{item}">
             {{ numberWithCommas(item.minimum_bet_prize) }}
           </template>
+          <template #[`item.minimum_out_come_rate`]="{item}">
+            {{ numberWithCommas(item.minimum_out_come_rate) }}
+          </template>
+
           <template #[`item.maximum_bet_prize`]="{item}">
             {{ numberWithCommas(item.maximum_bet_prize) }}
           </template>
@@ -317,7 +321,14 @@ export default {
           align: "center"
         },
         {
-          text: "อัตราจ่าย",
+          text: "อัตราจ่ายต่ำสุด",
+          value: "minimum_out_come_rate",
+          class: "font-weight-bold",
+          align: "center"
+        },
+
+        {
+          text: "อัตราจ่ายสูงสุด",
           value: "maximum_out_come_rate",
           class: "font-weight-bold",
           align: "center"
@@ -328,6 +339,7 @@ export default {
           class: "font-weight-bold",
           align: "center"
         },
+
         {
           text: "แทงสูงสุด",
           value: "maximum_bet_prize",

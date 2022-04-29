@@ -72,6 +72,7 @@
         </div>
       </div>
     </div>
+
     <div v-if="numberType != null">
       <div class="pa-1 rounded-lg white my-3 pa-2">
         <div class="text-center py-3">
@@ -94,7 +95,7 @@
       <v-dialog v-model="dledit" max-width="300px" persistent>
         <v-form v-model="valid" ref="formconfig"
           ><v-card class="pa-2">
-            <v-card-title><h3>เพิ่มข้อมูลจำลอง</h3></v-card-title>
+            <v-card-title><h3>เพิ่มยอดข้อมูลจำลอง</h3></v-card-title>
             <div class="pa-2 rounded-lg elevation-2 white">
               <v-text-field
                 label="หมายเลข"
@@ -110,6 +111,7 @@
                 placeholder="กรอกอัตราจ่ายจำลอง"
                 dense
                 :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
+                @keypress="e => checkpositive(e)"
                 type="number"
                 class="my-2"
                 hide-details="auto"
@@ -162,6 +164,17 @@
               :value="this.payoutrate.maximum_out_come_rate || 0"
             ></v-text-field>
           </div>
+
+          <div class="col-12 ">
+            <v-btn
+              color="purple"
+              class="font-weight-bold"
+              rounded
+              dark
+              @click="createFakenumber()"
+              ><v-icon left>mdi-plus</v-icon>เพิ่มข้อมูลตัวเลขจำลอง</v-btn
+            >
+          </div>
         </div>
         <v-data-table
           :headers="headerReport"
@@ -176,6 +189,7 @@
             {{ numberWithCommas(item.bet_amount + item.bet_fake) }}
           </template>
           <!-- อัตราจ่าย -->
+          
           <template #[`item.payrate`]="{item}">
             {{ numberWithCommas(calPayrate(item)) }}
           </template>
@@ -222,6 +236,59 @@
           </v-col>
         </v-row>
       </div>
+      <v-dialog v-model="dlCreate" max-width="300px" persistent>
+        <v-form v-model="validCreate" ref="formCreate"
+          ><v-card class="pa-2">
+            <v-card-title><h3>เพิ่มข้อมูลตัวเลขจำลอง</h3></v-card-title>
+            <div class="pa-2 rounded-lg elevation-2 white">
+              <v-text-field
+                label="หมายเลข"
+                dense
+                type="number"
+                @keypress="e => checkpositive(e)"
+                :rules="[
+                  v => !!v || `กรุณากรอกตัวเลขให้ถูกต้อง`,
+                  v =>
+                    (v &&
+                      v.length >=
+                        parseInt(payoutrate.lottonumbertype_number)) ||
+                    `กรุณากรอกตัวเลขให้ถุกต้องจำนวน ${payoutrate.lottonumbertype_number} ตัว`
+                ]"
+                @keydown="
+                  e =>
+                    rangeInput(
+                      e,
+                      parseInt(payoutrate.lottonumbertype_number),
+                      formCreate.lotto_number
+                    )
+                "
+                outlined
+                :counter="parseInt(payoutrate.lottonumbertype_number)"
+                v-model="formCreate.lotto_number"
+                hide-details="auto"
+              ></v-text-field>
+              <v-text-field
+                label="ยอดอัตราจ่ายจำลอง"
+                outlined
+                placeholder="กรอกอัตราจ่ายจำลอง"
+                dense
+                :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
+                @keypress="e => checkpositive(e)"
+                type="number"
+                class="my-2"
+                hide-details="auto"
+                v-model="formCreate.fakeValue"
+              ></v-text-field>
+            </div>
+            <v-card-actions class="justify-center">
+              <v-btn color="success" @click="submitCreate()">เพิ่ม</v-btn>
+              <v-btn color="error" @click="closeCreate()"
+                >ปิด</v-btn
+              ></v-card-actions
+            >
+          </v-card></v-form
+        >
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -260,6 +327,9 @@ export default {
   },
   data() {
     return {
+      validCreate: false,
+      dlCreate: false,
+      formCreate: {},
       valid: false,
       formEdit: {},
       dledit: false,
@@ -438,6 +508,15 @@ export default {
     }
   },
   methods: {
+    createFakenumber() {
+      this.dlCreate = true;
+    },
+    closeCreate() {
+      this.$refs.formCreate.resetValidation();
+      this.$refs.formCreate.reset();
+
+      this.dlCreate = false;
+    },
     async mapchart(item) {
       this.itemgraphshow[0].data = [];
       this.itemgraphshow[1].data = [];
@@ -672,6 +751,19 @@ export default {
       }
       this.getOutcome();
     },
+    checkpositive(evt) {
+      evt = evt ? evt : window.event;
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
     getParameter() {
       let params = {
         program_id: this.toRound,
@@ -728,6 +820,14 @@ export default {
       this.$refs.formconfig.reset();
       this.$refs.formconfig.resetValidation();
     },
+    rangeInput(self, length, itemmodel) {
+      // console.log(itemmodel);
+      if (itemmodel == undefined) {
+        itemmodel = "";
+      } else if (/[0-9]/g.test(self.key) && itemmodel.length >= length) {
+        self.preventDefault();
+      }
+    },
     checkpositive(evt) {
       evt = evt ? evt : window.event;
       let charCode = evt.which ? evt.which : evt.keyCode;
@@ -739,6 +839,49 @@ export default {
         evt.preventDefault();
       } else {
         return true;
+      }
+    },
+    async submitCreate() {
+      let body = {
+        program_id: this.toRound,
+        typecategory_id: this.selectTypeCategory,
+        lottonumbertype_id: this.numberType,
+        bet_details: [
+          {
+            lotto_number: this.formCreate.lotto_number,
+            bet: this.formCreate.fakeValue
+          }
+        ]
+      };
+      if (this.$refs.formCreate.validate()) {
+        try {
+          await this.betFake(body);
+          this.$swal({
+            icon: "success",
+            title: "เพิ่มข้อมูลตัวเลขจำลองเรียบร้อย",
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            timer: 2000
+          }).then(result => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === this.$swal.DismissReason.timer) {
+              this.getFlexoddReport();
+            }
+          });
+          this.closeCreate();
+        } catch (error) {
+          this.$swal({
+            icon: "warning",
+            title: "เพิ่มยอดเเทงจำลองไม่ได้เนื่องจากหวยออกผลเเล้ว",
+            showConfirmButton: false,
+            timer: 2000
+          });
+          this.closeCreate();
+          console.log("faile");
+          console.log(error);
+        }
+      } else {
+        this.$swal("กรุณากรอกข้อมูลให้ครบถ้วน", "", "warning");
       }
     },
     async submitConfig() {
@@ -759,6 +902,7 @@ export default {
           this.$swal({
             icon: "success",
             title: "เเก้ไขเรียบร้อย",
+            allowOutsideClick: false,
             showConfirmButton: false,
             timer: 2000
           }).then(result => {

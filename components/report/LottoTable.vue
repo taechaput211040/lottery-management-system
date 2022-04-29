@@ -51,7 +51,7 @@
                   v-on="on"
                   class="primary--text font-weight-bold"
                   style="cursor:pointer;"
-                  @click="handleClickUsername(item.agent_name)"
+                  @click="handleClickUsername(item.agent_name, item)"
                 >
                   {{ item.agent_name }}
                 </div></template
@@ -95,7 +95,11 @@
           </v-col>
         </v-row>
 
-        <div v-show="(datarender.members || []).length != 0">
+        <div
+          v-show="
+            (datarender.members || []).length != 0 && !$route.query.memberid
+          "
+        >
           <div class="mt-5 pa-3">
             <h3>รายงานสมาชิก</h3>
           </div>
@@ -176,6 +180,22 @@
             </v-col>
           </v-row>
         </div>
+
+        <div
+          class="white rounded-lg"
+          v-if="$route.query.agentId && $route.query.memberid"
+        >
+          <v-btn
+            color="red back_btn"
+            class="ma-2"
+            @click="backTomember()"
+            rounded
+            small
+            dark
+            ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
+          >
+          <round-table :datefilter="datefilter"></round-table>
+        </div>
       </div>
     </div>
   </div>
@@ -185,8 +205,9 @@
 import { mapActions } from "vuex";
 import FilterSearch from "../../components/form/FilterSearch.vue";
 import LoadingPage from "../form/LoadingPage.vue";
+import RoundTable from "./RoundTable.vue";
 export default {
-  components: { FilterSearch, LoadingPage },
+  components: { FilterSearch, LoadingPage, RoundTable },
   data() {
     return {
       optionsRender: {},
@@ -409,8 +430,11 @@ export default {
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
     },
-    handleClickUsername(user) {
-      this.$router.push(`?agentId=${user}`);
+    handleClickUsername(user, item) {
+      console.log(item, "item");
+      if (item.agent_id) {
+        this.$router.push(`?agentId=${item.agent_id}`);
+      }
       this.isLoading = true;
       this.agent_name = user;
 
@@ -424,7 +448,9 @@ export default {
       sessionStorage.setItem(`userPrev`, JSON.stringify(form_path));
     },
     backPrevpath() {
-      this.$router.go(-1);
+      this.$router.push({
+        query: { agentId: `${this.$route.query.agentId}`, memberid: undefined }
+      });
       this.isLoading = true;
       const form_path = JSON.parse(sessionStorage.getItem("userPrev"));
       const prevUsers = form_path.slice(0, form_path.length - 1);
@@ -437,6 +463,11 @@ export default {
         this.getReportdata();
       }
       sessionStorage.setItem("userPrev", JSON.stringify(prevUsers));
+    },
+    backTomember() {
+      this.$router.push({
+        query: { agentId: `${this.$route.query.agentId}`, memberid: undefined }
+      });
     }
   }
 };

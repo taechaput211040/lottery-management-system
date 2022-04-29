@@ -195,24 +195,24 @@ export default {
                 to: "/report/betReport",
                 status: true
               },
-              // {
-              //   icon: "mdi-numeric",
-              //   text: "รายงานตัวเลข",
-              //   to: "/report/reportnumber",
-              //   status: true
-              // },
+              {
+                icon: "mdi-numeric",
+                text: "รายงานตัวเลข",
+                to: "/report/reportnumber",
+                status: true
+              },
               {
                 icon: "mdi-file-table-box-outline",
                 text: "รายงานน้ำไหล ปัจจุบัน",
                 to: "/report/reportFlexodd",
                 status: true
               },
-              // {
-              //   icon: "mdi-currency-usd",
-              //   text: "รายงานส่วนต่างอัตราจ่าย",
-              //   to: "/report/reportOutcomerate",
-              //   status: true
-              // }
+              {
+                icon: "mdi-currency-usd",
+                text: "รายงานส่วนต่างอัตราจ่าย",
+                to: "/report/reportOutcomerate",
+                status: true
+              }
             ]
           },
           {
@@ -254,12 +254,12 @@ export default {
               }
             ]
           },
-          // {
-          //   title: "เพลา",
-          //   to: "/pay_rate/rate",
-          //   icon: "mdi-tune-variant",
-          //   status: true
-          // },
+          {
+            title: "เพลา",
+            to: "/pay_rate/rate",
+            icon: "mdi-tune-variant",
+            status: true
+          },
           {
             title: "น้ำไหล",
             to: "/flexodd",
@@ -318,12 +318,12 @@ export default {
               to: "/report/betReport",
               status: true
             },
-            // {
-            //   icon: "mdi-numeric",
-            //   text: "รายงานตัวเลข",
-            //   to: "/report/reportnumber",
-            //   status: true
-            // },
+            {
+              icon: "mdi-numeric",
+              text: "รายงานตัวเลข",
+              to: "/report/reportnumber",
+              status: true
+            },
             {
               icon: "mdi-file-table-box-outline",
               text: "รายงานน้ำไหล ปัจจุบัน",
@@ -397,12 +397,12 @@ export default {
             }
           ]
         },
-        // {
-        //   title: "เพลา",
-        //   to: "/pay_rate/rate",
-        //   icon: "mdi-tune-variant",
-        //   status: true
-        // },
+        {
+          title: "เพลา",
+          to: "/pay_rate/rate",
+          icon: "mdi-tune-variant",
+          status: true
+        },
         {
           title: "น้ำไหล",
           to: "/flexodd",
