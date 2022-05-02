@@ -26,7 +26,7 @@
                 <v-icon>mdi-magnify</v-icon>ค้นหา</v-btn
               ><v-spacer></v-spacer
               ><v-btn color="primary" rounded dark @click="modal_add = true">
-                <v-icon>mdi-plus</v-icon>add</v-btn
+                <v-icon>mdi-plus</v-icon>เพิ่ม</v-btn
               >
             </v-row>
             <v-card class="mx-auto mt-5 justify-center classtable">
