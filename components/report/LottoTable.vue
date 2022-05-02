@@ -342,11 +342,23 @@ export default {
   },
   mounted() {
     sessionStorage.removeItem("pathPrev");
+
     sessionStorage.removeItem("userPrev");
   },
   methods: {
+    setRouter() {
+      if (!this.$route.query.agentId) {
+        this.$router.push(
+          `${this.$route.fullPath}?agentId=${this.datarender.current.agent_id}`
+        );
+      }
+    },
     showBillDetail(item) {
-      this.$router.push(`${this.$route.fullPath}&memberid=${item.member_id}`);
+      if (this.$route.query.agentId) {
+        this.$router.push(`${this.$route.fullPath}&memberid=${item.member_id}`);
+      } else {
+        this.$router.push(`${this.$route.fullPath}?memberid=${item.member_id}`);
+      }
     },
     showBackbtn() {
       if (
@@ -421,6 +433,7 @@ export default {
         console.log(error);
         this.isLoading = false;
       }
+      await this.setRouter();
     },
     numberWithCommas(x) {
       var parts = parseInt(x)
@@ -448,9 +461,17 @@ export default {
       sessionStorage.setItem(`userPrev`, JSON.stringify(form_path));
     },
     backPrevpath() {
-      this.$router.push({
-        query: { agentId: `${this.$route.query.agentId}`, memberid: undefined }
-      });
+      if (this.$store.state.auth.level >= 3) {
+        this.$router.go(-1);
+      } else {
+        this.$router.push({
+          query: {
+            agentId: `${this.$route.query.agentId}`,
+            memberid: undefined
+          }
+        });
+      }
+
       this.isLoading = true;
       const form_path = JSON.parse(sessionStorage.getItem("userPrev"));
       const prevUsers = form_path.slice(0, form_path.length - 1);

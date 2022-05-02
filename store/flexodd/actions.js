@@ -95,3 +95,32 @@ export async function getPerflex({ commit }) {
     }
   });
 }
+
+export async function getMaxLoss({ commit }) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `https://sm-lotto.com/v1alpha/lotto/setting/api/setting_type/get_max_profit_lost`
+      );
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export async function configMaxLoss({ commit }, payload) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.patch(
+        `https://sm-lotto.com/v1alpha/lotto/setting/api/setting_type/update_max_profit_lost`,
+        {
+          max_profit_lost: payload
+        }
+      );
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

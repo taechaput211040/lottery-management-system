@@ -45,44 +45,71 @@
               ตั้งค่ากำไรและอัตราน้ำไหล
             </div>
             <v-divider></v-divider>
-            <v-form
-              ><div class="row pa-2">
-                <div class="col-6">
-                  กำไรขั้นต่ำ(%)
-                  <v-text-field
-                    dense
-                    v-model.number="formset.profit"
-                    hide-details="auto"
-                    @keypress="e => checkpositive(e)"
-                    class="mb-2"
-                    type="number"
-                    :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
-                    outlined
-                    required
-                    placeholder="กรอกกำไรขั้นต่ำ"
-                  ></v-text-field>
-                </div>
-                <div class="col-6">
-                  อัตราน้ำไหลขั้นต่ำ(%)
-                  <v-text-field
-                    dense
-                    type="number"
-                    v-model.number="formset.flexodd"
-                    @keypress="e => checkpositive(e)"
-                    placeholder="กรอกอัตราน้ำไหลขั้นต่ำ"
-                    outlined
-                    hide-details="auto"
-                    required
-                    :rules="[v => !!v || 'กรุณากรอกอัตราน้ำไหลขั้นต่ำ']"
-                  ></v-text-field>
-                </div>
-                <div class="text-right col-12 pb-3">
-                  <v-btn color="success" @click="setprofit(formset)"
-                    >บันทึก</v-btn
-                  >
-                </div>
+            <div class="row pa-2">
+              <div class="col-12 col-sm-6   ">
+                <v-form ref="formProfit">
+                  <div class="col-12 pa-0">
+                    กำไรขั้นต่ำ(%)
+                    <v-text-field
+                      dense
+                      v-model.number="formset.profit"
+                      hide-details="auto"
+                      @keypress="e => checkpositive(e)"
+                      class="mb-2"
+                      type="number"
+                      :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
+                      outlined
+                      required
+                      placeholder="กรอกกำไรขั้นต่ำ"
+                    ></v-text-field>
+                  </div>
+                  <div class="col-12 pa-0">
+                    อัตราน้ำไหลขั้นต่ำ(%)
+                    <v-text-field
+                      dense
+                      type="number"
+                      v-model.number="formset.flexodd"
+                      @keypress="e => checkpositive(e)"
+                      placeholder="กรอกอัตราน้ำไหลขั้นต่ำ"
+                      outlined
+                      hide-details="auto"
+                      required
+                      :rules="[v => !!v || 'กรุณากรอกอัตราน้ำไหลขั้นต่ำ']"
+                    ></v-text-field>
+                  </div>
+                  <div class="text-right col-12 pb-3">
+                    <v-btn color="success" @click="setprofit(formset)"
+                      >บันทึก</v-btn
+                    >
+                  </div>
+                </v-form>
               </div>
-            </v-form>
+              <v-divider vertical inset></v-divider>
+              <div class="col-12 col-sm-6   ">
+                <v-form ref="formMax_profit_lost">
+                  <div class="col-12 pa-0">
+                    ยอดขาดทุนสูงสุด(%)
+                    <v-text-field
+                      dense
+                      v-model.number="max_profit_lost"
+                      hide-details="auto"
+                      @keypress="e => checkpositive(e)"
+                      class="mb-2"
+                      type="number"
+                      :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
+                      outlined
+                      required
+                      placeholder="กรอกกำไรขั้นต่ำ"
+                    ></v-text-field>
+                  </div>
+                  <div class="text-right col-12 pb-3">
+                    <v-btn color="success" @click="setprofitLoss()"
+                      >บันทึก</v-btn
+                    >
+                  </div></v-form
+                >
+              </div>
+            </div>
           </div>
         </v-col>
       </v-row>
@@ -220,7 +247,7 @@
       </div>
     </div>
 
-    <v-dialog max-width="400px" v-model="dlupdate">
+    <v-dialog max-width="400px" v-model="dlupdate" persistent>
       <v-form ref="edtform">
         <v-card class="pa-3">
           <v-card-title primary-title class="justify-center font-weight-bold">
@@ -238,12 +265,35 @@
             ></v-text-field>
             <v-text-field
               outlined
+              label="อัตราจ่ายต่ำสุด"
+              dense
+              :rules="[
+                v => !!v || 'กรุณากรอกอัตราจ่ายต่ำสุด',
+                v =>
+                  (v && v <= formupdate.maximum_out_come_rate) ||
+                  'กรุณากรอกอัตราจ่ายต่ำสุดน้อยกว่าอัตราจ่ายสูงสุด'
+              ]"
+              type="number"
+              class="my-2"
+              placeholder="กรุณากรอกอัตราจ่ายต่ำสุด"
+              @keypress="e => checkpositive(e)"
+              hide-details="auto"
+              v-model.number="formupdate.minimum_out_come_rate"
+            ></v-text-field>
+            <v-text-field
+              outlined
               label="อัตราจ่ายสูงสุด"
               dense
               type="number"
               class="my-2"
               placeholder="กรุณากรอกอัตราการจ่ายสูงสุด"
               @keypress="e => checkpositive(e)"
+              :rules="[
+                v => !!v || 'กรุณากรอกอัตราจ่ายสูงสุด',
+                v =>
+                  (v && v >= formupdate.minimum_out_come_rate) ||
+                  'กรุณากรอกอัตราจ่ายสูงสุดให้มากกว่าอัตราจ่ายต่ำสุด'
+              ]"
               hide-details="auto"
               v-model.number="formupdate.maximum_out_come_rate"
             ></v-text-field>
@@ -253,6 +303,12 @@
               type="number"
               @keypress="e => checkpositive(e)"
               placeholder="กรุณากรอกยอดแทงต่ำสุด"
+              :rules="[
+                v => !!v || 'กรุณากรอกยอดแทงต่ำสุด',
+                v =>
+                  (v && v <= formupdate.maximum_bet_prize) ||
+                  'กรุณากรอกยอดแทงต่ำสุดให้น้อยกว่ายอดแทงสูงสุด'
+              ]"
               dense
               class="my-2"
               hide-details="auto"
@@ -265,6 +321,12 @@
               label="แทงสูงสุด"
               class="my-2"
               type="number"
+              :rules="[
+                v => !!v || 'กรุณากรอกยอดแทงต่ำสุด',
+                v =>
+                  (v && v >= formupdate.minimum_bet_prize) ||
+                  'กรุณากรอกยอดเเทงสูงสุดให้มากกว่ายอดแทงต่ำสุด'
+              ]"
               dense
               hide-details="auto"
               v-model.number="formupdate.maximum_bet_prize"
@@ -303,6 +365,7 @@ export default {
         profit: 0,
         flexodd: 0
       },
+      max_profit_lost: 0,
       adddl: false,
       dlupdate: false,
       formupdate: {},
@@ -404,6 +467,7 @@ export default {
       this.listtype = this.$store.state.lottosetting.lottotype;
       this.isLoading = false;
       this.getPercent();
+      this.getPerMaxloss();
     } catch (error) {
       console.log(error);
       this.isLoading = false;
@@ -417,36 +481,90 @@ export default {
       "getOutcomerateUplined",
       "updateFlexOutcomerate",
       "setflexoddProfit",
-      "getPerflex"
+      "getPerflex",
+      "getMaxLoss",
+      "configMaxLoss"
     ]),
+    async getPerMaxloss() {
+      try {
+        let { data: perMaxlsoe } = await this.getMaxLoss();
+        this.max_profit_lost = perMaxlsoe.max_profit_lost;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     getDetail(id) {
       this.$router.push(`${this.$route.path}?id=${id}`);
     },
     async setprofit() {
-      try {
+      if (this.$refs.formProfit.validate()) {
+        try {
+          this.$swal({
+            title: "ตั้งค่ากำไรขั้นต่ำและอัตราน้ำไหลขั้นต่ำ?",
+            icon: "primary",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "ตั้งค่า",
+            cancelButtonText: "ยกเลิก"
+          }).then(async result => {
+            if (result.isConfirmed) {
+              await this.setflexoddProfit(this.formset);
+              this.$swal({
+                icon: "success",
+                title: "ตั้งค่าเรียบร้อย",
+                showConfirmButton: false,
+                timer: 1500
+              });
+              this.getPercent();
+            }
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
         this.$swal({
-          title: "ตั้งค่ากำไรขั้นต่ำและอัตราน้ำไหลขั้นต่ำ?",
-          icon: "primary",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "ตั้งค่า",
-          cancelButtonText: "ยกเลิก"
-        }).then(async result => {
-          if (result.isConfirmed) {
-            await this.setflexoddProfit(this.formset);
-            this.$swal({
-              icon: "success",
-              title: "ตั้งค่าเรียบร้อย",
-              showConfirmButton: false,
-              timer: 1500
-            });
-            this.getPercent();
-          } else {
-          }
+          icon: "warning",
+          title: "กรุณากรอกข้อมูลให้ครบ",
+          showConfirmButton: false,
+          timer: 1500
         });
-      } catch (error) {
-        console.log(error);
+      }
+    },
+    async setprofitLoss() {
+      let body = this.max_profit_lost;
+      if (this.$refs.formMax_profit_lost.validate()) {
+        try {
+          this.$swal({
+            title: "ตั้งค่ายอดขาดทุนสูงสุด?",
+            icon: "primary",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "ตั้งค่า",
+            cancelButtonText: "ยกเลิก"
+          }).then(async result => {
+            if (result.isConfirmed) {
+              await this.configMaxLoss(body);
+              this.$swal({
+                icon: "success",
+                title: "ตั้งค่าเรียบร้อย",
+                showConfirmButton: false,
+                timer: 1500
+              });
+              this.getPerMaxloss();
+            }
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        this.$swal({
+          icon: "warning",
+          title: "กรุณากรอกข้อมูลให้ครบ",
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
     },
     async selectCatebytype() {
@@ -507,26 +625,37 @@ export default {
       }
     },
     async submitEdit(item) {
-      item = JSON.parse(JSON.stringify(item));
-      console.log(item);
       this.loading_btn = true;
-      try {
-        let body = {
-          typecategory_id: this.selectCate,
-          lotto_numbertype: [
-            {
-              lottonumbertype_id: item.lottonumbertype_id,
-              maximum_out_come_rate: item.maximum_out_come_rate,
-              minimum_bet_prize: item.minimum_bet_prize,
-              maximum_bet_prize: item.maximum_bet_prize
-            }
-          ]
-        };
-        await this.updateFlexOutcomerate(body);
-        this.loading_btn = false;
-        this.dlupdate = false;
-        await this.selectFlexodd(this.selectCate);
-      } catch (error) {
+      item = JSON.parse(JSON.stringify(item));
+      if (this.$refs.edtform.validate()) {
+        try {
+          let body = {
+            typecategory_id: this.selectCate,
+            lotto_numbertype: [
+              {
+                lottonumbertype_id: item.lottonumbertype_id,
+                minimum_out_come_rate: item.minimum_out_come_rate,
+                maximum_out_come_rate: item.maximum_out_come_rate,
+                minimum_bet_prize: item.minimum_bet_prize,
+                maximum_bet_prize: item.maximum_bet_prize
+              }
+            ]
+          };
+          await this.updateFlexOutcomerate(body);
+          this.loading_btn = false;
+          this.dlupdate = false;
+          await this.selectFlexodd(this.selectCate);
+        } catch (error) {
+          this.$swal({
+            icon: "error",
+            title: `กรุณากรอกข้อมูลให้ถูกต้องและครบถ้วน`,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.loading_btn = false;
+          this.dlupdate = false;
+        }
+      } else {
         this.$swal({
           icon: "error",
           title: `กรุณากรอกข้อมูลให้ถูกต้องและครบถ้วน`,
@@ -534,7 +663,6 @@ export default {
           timer: 1500
         });
         this.loading_btn = false;
-        this.dlupdate = false;
       }
     },
     numberWithCommas(x) {

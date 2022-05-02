@@ -46,18 +46,8 @@
                   no-title
                   scrollable
                   locale="th"
+                  @input="$refs.menu.save(filter.startDate)"
                 >
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="menu = false">
-                    ยกเลิก
-                  </v-btn>
-                  <v-btn
-                    text
-                    color="primary"
-                    @click="$refs.menu.save(filter.startDate)"
-                  >
-                    ยืนยัน
-                  </v-btn>
                 </v-date-picker>
               </v-menu>
               <!-- <el-date-picker
@@ -97,18 +87,8 @@
                   scrollable
                   :min="filter.startDate"
                   locale="th"
+                  @input="$refs.menu2.save(filter.endDate)"
                 >
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="menu2 = false">
-                    ยกเลิก
-                  </v-btn>
-                  <v-btn
-                    text
-                    color="primary"
-                    @click="$refs.menu2.save(filter.endDate)"
-                  >
-                    ยืนยัน
-                  </v-btn>
                 </v-date-picker>
               </v-menu>
             </div>
