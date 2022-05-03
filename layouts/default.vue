@@ -161,8 +161,35 @@ export default {
   },
   computed: {
     menurender() {
-      if (this.$store.state.auth.role === "LOTTO") {
+      if (
+        this.$store.state.auth.role === "LOTTO" &&
+        this.$store.state.auth.rule != "PRIZE"
+      ) {
         return this.items;
+      } else if (this.$store.state.auth.rule === "PRIZE") {
+        let menu = [
+          {
+            title: "คำนวณผลรางวัล",
+            to: "/award",
+            icon: "mdi-certificate",
+            status: true
+          },
+          {
+            title: "ตั้งค่า",
+            to: "/company",
+            icon: "mdi-cog",
+            status: true,
+            subLinks: [
+              {
+                icon: "mdi-timer-outline",
+                text: "รอบหวย",
+                to: "/setting/lottoSchedule",
+                status: true
+              }
+            ]
+          }
+        ];
+        return menu;
       } else {
         let menu = [
           {

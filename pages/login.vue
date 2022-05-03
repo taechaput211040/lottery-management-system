@@ -99,6 +99,7 @@ export default {
             localStorage.setItem("username", datatoken.username);
             localStorage.setItem("token", datatoken.token);
             localStorage.setItem("role", datatoken.position);
+            localStorage.setItem("rule", datatoken.rule);
           }
           this.$router.push("/");
         }

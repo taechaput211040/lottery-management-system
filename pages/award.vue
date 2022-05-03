@@ -67,10 +67,10 @@
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
           <template #[`item.save`]="{item}">
-            <!-- :disabled="item.status_calculate == true" -->
             <v-btn
               color="black"
               text
+              :disabled="item.status_calculate == true"
               outlined
               small
               rounded
@@ -80,13 +80,14 @@
           </template>
           <template #[`item.calculate`]="{item}">
             <!-- เงื่อนไข -->
-            <!-- :disabled="
-                item.status_lotto == false || item.status_calculate == true
-              " -->
+
             <v-btn
               color="black"
               text
               outlined
+              :disabled="
+                item.status_lotto == false || item.status_calculate == true
+              "
               small
               rounded
               @click="openDlupdate(item, 'calculate')"
@@ -315,7 +316,7 @@ import FilterSearch from "../components/form/FilterSearch.vue";
 import LoadingPage from "../components/form/LoadingPage.vue";
 export default {
   components: { FilterSearch, LoadingPage },
-
+  computed: {},
   data() {
     return {
       loading_btn: false,
@@ -413,7 +414,10 @@ export default {
   computed: {
     setheader() {
       let headerender = this.header;
-      if (this.$store.state.auth.role != "LOTTO") {
+      if (
+        this.$store.state.auth.role != "LOTTO" &&
+        this.$store.state.auth.rule != "PRIZE"
+      ) {
         headerender = [
           {
             text: "No.",
@@ -465,6 +469,65 @@ export default {
           }
         ];
         return headerender;
+      } else if (this.$store.state.auth.rule === "PRIZE") {
+        headerender = [
+          {
+            text: "No.",
+            value: "no",
+            class: "font-weight-bold",
+            cellClass: "font-weight-bold",
+            align: "center",
+            width: "80px",
+            sortable: false
+          },
+          {
+            text: "ชื่อหวย",
+            value: "title",
+            class: "font-weight-bold",
+            align: "left",
+            width: "200px",
+            sortable: false
+          },
+          {
+            text: "รอบวันที่",
+            value: "lotto_round",
+            class: "font-weight-bold",
+            align: "left",
+            width: "200px",
+            sortable: false
+          },
+          {
+            text: "เวลาออกผล",
+            value: "bet_lotto_time",
+            class: "font-weight-bold",
+            align: "left",
+            width: "200px"
+          },
+          {
+            text: "สถานะการออกรางวัล",
+            value: "status_lotto",
+            class: "font-weight-bold",
+            align: "left",
+            width: "200px",
+            sortable: false
+          },
+          {
+            text: "สถานะการคำนวณผลรางวัล",
+            value: "status_calculate",
+            class: "font-weight-bold",
+            align: "left",
+            sortable: false,
+            width: "200px"
+          },
+          {
+            text: "กรอกผลรางวัล",
+            value: "save",
+            class: "font-weight-bold",
+            align: "left",
+            sortable: false
+          }
+        ];
+        return headerender
       } else {
         return headerender;
       }
