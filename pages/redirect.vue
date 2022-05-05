@@ -20,19 +20,12 @@ export default {
   components: { LoadingProgess },
   layout: "session",
   data() {
-    return {
-      ip_address: ""
-    };
+    return {};
   },
   async mounted() {
-    await this.getIp();
     await this.loginbyHash();
   },
   methods: {
-    async getIp() {
-      let { data } = await this.$axios.get(`https://ipinfo.io/ip`);
-      this.ip_address = data;
-    },
     ...mapActions("auth", ["gettoken"]),
     ...mapMutations("auth", ["set_hash"]),
 
@@ -48,8 +41,7 @@ export default {
       }
       if (this.$store.state.auth.hash) {
         let params = {
-          hash: memberHash,
-          ip: this.ip_address
+          hash: memberHash
         };
         try {
           await this.gettoken(params);

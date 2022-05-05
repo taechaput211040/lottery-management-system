@@ -2,7 +2,7 @@
 export async function loginWithMemberHash(context, token) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = token
+      let response = token;
 
       // let response = await this.$axios.post(
       //   `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/auth/user/hash`,
@@ -40,7 +40,7 @@ export async function gettoken(context, params) {
       let response = await this.$axios.patch(
         `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/auth/user/token/${params.hash}`,
         {
-          ip: params.ip
+          ip: "192.168.1.1"
         }
       );
       if (response.status == 200) {

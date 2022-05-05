@@ -65,21 +65,17 @@ export default {
       checkonline: false,
       username: "",
       password: "",
-      authendata: {},
-      ip_address: ""
+      authendata: {}
     };
   },
   async fetch() {},
   async beforeMount() {
     this.checklogin();
-    this.getIp();
+
   },
   methods: {
     ...mapActions("auth", ["login", "gettoken"]),
-    async getIp() {
-      let { data } = await this.$axios.get(`https://ipinfo.io/ip`);
-      this.ip_address = data;
-    },
+
     async auth() {
       try {
         const { data: response } = await this.login({
@@ -88,8 +84,7 @@ export default {
         });
         if (response.hash) {
           let params = {
-            hash: response.hash,
-            ip: this.ip_address
+            hash: response.hash
           };
           let { data: datatoken } = await this.gettoken(params);
           if (this.checkonline) {
