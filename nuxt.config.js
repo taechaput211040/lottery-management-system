@@ -66,7 +66,14 @@ export default {
   env: {
     TITLE: process.env.TITLE,
     LOGO: process.env.LOGO,
-    LOGOTITLE: process.env.LOGOTITLE
+    LOGOTITLE: process.env.LOGOTITLE,
+    API_LOTTO_LAUNCHGAME: process.env.API_LOTTO_LAUNCHGAME,
+    API_LOTTO_PRICE: process.env.API_LOTTO_PRICE,
+    API_LOTTO_SETTING: process.env.API_LOTTO_SETTING,
+    API_SETTING_SELLER: process.env.API_SETTING_SELLER,
+    API_SETTING_FLEX_ODD: process.env.API_SETTING_FLEX_ODD,
+    API_LOTTO_REPORT: process.env.API_LOTTO_REPORT,
+    API_LOTTO_BET:process.env.API_LOTTO_BET
   },
   axios: {
     proxy: true,
@@ -84,6 +91,6 @@ export default {
   build: {},
   router: {
     // mode: "history"
-    base: "/backofficeV2/"
+    base: "/dev-backoffice/"
   }
 };

@@ -2,7 +2,7 @@ export async function getTypelottoAll({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting_flex_odd/api/flex_odd/all_lottotype`
+        `${process.env.API_SETTING_FLEX_ODD}/flex_odd/all_lottotype`
       );
 
       resolve(response);
@@ -15,7 +15,7 @@ export async function getCategoryflexbyid({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting_flex_odd/api/flex_odd/all_title/${id}`
+        `${process.env.API_SETTING_FLEX_ODD}/flex_odd/all_title/${id}`
       );
 
       resolve(response);
@@ -28,7 +28,7 @@ export async function getOutcomerate({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting_flex_odd/api/flex_odd/all_outcomrate_getsetting/${id}`
+        `${process.env.API_SETTING_FLEX_ODD}/flex_odd/all_outcomrate_getsetting/${id}`
       );
 
       resolve(response);
@@ -41,7 +41,7 @@ export async function getOutcomerateUplined({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting_flex_odd/api/flex_odd/all_outcomrate_getsetting_upline/${id}`
+        `${process.env.API_SETTING_FLEX_ODD}/flex_odd/all_outcomrate_getsetting_upline/${id}`
       );
 
       resolve(response);
@@ -54,7 +54,7 @@ export async function updateFlexOutcomerate({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/setting_flex_odd/api/flex_odd/update/outcomerate`,
+        `${process.env.API_SETTING_FLEX_ODD}/flex_odd/update/outcomerate`,
         body
       );
 
@@ -68,7 +68,7 @@ export async function setflexoddProfit({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/setting_flex_odd/api/flex_odd/update/flex_odd_lotto`,
+        `${process.env.API_SETTING_FLEX_ODD}/flex_odd/update/flex_odd_lotto`,
         {
           flex_odd_lotto: parseFloat(body.flexodd),
           profit: parseFloat(body.profit)
@@ -86,7 +86,7 @@ export async function getPerflex({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting_flex_odd/api/flex_odd/get_per_flex`
+        `${process.env.API_SETTING_FLEX_ODD}/flex_odd/get_per_flex`
       );
 
       resolve(response);
@@ -100,7 +100,7 @@ export async function getMaxLoss({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting/api/setting_type/get_max_profit_lost`
+        `${process.env.API_LOTTO_SETTING}/setting_type/get_max_profit_lost`
       );
       resolve(response);
     } catch (error) {
@@ -113,7 +113,7 @@ export async function configMaxLoss({ commit }, payload) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/setting/api/setting_type/update_max_profit_lost`,
+        `${process.env.API_LOTTO_SETTING}/setting_type/update_max_profit_lost`,
         {
           max_profit_lost: payload
         }

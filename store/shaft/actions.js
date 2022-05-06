@@ -2,7 +2,7 @@ export async function getSellerAll({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/all_title/${id}`
+        `${process.env.API_SETTING_SELLER}/seller/all_title/${id}`
       );
 
       resolve(response);
@@ -15,7 +15,7 @@ export async function getAllsettingseller({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/get_all_setting_seller/${id}`
+        `${process.env.API_SETTING_SELLER}/seller/get_all_setting_seller/${id}`
       );
 
       resolve(response);
@@ -28,7 +28,7 @@ export async function getAllsettingUpline({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/get_all_setting_seller_upline/${id}`
+        `${process.env.API_SETTING_SELLER}/seller/get_all_setting_seller_upline/${id}`
       );
 
       resolve(response);
@@ -41,7 +41,7 @@ export async function getAllunlimited({ commit }, params) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/get_limited_number/${params.typecategory_id}&${params.lottonumbertype_id}`
+        `${process.env.API_SETTING_SELLER}/seller/get_limited_number/${params.typecategory_id}&${params.lottonumbertype_id}`
       );
 
       resolve(response);
@@ -55,7 +55,7 @@ export async function Addlimited({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/limited_number/`,
+        `${process.env.API_SETTING_SELLER}/seller/limited_number/`,
         body
       );
 
@@ -70,7 +70,7 @@ export async function updateSettingseller({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/update_setting_seller/`,
+        `${process.env.API_SETTING_SELLER}/seller/update_setting_seller/`,
         body
       );
 
@@ -91,7 +91,7 @@ export async function deleteLimitnumber(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/delete_limited_number/`,
+        `${process.env.API_SETTING_SELLER}/seller/delete_limited_number/`,
         {
           typecategory_id: params.typecategory_id,
           lottonumbertype_id: params.lottonumbertype_id,

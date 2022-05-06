@@ -362,7 +362,7 @@ export default {
         }).then(async result => {
           if (result.isConfirmed) {
             await this.$axios.delete(
-              "https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/delete_limited_number/",
+              "${process.env.API_SETTING_SELLER}/seller/delete_limited_number/",
               {
                 data: {
                   typecategory_id: this.$route.query.id,

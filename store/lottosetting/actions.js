@@ -3,7 +3,7 @@ export async function getLottotype(context) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoType/get`
+        `${process.env.API_LOTTO_PRICE}/LottoType/get`
       );
       context.commit("set_lottotype", response.data.result.data);
       resolve(response.data);
@@ -18,7 +18,7 @@ export async function createLottotype({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoType/insert`,
+        `${process.env.API_LOTTO_PRICE}/LottoType/insert`,
         {
           title: body.title
         }
@@ -35,7 +35,7 @@ export async function updateLottotype({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoType/update/${body.id}`,
+        `${process.env.API_LOTTO_PRICE}/LottoType/update/${body.id}`,
         {
           title: body.title,
           status: body.status
@@ -53,7 +53,7 @@ export async function deleteLottotype({ commit }, param) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoType/delete/${param.id}`
+        `${process.env.API_LOTTO_PRICE}/LottoType/delete/${param.id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -67,7 +67,7 @@ export async function closeLottotype({ commit }, param) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoType/close/${param.id}`
+        `${process.env.API_LOTTO_PRICE}/LottoType/close/${param.id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -81,7 +81,7 @@ export async function getTypeCategoryByid({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategory/id/${id}`
+        `${process.env.API_LOTTO_PRICE}/TypeCategory/id/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -95,7 +95,7 @@ export async function getTypeCategoryDetailByid({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/id/${id}`
+        `${process.env.API_LOTTO_PRICE}/TypeCategoryDetail/id/${id}`
       );
       resolve(response);
     } catch (error) {
@@ -117,7 +117,7 @@ export async function getTypeCategory(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategory/get`,
+        `${process.env.API_LOTTO_PRICE}/TypeCategory/get`,
         {
           params: {
             title: params.title,
@@ -146,7 +146,7 @@ export async function getTypeCategoryDetail(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/get`,
+        `${process.env.API_LOTTO_PRICE}/TypeCategoryDetail/get`,
         {
           params: {
             title: params.title,
@@ -168,7 +168,7 @@ export async function orderByTypeCategory({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategory/orderby`,
+        `${process.env.API_LOTTO_PRICE}/TypeCategory/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -183,7 +183,7 @@ export async function orderByTypeCategoryDetail({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/orderby`,
+        `${process.env.API_LOTTO_PRICE}/TypeCategoryDetail/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -196,7 +196,7 @@ export async function createType({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategory/insert`,
+        `${process.env.API_LOTTO_PRICE}/TypeCategory/insert`,
         body
       );
 
@@ -213,7 +213,7 @@ export async function createTypeCategory({ commit }, body) {
     console.log(body);
     try {
       let response = await this.$axios.post(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/insert`,
+        `${process.env.API_LOTTO_PRICE}/TypeCategoryDetail/insert`,
         body
       );
 
@@ -227,7 +227,7 @@ export async function updateTypeCategoryDetail({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/update/${body.id}`,
+        `${process.env.API_LOTTO_PRICE}/TypeCategoryDetail/update/${body.id}`,
         body
       );
 
@@ -243,7 +243,7 @@ export async function createTypeCategoryDetail({ commit, body }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/insert`,
+        `${process.env.API_LOTTO_PRICE}/TypeCategoryDetail/insert`,
         body
       );
       resolve(response.data);
@@ -258,7 +258,7 @@ export async function updateTypeCategory({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategory/update/${body.id}`,
+        `${process.env.API_LOTTO_PRICE}/TypeCategory/update/${body.id}`,
         body
       );
       resolve(response.data);
@@ -273,7 +273,7 @@ export async function deleteTypeCategory({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategory/delete/${id}`
+        `${process.env.API_LOTTO_PRICE}/TypeCategory/delete/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -287,7 +287,7 @@ export async function closeTypeCategory({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategory/close/${id}`
+        `${process.env.API_LOTTO_PRICE}/TypeCategory/close/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -300,7 +300,7 @@ export async function deleteCategoryTypeDetail({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/delete/${id}`
+        `${process.env.API_LOTTO_PRICE}/TypeCategoryDetail/delete/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -312,7 +312,7 @@ export async function closeCategoryTypeDetail({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/TypeCategoryDetail/close/${id}`
+        `${process.env.API_LOTTO_PRICE}/TypeCategoryDetail/close/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -325,7 +325,7 @@ export async function getProgramLottoById({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/id/${id}`
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/id/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -353,7 +353,7 @@ export async function getProgramLotto(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/get`,
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/get`,
         {
           params: {
             title: params.title,
@@ -381,7 +381,7 @@ export async function orderByProgramLotto({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/orderby`,
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -396,7 +396,7 @@ export async function createProgramLotto({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/insert`,
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/insert`,
         body
       );
       resolve(response.data);
@@ -411,7 +411,7 @@ export async function updateProgramLotto({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/update/${body.id}`,
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/update/${body.id}`,
         {
           bet_open_time: body.bet_open_time,
           bet_close_time: body.bet_close_time,
@@ -437,7 +437,7 @@ export async function deleteProgramLotto({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/delete/${id}`
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/delete/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -451,7 +451,7 @@ export async function closeProgramLotto({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/close/${id}`
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/close/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -465,7 +465,7 @@ export async function checkProgramLotto({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/CheckLotto`
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/CheckLotto`
       );
       resolve(response.data);
     } catch (error) {
@@ -479,7 +479,7 @@ export async function checkIdProgramLotto({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/CheckLottoById/${id}`
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/CheckLottoById/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -493,7 +493,7 @@ export async function checkTitleProgramLotto({ commit, title }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/CheckLottoById/${title}`
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/CheckLottoById/${title}`
       );
       resolve(response.data);
     } catch (error) {
@@ -507,7 +507,7 @@ export async function genProgramLotto({ commit, num_of_month }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/GenProgramLotto/${num_of_month}`
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/GenProgramLotto/${num_of_month}`
       );
       resolve(response.data);
     } catch (error) {
@@ -521,7 +521,7 @@ export async function getLottoNumberTypeByid({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/id/${id}`
+        `${process.env.API_LOTTO_PRICE}/LottoNumberType/id/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -545,7 +545,7 @@ export async function getLottoNumberType(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/get`,
+        `${process.env.API_LOTTO_PRICE}/LottoNumberType/get`,
         {
           params: {
             name: params.name,
@@ -568,7 +568,7 @@ export async function getTypeDefult({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/lottonumbertype_default`
+        `${process.env.API_LOTTO_PRICE}/LottoNumberType/lottonumbertype_default`
       );
       resolve(response.data);
     } catch (error) {
@@ -581,7 +581,7 @@ export async function getLottoNumberTypeSort({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/orderby`,
+        `${process.env.API_LOTTO_PRICE}/LottoNumberType/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -596,7 +596,7 @@ export async function createLottoNumberType({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/insert`,
+        `${process.env.API_LOTTO_PRICE}/LottoNumberType/insert`,
         body
       );
       resolve(response.data);
@@ -611,7 +611,7 @@ export async function updateLottoNumberTypeByid({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/update/${body.id}`,
+        `${process.env.API_LOTTO_PRICE}/LottoNumberType/update/${body.id}`,
         {
           lottonumbertype_default_id: body.lottonumbertype_default_id,
           typecategory_id: body.typecategory_id,
@@ -631,7 +631,7 @@ export async function deleteLottoNumberType({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/delete/${id}`
+        `${process.env.API_LOTTO_PRICE}/LottoNumberType/delete/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -645,7 +645,7 @@ export async function closeLottoNumberType({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoNumberType/close/${id}`
+        `${process.env.API_LOTTO_PRICE}/LottoNumberType/close/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -659,7 +659,7 @@ export async function getLottoPrizeByid({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/id/`,
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/id/`,
         id
       );
       resolve(response.data);
@@ -674,7 +674,7 @@ export async function getLottoPrize({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/get`
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/get`
       );
       resolve(response.data);
     } catch (error) {
@@ -688,7 +688,7 @@ export async function getLottoPrizeByOrder({ commit, sort_param }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/orderby`,
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/orderby`,
         sort_param
       );
       resolve(response.data);
@@ -703,7 +703,7 @@ export async function createLottoPrize({ commit, body }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/insert`,
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/insert`,
         body
       );
       resolve(response.data);
@@ -718,7 +718,7 @@ export async function updateLottoPrize({ commit, id, body }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/update/${id}`,
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/update/${id}`,
         body
       );
       resolve(response.data);
@@ -733,7 +733,7 @@ export async function deleteLottoPrize({ commit, id }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.delete(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/${id}`
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -757,7 +757,7 @@ export async function getawardlotto(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/ProgramLotto/get_award`,
+        `${process.env.API_LOTTO_PRICE}/ProgramLotto/get_award`,
         {
           params: {
             title: params.title,
@@ -781,7 +781,7 @@ export async function getlottobyprogram({ commit }, id) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/get_by_program_id/${id}`
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/get_by_program_id/${id}`
       );
       resolve(response.data);
     } catch (error) {
@@ -794,7 +794,7 @@ export async function savelottonumber({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/update_reward`,
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/update_reward`,
         body
       );
       resolve(response.data);
@@ -807,7 +807,7 @@ export async function calculateAward({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/calculator_prize`,
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/calculator_prize`,
         body
       );
       resolve(response.data);

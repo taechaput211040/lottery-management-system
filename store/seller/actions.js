@@ -3,7 +3,7 @@ export async function getAllsetting({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/get_typecategory_self`
+        `${process.env.API_LOTTO_SETTING}/ManageLotto/get_typecategory_self`
       );
 
       resolve(response);
@@ -17,7 +17,7 @@ export async function changeStaussetting({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/update_lotto_self`,
+        `${process.env.API_LOTTO_SETTING}/ManageLotto/update_lotto_self`,
         {
           typecategory_id: body.id,
           status: body.self_status
@@ -34,7 +34,7 @@ export async function changeStausDownline({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/update_lotto_dowline`,
+        `${process.env.API_LOTTO_SETTING}/ManageLotto/update_lotto_dowline`,
         body
       );
 
@@ -49,7 +49,7 @@ export async function getLottoDownline({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/get_member`
+        `${process.env.API_LOTTO_SETTING}/ManageLotto/get_member`
       );
 
       resolve(response);
@@ -62,7 +62,7 @@ export async function getTypeByUser({ commit }, username) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting/api/ManageLotto/get_typecategory_by_user/${username}`
+        `${process.env.API_LOTTO_SETTING}/ManageLotto/get_typecategory_by_user/${username}`
       );
 
       resolve(response);
@@ -77,7 +77,7 @@ export async function gettypeByalluser({ commit }) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/setting/api/setting_type/get_purchasetype_all_users`
+        `${process.env.API_LOTTO_SETTING}/setting_type/get_purchasetype_all_users`
       );
       resolve(response);
     } catch (error) {
@@ -89,7 +89,7 @@ export async function changeStausType({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://sm-lotto.com/v1alpha/lotto/setting/api/setting_type/update_purchasetype`,
+        `${process.env.API_LOTTO_SETTING}/setting_type/update_purchasetype`,
         {
           username: body.username,
           flex_odd: body.flex_odd,
@@ -109,7 +109,7 @@ export async function recieveSellertofull({ state, commit }, context) {
     if (!state.balance_top) {
       try {
         let response = await this.$axios.get(
-          `https://sm-lotto.com/v1alpha/lotto/lotto_setting_seller/api/seller/get_balance_top?currentPage=1&limit=15`
+          `${process.env.API_SETTING_SELLER}/seller/get_balance_top?currentPage=1&limit=15`
         );
         commit("set_topseller", response.data);
         resolve(response);

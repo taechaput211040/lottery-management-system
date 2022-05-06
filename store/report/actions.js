@@ -9,7 +9,7 @@ export async function getAccountReport(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/users/get_members`,
+        `${process.env.API_LOTTO_LAUNCHGAME}/users/get_members`,
         {
           params: {
             username: params.username,
@@ -35,7 +35,7 @@ export async function getMemberReportByUser(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_launchgame/api/users/get_member_by_user`,
+        `${process.env.API_LOTTO_LAUNCHGAME}/users/get_member_by_user`,
         {
           params: {
             username: params.username,
@@ -100,7 +100,7 @@ export async function getReportDetail(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Range/${params.start_time}/${params.end_time}`,
+        `${process.env.API_LOTTO_REPORT}/summary/Range/${params.start_time}/${params.end_time}`,
         {
           params: {
             type_purchase: params.type_purchase,
@@ -133,7 +133,7 @@ export async function getReportNumber(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto_price/api/LottoPrize/report_prize`,
+        `${process.env.API_LOTTO_PRICE}/LottoPrize/report_prize`,
         {
           params: {
             lottotype_id: params.lottotype_id,
@@ -163,7 +163,7 @@ export async function getDashboardWinlose(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Overview/${params.start_time}/${params.end_time}`
+        `${process.env.API_LOTTO_REPORT}/summary/Overview/${params.start_time}/${params.end_time}`
       );
       resolve(response);
     } catch (error) {
@@ -181,7 +181,7 @@ export async function getGraphReport(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Overview/${params.type}`
+        `${process.env.API_LOTTO_REPORT}/summary/Overview/${params.type}`
       );
       resolve(response);
     } catch (error) {
@@ -205,7 +205,7 @@ export async function getReportWinlose(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Winlose/${params.start_time}/${params.end_time}`,
+        `${process.env.API_LOTTO_REPORT}/summary/Winlose/${params.start_time}/${params.end_time}`,
         {
           params: {
             agent_name: params.agent_name,
@@ -235,7 +235,7 @@ export async function getDifferentReport(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Payrate/different/${params.start_time}/${params.end_time}`,
+        `${process.env.API_LOTTO_REPORT}/summary/Payrate/different/${params.start_time}/${params.end_time}`,
         {
           params: {
             page: params.page,
@@ -262,7 +262,7 @@ export async function getTransaction(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Transaction/${params.round_id}/${params.member_id}`,
+        `${process.env.API_LOTTO_REPORT}/summary/Transaction/${params.round_id}/${params.member_id}`,
         {
           params: {
             type_purchase: params.type_purchase,
@@ -289,7 +289,7 @@ export async function getNumberTypeReport(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Ranking/${params.program_id}`,
+        `${process.env.API_LOTTO_REPORT}/summary/Ranking/${params.program_id}`,
         {
           params: {
             type_purchase: params.type_purchase,
@@ -319,7 +319,7 @@ export async function getDetailNumberReport(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Ranking/${params.program_id}/${params.lottonumbertype_id}`,
+        `${process.env.API_LOTTO_REPORT}/summary/Ranking/${params.program_id}/${params.lottonumbertype_id}`,
         {
           params: {
             type_purchase: params.type_purchase,
@@ -340,7 +340,7 @@ export async function betFake({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.post(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-bet/api/bet/bet_fake`,
+        `${process.env.API_LOTTO_BET}/bet/bet_fake`,
         body
       );
       resolve(response);
@@ -365,7 +365,7 @@ export async function getRoundBymemberid(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://sm-lotto.com/v1alpha/lotto/lotto-report/api/summary/Round/${params.agent_id}/${params.member_id}/${params.start_time}/${params.end_time}`,
+        `${process.env.API_LOTTO_REPORT}/summary/Round/${params.agent_id}/${params.member_id}/${params.start_time}/${params.end_time}`,
         {
           params: {
             page: params.page,
