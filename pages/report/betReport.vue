@@ -124,7 +124,7 @@
                 <span>ดูรายละเอียดโพยรับของ</span>
               </v-tooltip>
 
-              <v-tooltip bottom color="error" dark>
+              <!-- <v-tooltip bottom color="error" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -141,7 +141,7 @@
                   </v-btn></template
                 >
                 <span>ยกเลิกโพย</span>
-              </v-tooltip>
+              </v-tooltip> -->
             </div>
           </template>
           <template #[`item.winlose`]="{item}">

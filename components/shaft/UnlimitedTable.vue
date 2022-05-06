@@ -15,9 +15,6 @@
         <span class="error--text ">{{ this.$route.query.typename }}</span>
       </h3>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="openadd_limited()"
-        ><v-icon>mdi-plus</v-icon>เพิ่มเลขอั้น</v-btn
-      >
     </div>
     <div v-if="isLoading"><loading-page></loading-page></div>
     <div v-else class="rounded-lg white">
@@ -54,15 +51,6 @@
               small
               @click="openEdit(item)"
               ><v-icon left>mdi-cog</v-icon>แก้ไขเลขอั้น
-            </v-btn>
-            <v-btn
-              rounded
-              color="error"
-              class="mx-1"
-              dark
-              small
-              @click="deletenumber(item)"
-              ><v-icon left>mdi-delete</v-icon> ลบ
             </v-btn>
           </div>
         </template>
