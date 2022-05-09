@@ -1,6 +1,14 @@
 <template>
   <div>
     <h1 class="mt-2">ชนิดของหวย : {{ $route.query.type }}</h1>
+
+    <v-skeleton-loader
+      :loading="isLoading"
+      class="mx-auto"
+      max-width="300"
+      type="card"
+    ></v-skeleton-loader>
+
     <div v-if="isLoading"><loading-page></loading-page></div>
     <div v-else class="ma-2  white rounded-lg">
       <div class="d-flex pa-2 align-center">
@@ -258,6 +266,11 @@
 import { mapActions } from "vuex";
 import LoadingPage from "../form/LoadingPage.vue";
 export default {
+  inject: {
+    theme: {
+      default: { isDark: false }
+    }
+  },
   components: { LoadingPage },
   data() {
     return {

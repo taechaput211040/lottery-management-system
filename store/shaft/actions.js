@@ -37,11 +37,27 @@ export async function getAllsettingUpline({ commit }, id) {
     }
   });
 }
-export async function getAllunlimited({ commit }, params) {
+export async function getAllunlimited(
+  { commit },
+  params = {
+    typecategory_id: undefined,
+    lottonumbertype_id: undefined,
+    currentPage: undefined,
+    limit: undefined,
+    lotto_number: undefined
+  }
+) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `${process.env.API_SETTING_SELLER}/seller/get_limited_number/${params.typecategory_id}&${params.lottonumbertype_id}`
+        `${process.env.API_SETTING_SELLER}/seller/get_limited_number/${params.typecategory_id}&${params.lottonumbertype_id}`,
+        {
+          params: {
+            currentPage: params.currentPage,
+            limit: params.limit,
+            lotto_number: params.lotto_number
+          }
+        }
       );
 
       resolve(response);

@@ -16,15 +16,41 @@
       </h3>
       <v-spacer></v-spacer>
     </div>
-    <div v-if="isLoading"><loading-page></loading-page></div>
-    <div v-else class="rounded-lg white">
+    <!-- <div v-if="isLoading"><loading-page></loading-page></div> -->
+    <div class="rounded-lg white">
+      <div class="py-3 px-1">
+        <div class="col-12 col-sm-4">
+          <v-text-field
+            append-icon="mdi-magnify"
+            label="ค้นหาเลขอั้น"
+            dense
+            @keyup.enter="getSelfeData()"
+            v-model="search"
+            solo-inverted
+            hide-details="auto"
+            ><v-btn
+              @click="getSelfeData()"
+              slot="append"
+              color="success"
+              fab
+              dark
+              x-small
+            >
+              <v-icon>mdi-magnify</v-icon></v-btn
+            ></v-text-field
+          >
+        </div>
+      </div>
       <v-data-table
+        :server-items-length="pagination.rowsNumber"
+        :items-per-page.sync="pagination.rowsPerPage"
+        :page.sync="pagination.page"
         class="elevation-2"
         hide-default-footer
-        :options.sync="option"
+        :options.sync="options"
         :headers="headersunlimited"
         :loading="isLoading"
-        :items="datarender"
+        :items="datarender.data"
       >
         <template v-slot:no-data>
           <v-alert
@@ -36,9 +62,6 @@
           >
             ไม่พบข้อมูล
           </v-alert>
-        </template>
-        <template #[`item.no`]="{index}">
-          {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
         </template>
 
         <template #[`item.action`]="{item}">
@@ -61,16 +84,17 @@
             outlined
             hide-details="auto "
             dense
-            v-model="option.itemsPerPage"
+            v-model="pagination.rowsPerPage"
             :items="pageSizes"
+            @change="handlePageSizeChange"
             label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10" lg="10">
           <v-pagination
-            v-model="option.page"
+            v-model="pagination.page"
             :total-visible="7"
-            :length="Math.ceil(datarender.length / option.itemsPerPage)"
+            :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
           ></v-pagination>
         </v-col>
       </v-row>
@@ -238,8 +262,17 @@ export default {
   components: { LoadingPage },
   data() {
     return {
+      options: {},
+      search: undefined,
+      pagination: {
+        sortBy: "desc",
+        descending: false,
+        page: 1,
+        rowsPerPage: 15,
+        rowsNumber: 0
+      },
       loading_btn: false,
-      option: {},
+
       pageSizes: [5, 10, 15, 25],
       validEditform: false,
       valid: false,
@@ -283,44 +316,41 @@ export default {
       dialogdetail: false,
       headersunlimited: [
         {
-          text: "No.",
-          value: "no",
-          class: "font-weight-bold",
-          cellClass: "font-weight-bold",
-          align: "center",
-          width: "100px"
-        },
-        {
           text: "เลข",
           value: "lotto_number",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
+          sortable: false
         },
         {
           text: "อัตราจ่าย",
           value: "out_come_rate",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
+          sortable: false
         },
 
         {
           text: "รับของ",
           value: "self_receive_amount",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
+          sortable: false
         },
         {
           text: "รับของปัจจุบัน",
           value: "self_receive_balance",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
+          sortable: false
         },
         {
           text: "ดำเนินการ",
           value: "action",
           class: "font-weight-bold",
           align: "center",
-          width: "200"
+          width: "200",
+          sortable: false
         }
       ],
       datarender: [],
@@ -331,41 +361,23 @@ export default {
       }
     };
   },
-  async fetch() {
+  async mounted() {
     this.getSelfeData();
   },
+  watch: {
+    options: {
+      async handler() {
+        this.isLoading = true;
+        await this.getSelfeData();
+      },
+      deep: true
+    }
+  },
   methods: {
-    async deletenumber(item) {
-      console.log(item);
-
-      try {
-        this.$swal({
-          title: "แน่ใจหรือไม่ว่าต้องการลบ?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "ลบ",
-          cancelButtonText: "ยกเลิก"
-        }).then(async result => {
-          if (result.isConfirmed) {
-            await this.$axios.delete(
-              "${process.env.API_SETTING_SELLER}/seller/delete_limited_number/",
-              {
-                data: {
-                  typecategory_id: this.$route.query.id,
-                  lottonumbertype_id: this.$route.query.lottonumbertype_id,
-                  lotto_number: item.lotto_number
-                }
-              }
-            );
-            this.$swal("ลบเรียบร้อย!", "ดำเนินการเสร็จสิ้น", "success");
-            this.$fetch();
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
+    async handlePageSizeChange(size) {
+      this.pagination.page = 1;
+      this.pagination.rowsPerPage = size;
+      this.getSelfeData();
     },
     closeEdit() {
       this.editlimitedDialog = false;
@@ -387,13 +399,28 @@ export default {
       "Addlimited",
       "deleteLimitnumber"
     ]),
+    getParameter() {
+      if (
+        this.search === "" ||
+        this.search === null ||
+        this.search === undefined ||
+        !this.search
+      ) {
+        this.search === undefined;
+      }
+      let params = {
+        typecategory_id: this.$route.query.id,
+        lottonumbertype_id: this.$route.query.lottonumbertype_id,
+        currentPage: this.pagination.page,
+        limit: this.pagination.rowsPerPage,
+        lotto_number: this.search
+      };
+      return params;
+    },
     async getSelfeData() {
       this.isLoading = true;
       try {
-        let params = {
-          typecategory_id: this.$route.query.id,
-          lottonumbertype_id: this.$route.query.lottonumbertype_id
-        };
+        let params = this.getParameter();
         let { data } = await this.getAllunlimited(params);
         if (data.result) {
           this.datarender = data.result;
@@ -402,6 +429,7 @@ export default {
           this.datarender = [];
           this.isLoading = false;
         }
+        this.pagination.rowsNumber = data.result.total;
       } catch (error) {
         this.isLoading = false;
       }

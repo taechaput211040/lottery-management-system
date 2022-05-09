@@ -6,7 +6,7 @@
         - {{ thisUser }}</span
       >
     </h2>
-    <div v-if="isLoading"><loading-page></loading-page></div>
+    <div v-if="isLoader"><loading-page></loading-page></div>
     <div v-else>
       <v-btn
         color="red back_btn"
@@ -179,7 +179,7 @@ export default {
       memberRender: [],
       typeForRender: "viewAgent",
       prevUser: null,
-      isLoading: false,
+      isLoader: false,
       pageSizes: [5, 10, 15, 25],
       options: {},
       thisUser: this.$store.state.auth.username,
@@ -290,10 +290,10 @@ export default {
         this.accountRendering = result.data;
         this.pagination.rowsNumber = result.total;
 
-        this.isLoading = false;
+        this.isLoader = false;
       } catch (error) {
         console.log(error);
-        this.isLoading = false;
+        this.isLoader = false;
       }
       if (!item) {
         this.thisUser = "";
@@ -302,12 +302,14 @@ export default {
       }
       this.loading_btn = false;
     },
+    toloadingPage() {
+      this.isLoader = true;
+    },
     async getMemberByuser(item) {
       let params = undefined;
       params = this.getParameter(item);
-
+      this.toloadingPage();
       let { result } = await this.getMemberReportByUser(params);
-
       this.accountRendering = result.data;
       this.pagination.rowsNumber = result.total;
       if (!item) {
@@ -315,7 +317,7 @@ export default {
       } else {
         this.thisUser = item;
       }
-      this.isLoading = false;
+      this.isLoader = false;
       this.loading_btn = false;
     },
     getParameterByMember() {
@@ -334,7 +336,7 @@ export default {
 
       this.memberRender = result.data;
       this.paginationMember.rowsNumber = result.total;
-      this.isLoading = false;
+      this.isLoader = false;
     },
     async handlePageSizeChange(size) {
       this.pagination.page = 1;

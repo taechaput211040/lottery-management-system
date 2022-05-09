@@ -1,5 +1,5 @@
 <template>
-  <div class="body-loading">
+  <div class="body-loading" v-if="loading">
     <div class="lds-ellipsis">
       <div></div>
       <div></div>
@@ -10,7 +10,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    loading: {
+      default: true,
+      type: Boolean
+    }
+  }
+};
 </script>
 
 <style>
@@ -33,7 +40,7 @@ export default {};
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: linear-gradient(to bottom , #1a68d3 0%, #1993f4 100%);
+  background: linear-gradient(to bottom, #1a68d3 0%, #1993f4 100%);
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 .lds-ellipsis div:nth-child(1) {
