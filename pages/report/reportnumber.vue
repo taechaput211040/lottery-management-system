@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!isLoading">
+    <div>
       <h2>หวยเพลา / รายงานตัวเลขสูงสุด</h2>
       <div class="pa-1 rounded-lg white my-3 pa-2">
         <div class="row py-3">
@@ -154,18 +154,16 @@
       </div>
     </div>
     <div v-if="isLoading" class="text-center">
-      <v-progress-circular
-        :size="50"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
+      <loading-page></loading-page>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
       numberValue: {},
@@ -266,6 +264,7 @@ export default {
       }
     },
     async selectRound(value) {
+      this.isLoading = true;
       this.toRound = "";
       let params = {
         currentPage: 1,
@@ -288,6 +287,7 @@ export default {
         console.log(error);
         this.isLoading = false;
       }
+      this.isLoading = false;
     },
     async getNumberreport(value, type) {
       console.log(type);
@@ -297,12 +297,14 @@ export default {
         page: 1,
         limit: 10
       };
+      this.isLoading = true;
       try {
         let { data } = await this.getNumberTypeReport(params);
         this.numberReportrender = data;
       } catch (error) {
         console.log(error);
       }
+      this.isLoading = false;
     },
 
     async showDetail(item) {

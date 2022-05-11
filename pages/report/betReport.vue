@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>รายการแทง</h2>
-
+    <loading-page v-if="isLoading"></loading-page>
     <div class="row  rounded-lg white ma-0 mb-3">
       <div class=" col-12  col-md-4 pa-0">
         <div class=" my-3 rounded-lg white">
@@ -279,10 +279,12 @@
 <script>
 import { mapActions } from "vuex";
 import FilterSearch from "../../components/form/FilterSearch.vue";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 export default {
-  components: { FilterSearch },
+  components: { FilterSearch, LoadingPage },
   data() {
     return {
+      isLoading: false,
       pageSizes: [5, 10, 15, 25],
       optionsDetail: {},
       typecategory: "",
@@ -577,12 +579,18 @@ export default {
       this.getReportdata();
     },
     async getReportdata() {
-      let params = this.getparameter();
-      let { data: response } = await this.getReportDetail(params);
-      console.log(response);
-      this.summary = response.summary;
-      this.itemReport = response.data;
-      this.pagination.rowsNumber = response.pagination.total;
+      this.isLoading = true;
+      try {
+        let params = this.getparameter();
+        let { data: response } = await this.getReportDetail(params);
+        console.log(response);
+        this.summary = response.summary;
+        this.itemReport = response.data;
+        this.pagination.rowsNumber = response.pagination.total;
+      } catch (error) {
+        console.log(error);
+      }
+      this.isLoading = false;
     },
     getparameterDetail() {
       let params = {
@@ -595,6 +603,7 @@ export default {
       return params;
     },
     async getRenderNumberlotto() {
+      this.isLoading = true;
       let params = this.getparameterDetail();
       console.log(params);
       try {
@@ -612,6 +621,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      this.isLoading = false;
     },
     async getDetail(item, value) {
       this.itemDetailOpen = item;

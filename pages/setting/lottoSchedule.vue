@@ -161,7 +161,7 @@
     <div v-if="isLoading">
       <loading-page></loading-page>
     </div>
-    <div v-else class="white rounded-lg">
+    <div class="white rounded-lg">
       <div class="text-right" v-if="this.$store.state.auth.role == 'LOTTO'">
         <v-btn color="primary" @click="openInsert()" rounded class="ma-3"
           ><v-icon left>mdi-plus</v-icon>เพิ่มรอบหวย</v-btn
@@ -679,6 +679,7 @@ export default {
       return order;
     },
     async getdataRender() {
+      this.isLoading = true;
       let order = this.getOptionalOrder();
       console.log(order, "oreder");
       try {

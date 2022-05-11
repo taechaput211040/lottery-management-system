@@ -1,14 +1,10 @@
 <template>
   <div>
-    <div v-if="isLoading" class="text-center">
-      <v-progress-circular
-        :size="50"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
-    </div>
-    <div v-else>
+    <div>
       <h2>รายงานผลรางวัล</h2>
+      <div v-if="isLoading">
+        <loading-page></loading-page>
+      </div>
       <div class="row  rounded-lg white ma-0 mb-3">
         <div class=" col-12  col-md-4 pa-0">
           <div class=" my-3 rounded-lg white">
@@ -37,7 +33,7 @@
         </div>
       </div>
 
-      <div class="white rounded-lg "  v-show="selectType != ''">
+      <div class="white rounded-lg " v-show="selectType != ''">
         <h3 class="pa-4">ผลรางวัล</h3>
 
         <div class=" rounded-lg">
@@ -159,8 +155,10 @@
 <script>
 import { mapActions } from "vuex";
 import FilterSearch from "../../components/form/FilterSearch.vue";
+import LoadingFullpage from "../../components/form/LoadingFullpage.vue";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 export default {
-  components: { FilterSearch },
+  components: { FilterSearch, LoadingFullpage, LoadingPage },
   data() {
     return {
       isLoading: false,
@@ -251,7 +249,6 @@ export default {
   async fetch() {
     try {
       this.isLoading = true;
-      const { result } = await this.getLottotype();
       this.listtype = this.$store.state.lottosetting.lottotype;
       this.isLoading = false;
     } catch (error) {
@@ -280,6 +277,7 @@ export default {
     searchReport(filter) {
       this.filter = filter;
       this.getReport();
+      this.isLoading = true;
     },
     getParameter() {
       let order = this.getOptionalOrder();
@@ -312,12 +310,14 @@ export default {
     async getReport() {
       let params = await this.getParameter();
       try {
+        this.isLoading = true;
         let { result } = await this.getReportNumber(params);
         this.itemtypeaward = result.data;
         this.pagination.rowsNumber = result.total;
       } catch (error) {
         console.log(error);
       }
+      this.isLoading = false;
     }
   }
 };

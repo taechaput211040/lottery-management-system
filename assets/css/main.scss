@@ -32,6 +32,9 @@ span {
     background-color: #eaeaea;
   }
 }
+main {
+  min-height: 100vh !important;
+}
 .v-main__wrap {
   background-color: #eaeaea;
 }
@@ -136,12 +139,12 @@ table thead > tr > th > i {
 
 table thead > tr > th:nth-child(even),
 table thead > tr > th:nth-child(even).active {
-  background: linear-gradient(to bottom , #1a68d3 0%, #1993f4 100%);
+  background: linear-gradient(to bottom, #1a68d3 0%, #1993f4 100%);
 }
 
 table thead > tr > th:nth-child(odd),
 table thead > tr > th:nth-child(odd).active {
-  background: linear-gradient(to bottom , #1a68d3 0%, #1993f4 100%);
+  background: linear-gradient(to bottom, #1a68d3 0%, #1993f4 100%);
 }
 
 table tbody tr:nth-child(even) {

@@ -24,12 +24,12 @@
             append-icon="mdi-magnify"
             label="ค้นหาเลขอั้น"
             dense
-            @keyup.enter="getSelfeData()"
+            @keyup.enter="searchData()"
             v-model="search"
             solo-inverted
             hide-details="auto"
             ><v-btn
-              @click="getSelfeData()"
+              @click="searchData()"
               slot="append"
               color="success"
               fab
@@ -41,63 +41,70 @@
           >
         </div>
       </div>
-      <v-data-table
-        :server-items-length="pagination.rowsNumber"
-        :items-per-page.sync="pagination.rowsPerPage"
-        :page.sync="pagination.page"
-        class="elevation-2"
-        hide-default-footer
-        :options.sync="options"
-        :headers="headersunlimited"
-        :loading="isLoading"
-        :items="datarender.data"
-      >
-        <template v-slot:no-data>
-          <v-alert
-            :value="true"
-            border="left"
-            color="blue-grey"
-            type="error"
-            icon="mdi-warning"
-          >
-            ไม่พบข้อมูล
-          </v-alert>
-        </template>
+      <div v-if="isLoading">
+        <loading-page></loading-page>
+      </div>
+      <div>
+        <v-data-table
+          :server-items-length="pagination.rowsNumber"
+          :items-per-page.sync="pagination.rowsPerPage"
+          :page.sync="pagination.page"
+          class="elevation-2"
+          hide-default-footer
+          :options.sync="options"
+          :headers="headersunlimited"
+          :loading="isLoading"
+          :items="datarender.data"
+        >
+          <template v-slot:no-data>
+            <v-alert
+              :value="true"
+              border="left"
+              color="blue-grey"
+              type="error"
+              icon="mdi-warning"
+            >
+              ไม่พบข้อมูล
+            </v-alert>
+          </template>
 
-        <template #[`item.action`]="{item}">
-          <div class="d-flex justify-center">
-            <v-btn
-              rounded
-              color="black"
-              class="mx-1"
-              dark
-              small
-              @click="openEdit(item)"
-              ><v-icon left>mdi-cog</v-icon>แก้ไขเลขอั้น
-            </v-btn>
-          </div>
-        </template>
-      </v-data-table>
-      <v-row align="baseline" class="ma-3 ">
-        <v-col cols="12" sm="2" lg="2" xl="1">
-          <v-select
-            outlined
-            hide-details="auto "
-            dense
-            v-model="pagination.rowsPerPage"
-            :items="pageSizes"
-            @change="handlePageSizeChange"
-            label="รายการต่อหน้า"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="10" lg="10">
-          <v-pagination
-            v-model="pagination.page"
-            :total-visible="7"
-            :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
-          ></v-pagination>
-        </v-col>
-      </v-row>
+          <template #[`item.action`]="{item}">
+            <div class="d-flex justify-center">
+              <v-btn
+                rounded
+                color="black"
+                class="mx-1"
+                dark
+                small
+                @click="openEdit(item)"
+                ><v-icon left>mdi-cog</v-icon>แก้ไขเลขอั้น
+              </v-btn>
+            </div>
+          </template>
+        </v-data-table>
+        <v-row align="baseline" class="ma-3 ">
+          <v-col cols="12" sm="2" lg="2" xl="1">
+            <v-select
+              outlined
+              hide-details="auto "
+              dense
+              v-model="pagination.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChange"
+              label="รายการต่อหน้า"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10" lg="10">
+            <v-pagination
+              v-model="pagination.page"
+              :total-visible="7"
+              :length="
+                Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
+              "
+            ></v-pagination>
+          </v-col>
+        </v-row>
+      </div>
     </div>
 
     <v-dialog v-model="addlimitedDialog" persistent max-width="600px">
@@ -236,7 +243,6 @@
             <v-text-field
               outlined
               @keypress="e => checkpositive(e)"
-              :rules="[v => !!v || 'กรุณากรอกให้ครบถ้วน']"
               label="รับของ"
               type="number"
               dense
@@ -257,11 +263,13 @@
 
 <script>
 import { mapActions } from "vuex";
+import LoadingFullpage from "../form/LoadingFullpage.vue";
 import LoadingPage from "../form/LoadingPage.vue";
 export default {
-  components: { LoadingPage },
+  components: { LoadingPage, LoadingFullpage },
   data() {
     return {
+      loadpage: false,
       options: {},
       search: undefined,
       pagination: {
@@ -361,7 +369,7 @@ export default {
       }
     };
   },
-  async mounted() {
+  async fetch() {
     this.getSelfeData();
   },
   watch: {
@@ -417,8 +425,13 @@ export default {
       };
       return params;
     },
+    searchData(){
+      this.pagination.page = 1
+      this.getSelfeData()
+    },
     async getSelfeData() {
       this.isLoading = true;
+      this.loadpage = true;
       try {
         let params = this.getParameter();
         let { data } = await this.getAllunlimited(params);
@@ -433,6 +446,7 @@ export default {
       } catch (error) {
         this.isLoading = false;
       }
+      this.loadpage = false;
     },
     async openadd_limited() {
       this.form = {};
@@ -447,6 +461,8 @@ export default {
             lottonumber_name: this.form.lotto_number,
             out_come_rate: this.form.out_come_rate,
             self_receive_amount: this.form.self_receive_amount
+              ? this.form.self_receive_amount
+              : 0
           }
         ]
       };

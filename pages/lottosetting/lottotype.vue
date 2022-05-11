@@ -5,7 +5,7 @@
       <div v-if="isLoading">
         <loading-page></loading-page>
       </div>
-      <div v-else class="white rounded-lg ma-2 py-2">
+      <div class="white rounded-lg ma-2 py-2">
         <div class="d-flex ma-3">
           <v-spacer></v-spacer
           ><v-btn color="primary" rounded dark @click="modal_add = true">

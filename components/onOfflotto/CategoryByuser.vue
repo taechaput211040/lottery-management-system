@@ -9,6 +9,7 @@
       dark
       ><v-icon left>mdi-arrow-left-drop-circle</v-icon> ย้อนกลับ</v-btn
     >
+    <loading-page v-if="isLoading"></loading-page>
     <div class="rounded-lg white">
       <v-data-table
         hide-default-footer
@@ -112,7 +113,9 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import LoadingPage from "../form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   data() {
     return {
       option: {},

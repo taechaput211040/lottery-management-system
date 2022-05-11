@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2>รายงานส่วนต่างอัตราจ่าย</h2>
+    <loading-page v-if="isLoading"></loading-page>
     <filter-search @search="getbySearch"> </filter-search>
     <div class="mt-2 rounded-lg white">
       <v-data-table
@@ -190,10 +191,12 @@
 <script>
 import { mapActions } from "vuex";
 import FilterSearch from "../../components/form/FilterSearch.vue";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 export default {
-  components: { FilterSearch },
+  components: { FilterSearch, LoadingPage },
   data() {
     return {
+      isLoading: false,
       itemDetail: {},
       dldetail: false,
       options: {},
@@ -315,6 +318,7 @@ export default {
       return parameter;
     },
     async getData() {
+      this.isLoading = true;
       let params = this.getParameter();
       try {
         let { data: response } = await this.getDifferentReport(params);
@@ -325,6 +329,7 @@ export default {
         console.log(error);
         this.itemReport = [];
       }
+      this.isLoading = false;
     },
     async handlePageSizeChange(size) {
       this.pagination.page = 1;

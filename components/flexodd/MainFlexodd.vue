@@ -39,75 +39,38 @@
             </div>
           </div>
         </v-col>
-        <v-col cols="12" sm="6" v-if="$store.state.auth.role == 'LOTTO'">
-          <div class="rounded-lg white">
+        <v-col cols="12" sm="6">
+          <div class="rounded-lg white" style="height:100%;">
             <div class="success--text font-weight-bold pa-2">
               ตั้งค่ากำไรและอัตราน้ำไหล
             </div>
             <v-divider></v-divider>
             <div class="row pa-2">
-              <div class="col-12 col-sm-6   ">
-                <v-form ref="formProfit">
-                  <div class="col-12 pa-0">
-                    กำไรขั้นต่ำ(%)
-                    <v-text-field
-                      dense
-                      v-model.number="formset.profit"
-                      hide-details="auto"
-                      @keypress="e => checkpositive(e)"
-                      class="mb-2"
-                      type="number"
-                      :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
-                      outlined
-                      required
-                      placeholder="กรอกกำไรขั้นต่ำ"
-                    ></v-text-field>
-                  </div>
-                  <div class="col-12 pa-0">
-                    อัตราน้ำไหลขั้นต่ำ(%)
-                    <v-text-field
-                      dense
-                      type="number"
-                      v-model.number="formset.flexodd"
-                      @keypress="e => checkpositive(e)"
-                      placeholder="กรอกอัตราน้ำไหลขั้นต่ำ"
-                      outlined
-                      hide-details="auto"
-                      required
-                      :rules="[v => !!v || 'กรุณากรอกอัตราน้ำไหลขั้นต่ำ']"
-                    ></v-text-field>
-                  </div>
-                  <div class="text-right col-12 pb-3">
-                    <v-btn color="success" @click="setprofit(formset)"
-                      >บันทึก</v-btn
-                    >
+              <div class="col-12">
+                <v-form ref="formMax_profit_lost">
+                  ยอดขาดทุนสูงสุด(%)
+                  <div class="row mt-3">
+                    <div class="col-12 col-md-8">
+                      <v-text-field
+                        dense
+                        v-model.number="max_profit_lost"
+                        hide-details="auto"
+                        @keypress="e => checkpositive(e)"
+                        class="mb-2"
+                        type="number"
+                        :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
+                        outlined
+                        required
+                        placeholder="กรอกกำไรขั้นต่ำ"
+                      ></v-text-field>
+                    </div>
+                    <div class=" col-12 col-md-4 pb-3">
+                      <v-btn color="success" @click="setprofitLoss()"
+                        >บันทึก</v-btn
+                      >
+                    </div>
                   </div>
                 </v-form>
-              </div>
-              <v-divider vertical inset></v-divider>
-              <div class="col-12 col-sm-6   ">
-                <v-form ref="formMax_profit_lost">
-                  <div class="col-12 pa-0">
-                    ยอดขาดทุนสูงสุด(%)
-                    <v-text-field
-                      dense
-                      v-model.number="max_profit_lost"
-                      hide-details="auto"
-                      @keypress="e => checkpositive(e)"
-                      class="mb-2"
-                      type="number"
-                      :rules="[v => !!v || 'กรุณากรอกกำไรขั้นต่ำ']"
-                      outlined
-                      required
-                      placeholder="กรอกกำไรขั้นต่ำ"
-                    ></v-text-field>
-                  </div>
-                  <div class="text-right col-12 pb-3">
-                    <v-btn color="success" @click="setprofitLoss()"
-                      >บันทึก</v-btn
-                    >
-                  </div></v-form
-                >
               </div>
             </div>
           </div>
@@ -117,7 +80,7 @@
     <div v-if="isLoading">
       <loading-page></loading-page>
     </div>
-    <div v-else>
+    <div>
       <div v-if="selectCate != null" class="rounded-lg white pa-3">
         <div class="d-flex">
           <h4 class="my-2">หวยของตัวเอง</h4>
@@ -251,7 +214,7 @@
       <v-form ref="edtform">
         <v-card class="pa-3">
           <v-card-title primary-title class="justify-center font-weight-bold">
-            แก้ไขอัตราหวยน้ำไหล
+            ตั้งค่าหวยน้ำไหล
           </v-card-title>
           <div class="rounded-lg pa-2 elevation-3">
             <v-text-field
@@ -338,7 +301,7 @@
               color="success"
               :loading="loading_btn"
               @click="submitEdit(formupdate)"
-              >ตั้งค่า</v-btn
+              >บันทึก</v-btn
             >
             <v-btn color="error" @click="closeEdit()">ยกเลิก</v-btn>
           </v-card-actions>
@@ -462,15 +425,12 @@ export default {
     };
   },
   async fetch() {
-    this.isLoading = true;
     try {
       this.listtype = this.$store.state.lottosetting.lottotype;
-      this.isLoading = false;
-      this.getPercent();
+
       this.getPerMaxloss();
     } catch (error) {
       console.log(error);
-      this.isLoading = false;
     }
   },
   methods: {
@@ -486,12 +446,14 @@ export default {
       "configMaxLoss"
     ]),
     async getPerMaxloss() {
+      this.isLoading = true;
       try {
         let { data: perMaxlsoe } = await this.getMaxLoss();
         this.max_profit_lost = perMaxlsoe.max_profit_lost;
       } catch (error) {
         console.log(error);
       }
+      this.isLoading = false;
     },
     getDetail(id) {
       this.$router.push(`${this.$route.path}?id=${id}`);
@@ -516,7 +478,6 @@ export default {
                 showConfirmButton: false,
                 timer: 1500
               });
-              this.getPercent();
             }
           });
         } catch (error) {
@@ -568,21 +529,20 @@ export default {
       }
     },
     async selectCatebytype() {
+      this.selectCate = "";
+      this.isLoading = true;
       try {
         const { data } = await this.getCategoryflexbyid(this.selectType);
         this.itemcategory = data.result;
       } catch (error) {
         console.log(error);
       }
+      this.isLoading = false;
     },
     closeEdit() {
       this.dlupdate = false;
     },
-    async getPercent() {
-      let { data: perflex } = await this.getPerflex();
-      this.formset.profit = perflex.result.profit;
-      this.formset.flexodd = perflex.result.flex_odd_lotto;
-    },
+
     async selectFlexodd(value) {
       this.getOutComeratebyid(value);
       this.getUplinebyid(value);

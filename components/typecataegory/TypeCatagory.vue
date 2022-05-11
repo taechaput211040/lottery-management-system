@@ -2,7 +2,7 @@
   <div>
     <h1 class="mt-2">ชนิดของหวย : {{ $route.query.type }}</h1>
     <div v-if="isLoading"><loading-page></loading-page></div>
-    <div v-else class="ma-2  white rounded-lg">
+    <div class="ma-2  white rounded-lg">
       <div class="d-flex pa-2 align-center">
         <v-btn
           color="red back_btn"

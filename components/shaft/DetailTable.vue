@@ -16,7 +16,7 @@
       </h3>
     </div>
     <div v-if="isLoading"><loading-page></loading-page></div>
-    <div v-else>
+    <div>
       <div class="rounded-lg white">
         <v-data-table
           class="elevation-2"
@@ -165,7 +165,7 @@
       <v-dialog max-width="600px" v-model="updateDiaglog">
         <v-card class="pa-3">
           <v-card-title class="justify-center font-weight-bold"
-            >แก้ไขอัตราหวยเพลา</v-card-title
+            >ตั้งค่าหวยเพลา</v-card-title
           >
 
           <div class="elevation-3 rounded-lg pa-3">
@@ -227,10 +227,11 @@
           </div>
           <v-card-actions class="justify-center">
             <v-btn
-              class="success"
+              class="btn_setting"
+              color="success"
               :loading="loading_btn"
               @click="submitUpdate()"
-              >เเก้ไข</v-btn
+              >บันทึก</v-btn
             >
             <v-btn class="error" @click="clostupdate()">ยกเลิก</v-btn>
           </v-card-actions>

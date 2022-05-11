@@ -51,7 +51,7 @@
         </v-row>
 
         <div v-if="isLoading"><loading-page></loading-page></div>
-        <div v-else>
+        <div>
           <v-card class="mx-auto  justify-center classtable">
             <v-data-table
               :server-items-length="pagination.rowsNumber"
@@ -1165,6 +1165,7 @@ export default {
         this.getdataRender();
       } else {
         try {
+          this.isLoading = true;
           let params = {
             title: this.title_search ? this.title_search : undefined,
             currentPage: this.pagination.page,
@@ -1198,6 +1199,7 @@ export default {
       }
     },
     async getdataRender() {
+      this.isLoading = true;
       try {
         let params = {
           currentPage: this.pagination.page,

@@ -7,7 +7,7 @@
       >
     </h2>
     <div v-if="isLoader"><loading-page></loading-page></div>
-    <div v-else>
+    <div>
       <v-btn
         color="red back_btn"
         class="ma-3"
@@ -278,6 +278,7 @@ export default {
       return params;
     },
     async getMember(item) {
+      this.isLoader = true;
       let params = undefined;
       if (!item) {
         params = this.getParameter();
@@ -300,15 +301,15 @@ export default {
       } else {
         this.thisUser = item;
       }
+      this.isLoader = false;
       this.loading_btn = false;
     },
-    toloadingPage() {
-      this.isLoader = true;
-    },
+
     async getMemberByuser(item) {
+      this.isLoader = true;
       let params = undefined;
       params = this.getParameter(item);
-      this.toloadingPage();
+
       let { result } = await this.getMemberReportByUser(params);
       this.accountRendering = result.data;
       this.pagination.rowsNumber = result.total;

@@ -36,7 +36,6 @@ export default {
   justify-content: center;
   align-items: center;
   left: 0;
-  bottom: 0;
   flex-direction: column;
 }
 .text_loading {

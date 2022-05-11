@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>หวยน้ำไหล / รายงานตัวเลขสูงสุด</h2>
-
+    <loading-page v-if="isLoading"></loading-page>
     <div class="pa-1 rounded-lg white my-3 pa-2">
       <div class="row py-3">
         <div class="col-12 col-sm-6 col-md-3">
@@ -119,7 +119,12 @@
               ></v-text-field>
             </div>
             <v-card-actions class="justify-center">
-              <v-btn color="success" @click="submitConfig()">ยืนยัน</v-btn>
+              <v-btn
+                color="success"
+                @click="submitConfig()"
+                :loading="loading_btn"
+                >ยืนยัน</v-btn
+              >
               <v-btn color="error" @click="closeform()"
                 >ปิด</v-btn
               ></v-card-actions
@@ -142,17 +147,7 @@
               :value="this.maximumIncomeAmount || 10"
             ></v-text-field>
           </div>
-          <div class="col-12 col-sm-3">
-            กำไรขั้นต่ำ(บาท)
-            <v-text-field
-              placeholder="รายรับทั้งหมด"
-              hide-details="auto"
-              dense
-              filled
-              :value="minimumProfit"
-              disabled
-            ></v-text-field>
-          </div>
+
           <div class="col-12 col-sm-3">
             อัตราจ่ายสูงสุด(บาท)
             <v-text-field
@@ -162,6 +157,17 @@
               filled
               disabled
               :value="this.payoutrate.maximum_out_come_rate || 0"
+            ></v-text-field>
+          </div>
+          <div class="col-12 col-sm-3">
+            ยอดขาดทุนสูงสุด(%)
+            <v-text-field
+              placeholder="อัตราจ่ายสูงสุด"
+              hide-details="auto"
+              dense
+              filled
+              disabled
+              :value="this.max_profit_lost || 0"
             ></v-text-field>
           </div>
 
@@ -189,9 +195,9 @@
             {{ numberWithCommas(item.bet_amount + item.bet_fake) }}
           </template>
           <!-- อัตราจ่าย -->
-          
-          <template #[`item.payrate`]="{item}">
-            {{ numberWithCommas(calPayrate(item)) }}
+
+          <template #[`item.payrate`]="{item,index}">
+            {{ numberWithCommas(calPayrate(item, index)) }}
           </template>
           <!-- อัตราจ่าย -->
           <!-- จ่ายเงิน -->
@@ -281,7 +287,12 @@
               ></v-text-field>
             </div>
             <v-card-actions class="justify-center">
-              <v-btn color="success" @click="submitCreate()">เพิ่ม</v-btn>
+              <v-btn
+                color="success"
+                @click="submitCreate()"
+                :loading="loading_btn"
+                >เพิ่ม</v-btn
+              >
               <v-btn color="error" @click="closeCreate()"
                 >ปิด</v-btn
               ></v-card-actions
@@ -296,9 +307,10 @@
 <script>
 import { mapActions } from "vuex";
 import VueApexCharts from "vue-apexcharts";
+import LoadingPage from "../../components/form/LoadingPage.vue";
 
 export default {
-  components: { VueApexCharts },
+  components: { VueApexCharts, LoadingPage },
   comments: {
     numberFormat() {
       return (number, digit = 2, comma = true) => {
@@ -327,6 +339,7 @@ export default {
   },
   data() {
     return {
+      loading_btn: false,
       validCreate: false,
       dlCreate: false,
       formCreate: {},
@@ -344,6 +357,7 @@ export default {
       options: {},
       maximumIncomeAmount: 161,
       per_flex_rate: 10,
+      max_profit_lost: 0,
       payoutrate: {
         maximum_out_come_rate: 999
       },
@@ -409,7 +423,7 @@ export default {
           value: "lotto_number",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold",
+          cellClass: "font-weight-bold purple--text",
           width: "75px",
           sortable: false
         },
@@ -500,10 +514,11 @@ export default {
       console.log(error);
       this.isLoading = false;
     }
+    this.getPerMaxloss();
   },
   computed: {
-    minimumProfit() {
-      let profit = (this.per_flex_rate * this.maximumIncomeAmount) / 100;
+    maximumProfitwhenloss() {
+      let profit = this.maximumIncomeAmount * (this.max_profit_lost / 100);
       return profit;
     }
   },
@@ -543,8 +558,9 @@ export default {
       return winlose;
     },
     getRecieve_max() {
-      let Recieve_max =
-        parseFloat(this.maximumIncomeAmount) - parseFloat(this.minimumProfit);
+      let Recieve_max = parseFloat(
+        (this.maximumIncomeAmount * this.max_profit_lost) / 100
+      );
       return Recieve_max;
     },
     getWinloseNormal(item) {
@@ -558,11 +574,10 @@ export default {
     },
     // เชค winloseflexood
     checkFlex_odd(item) {
-      let Recieve_max = this.getRecieve_max();
       if (
         (item.bet_amount + item.bet_fake) *
           this.payoutrate.maximum_out_come_rate >
-        Recieve_max
+        this.maximumIncomeAmount
       ) {
         return true;
       } else {
@@ -575,7 +590,7 @@ export default {
     getWinloseFlex(item) {
       let wlflexodd = 0;
       if (this.checkFlex_odd(item)) {
-        wlflexodd = this.minimumProfit;
+        wlflexodd = this.maximumProfitwhenloss;
       } else {
         wlflexodd = this.getWinloseAmount(this.profitNormal(item));
       }
@@ -593,7 +608,7 @@ export default {
     },
     //colomn จ่ายเงิน
     numberWithCommas(x) {
-      var parts = x
+      var parts = parseFloat(x)
         .toFixed(2)
         .toString()
         .split(".");
@@ -662,14 +677,25 @@ export default {
     },
     //colomn จ่ายเงิน
     //column payrate
-    calPayrate(item) {
+    calPayrate(item, i) {
       let payrate = 0;
+      let profit_max = this.getRecieve_max();
       if (this.checkFlex_odd(item)) {
-        payrate = this.profitNormal(item) / (item.bet_amount + item.bet_fake);
+        if (
+          (item.bet_amount + item.bet_fake) *
+            parseInt(this.payoutrate.maximum_out_come_rate) <
+          profit_max
+        ) {
+          console.log("hooo");
+
+          payrate = this.payoutrate.minimum_out_come_rate;
+        } else {
+          payrate = this.profitNormal(item) / (item.bet_amount + item.bet_fake);
+        }
+        // }
       } else {
         payrate = this.payoutrate.maximum_out_come_rate;
       }
-
       return payrate;
     },
     //column payrate
@@ -686,8 +712,17 @@ export default {
       "getDetailNumberReport",
       "betFake"
     ]),
-    ...mapActions("flexodd", ["getOutcomerate", "getPerflex"]),
-
+    ...mapActions("flexodd", ["getOutcomerate", "getPerflex", "getMaxLoss"]),
+    async getPerMaxloss() {
+      this.isLoading = true;
+      try {
+        let { data: perMaxlsoe } = await this.getMaxLoss();
+        this.max_profit_lost = perMaxlsoe.max_profit_lost;
+      } catch (error) {
+        console.log(error);
+      }
+      this.isLoading = false;
+    },
     async selectTypelotto(value) {
       this.selectTypeCategory = null;
       this.toRound = null;
@@ -710,6 +745,7 @@ export default {
       }
     },
     async getNumberreport(value, type) {
+      this.isLoading = true;
       this.numberType = null;
       let params = {
         program_id: value,
@@ -723,8 +759,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      this.isLoading = false;
     },
     async selectRound(value) {
+      this.isLoading = true;
       this.toRound = null;
       this.numberType = null;
       let round;
@@ -749,6 +787,7 @@ export default {
         console.log(error);
         this.isLoading = false;
       }
+      this.isLoading = false;
       this.getOutcome();
     },
     checkpositive(evt) {
@@ -781,6 +820,7 @@ export default {
       this.getFlexoddReport();
     },
     async getFlexoddReport() {
+      this.isLoading = true;
       let params = this.getParameter();
       try {
         let { data: response } = await this.getDetailNumberReport(params);
@@ -793,6 +833,7 @@ export default {
         console.log(error);
       }
       this.payoutrate = this.mapNumbertype();
+      this.isLoading = false;
     },
     mapNumbertype() {
       let type = this.itemPayrate.find(x => {
@@ -854,6 +895,7 @@ export default {
         ]
       };
       if (this.$refs.formCreate.validate()) {
+        this.loading_btn = true;
         try {
           await this.betFake(body);
           this.$swal({
@@ -872,7 +914,7 @@ export default {
         } catch (error) {
           this.$swal({
             icon: "warning",
-            title: "เพิ่มยอดเเทงจำลองไม่ได้เนื่องจากหวยออกผลเเล้ว",
+            title: "เพิ่มยอดเเทงจำลองไม่สำเร็จ",
             showConfirmButton: false,
             timer: 2000
           });
@@ -880,6 +922,7 @@ export default {
           console.log("faile");
           console.log(error);
         }
+        this.loading_btn = false;
       } else {
         this.$swal("กรุณากรอกข้อมูลให้ครบถ้วน", "", "warning");
       }
@@ -898,6 +941,7 @@ export default {
       };
       if (this.$refs.formconfig.validate()) {
         try {
+          this.loading_btn = true;
           await this.betFake(body);
           this.$swal({
             icon: "success",
@@ -912,6 +956,7 @@ export default {
             }
           });
           this.dledit = false;
+          this.loading_btn = false;
         } catch (error) {
           this.$swal({
             icon: "warning",
@@ -922,6 +967,7 @@ export default {
           this.dledit = false;
           console.log("faile");
           console.log(error);
+          this.loading_btn = false;
         }
       } else {
         this.$swal("กรุณากรอกข้อมูลให้ครบถ้วน", "", "warning");

@@ -14,10 +14,9 @@
         <v-radio label="ออกผลมาแล้ว" value="success"></v-radio>
         <v-radio label="ผลยังไม่ออก" value="unsuccess"></v-radio>
       </v-radio-group>
-      <div v-if="isLoading">
-        <loading-page></loading-page>
-      </div>
-      <div v-else class="rounded-lg mt-5 pa-3 white">
+
+      <loading-page v-if="isLoading"></loading-page >
+      <div class="rounded-lg mt-5 pa-3 white">
         <div class="col-12 col-sm-6 col-md-6 col-lg-4  pa-0">
           <v-text-field
             v-model="searchtext"
@@ -99,10 +98,10 @@
           </template>
           <template #[`item.status_lotto`]="{item}">
             <v-chip small color="success" v-if="item.status_lotto == true"
-              ><v-icon left>mdi-circle</v-icon> ออกผลมาแล้ว</v-chip
+              ><v-icon left>mdi-circle</v-icon> บันทึกผลรางวัลแล้ว</v-chip
             >
             <v-chip small color="error" v-if="item.status_lotto == false"
-              ><v-icon left>mdi-circle</v-icon> ผลยังไม่ออก</v-chip
+              ><v-icon left>mdi-circle</v-icon> ยังไม่ได้บันทึกผลรางวัล</v-chip
             >
           </template>
           <template #[`item.status_calculate`]="{item}">
@@ -313,9 +312,10 @@
 <script>
 import { mapActions } from "vuex";
 import FilterSearch from "../components/form/FilterSearch.vue";
+import LoadingFullpage from "../components/form/LoadingFullpage.vue";
 import LoadingPage from "../components/form/LoadingPage.vue";
 export default {
-  components: { FilterSearch, LoadingPage },
+  components: { FilterSearch, LoadingPage, LoadingFullpage },
   computed: {},
   data() {
     return {
@@ -366,7 +366,7 @@ export default {
           align: "left"
         },
         {
-          text: "การออกรางวัล",
+          text: "การบันทึกผลรางวัล",
           value: "status_lotto",
           class: "font-weight-bold",
           align: "left",
@@ -527,7 +527,7 @@ export default {
             sortable: false
           }
         ];
-        return headerender
+        return headerender;
       } else {
         return headerender;
       }
@@ -619,6 +619,7 @@ export default {
       this.getAwardList();
     },
     async getAwardList() {
+      this.isLoading = true;
       let params = this.getParameter();
 
       try {

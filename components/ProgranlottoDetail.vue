@@ -4,7 +4,7 @@
     <div v-if="isLoading">
       <loading-page></loading-page>
     </div>
-    <div v-else class="mx-auto mt-5 justify-center classtable white rounded-lg">
+    <div class="mx-auto mt-5 justify-center classtable white rounded-lg">
       <div class="d-flex justify-end align-baseline">
         <v-btn
           rounded

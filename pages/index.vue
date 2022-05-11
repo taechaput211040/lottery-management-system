@@ -286,28 +286,7 @@ export default {
       Closedate: "",
       Opendate: "",
       Betdate: "",
-      itembytype: [
-        {
-          type: "หวยรัฐบาล",
-          summary: "35,000"
-        },
-        {
-          type: "หวยออมสิน",
-          summary: "35,000"
-        },
-        {
-          type: "หวยลาว",
-          summary: "35,000"
-        },
-        {
-          type: "หุ้นใต้หวัน",
-          summary: "35,000"
-        },
-        {
-          type: "หุ้นอังกฤษ",
-          summary: "35,000"
-        }
-      ],
+      itembytype: [],
       header_bet: [
         {
           text: "ลำดับ",
