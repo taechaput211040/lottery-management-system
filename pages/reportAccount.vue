@@ -55,7 +55,7 @@
             <v-btn
               color="black white--text"
               small
-              v-if="item.level == 3 && $store.state.auth.level != 3"
+              v-if="item.level >= 3 && $store.state.auth.level != 3"
               rounded
               @click="viewOther(item, 'viewMember')"
               :disabled="item.level == 6"
@@ -88,7 +88,10 @@
         </v-row>
       </div>
 
-      <div class="mt-5 white" v-show="$store.state.auth.level == 3">
+      <div
+        class="mt-5 white"
+        v-show="$store.state.auth.level >= 3 && memberRender.length > 0"
+      >
         <h3 class="pa-3">
           รายการ member ใน {{ this.$store.state.auth.username }}
         </h3>
@@ -236,8 +239,8 @@ export default {
     sessionStorage.removeItem("pathPrev");
     sessionStorage.removeItem("userPrev");
     this.thisUser = this.$store.state.auth.username;
-    this.getMember();
-    if (this.$store.state.auth.level == 3) {
+    //  this.getMember();
+    if (this.$store.state.auth.level >= 3) {
       this.getMemberUserbylevel3();
     }
   },
@@ -330,6 +333,7 @@ export default {
       return params;
     },
     async getMemberUserbylevel3() {
+      console.log("sasd");
       let params = undefined;
       params = this.getParameterByMember();
 
