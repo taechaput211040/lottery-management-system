@@ -132,7 +132,7 @@
                       >ยอดเเทง</v-list-item-title
                     >
                     <v-list-item-subtitle>{{
-                      this.itemDetail.out_come_rate
+                      numberWithCommas(this.itemDetail.out_come_rate)
                     }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
@@ -142,7 +142,7 @@
                       >อัตราจ่าย</v-list-item-title
                     >
                     <v-list-item-subtitle>{{
-                      this.itemDetail.out_come_rate
+                      numberWithCommas(this.itemDetail.out_come_rate)
                     }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
@@ -152,7 +152,9 @@
                       >อัตราจ่ายรับของ</v-list-item-title
                     >
                     <v-list-item-subtitle>{{
-                      this.itemDetail.out_come_rate_selfrecaive
+                      numberWithCommas(
+                        this.itemDetail.out_come_rate_selfrecaive
+                      )
                     }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
@@ -162,7 +164,7 @@
                       >ยอดส่วนต่าง</v-list-item-title
                     >
                     <v-list-item-subtitle>{{
-                      this.itemDetail.date
+                      numberWithCommas(this.itemDetail.different)
                     }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
@@ -172,7 +174,7 @@
                       >รวมเงินส่วนต่าง</v-list-item-title
                     >
                     <v-list-item-subtitle>{{
-                      this.itemDetail.different
+                      numberWithCommas(this.itemDetail.different_payout)
                     }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
@@ -335,6 +337,14 @@ export default {
       this.pagination.page = 1;
       this.pagination.rowsPerPage = size;
       this.getData();
+    },
+    numberWithCommas(x) {
+      var parts = parseFloat(x)
+        .toFixed(2)
+        .toString()
+        .split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
     }
   }
 };

@@ -28,6 +28,33 @@
           >
           <span>ดูรายการแทง</span></v-tooltip
         >
+        <v-tooltip bottom color="purple">
+          <template v-slot:activator="{ on, attrs }"
+            ><v-btn
+              color="purple"
+              v-bind="attrs"
+              v-on="on"
+              fab
+              small
+              icon
+              @click="openDetail(item, 2)"
+              ><v-icon> mdi-clipboard-text</v-icon></v-btn
+            ></template
+          >
+          <span>ดูรายการเเทงรับของ</span></v-tooltip
+        >
+      </template>
+      <template #[`item.winlose`]="{item}">
+        {{ numberWithCommas(item.winlose) }}
+      </template>
+      <template #[`item.bet`]="{item}">
+        {{ numberWithCommas(item.bet) }}
+      </template>
+      <template #[`item.payout`]="{item}">
+        {{ numberWithCommas(item.payout) }}
+      </template>
+      <template #[`item.turnover`]="{item}">
+        {{ numberWithCommas(item.turnover) }}
       </template></v-data-table
     >
     <v-row align="baseline" class="ma-3 ">

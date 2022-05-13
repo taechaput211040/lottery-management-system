@@ -233,13 +233,14 @@ export default {
                 text: "รายงานน้ำไหล ปัจจุบัน",
                 to: "/report/reportFlexodd",
                 status: true
-              },
-              {
-                icon: "mdi-currency-usd",
-                text: "รายงานส่วนต่างอัตราจ่าย",
-                to: "/report/reportOutcomerate",
-                status: true
               }
+              // ,
+              // {
+              //   icon: "mdi-currency-usd",
+              //   text: "รายงานส่วนต่างอัตราจ่าย",
+              //   to: "/report/reportOutcomerate",
+              //   status: true
+              // }
             ]
           },
           {
@@ -356,13 +357,14 @@ export default {
               text: "รายงานน้ำไหล ปัจจุบัน",
               to: "/report/reportFlexodd",
               status: true
-            },
-            {
-              icon: "mdi-currency-usd",
-              text: "รายงานส่วนต่างอัตราจ่าย",
-              to: "/report/reportOutcomerate",
-              status: true
             }
+            // ,
+            // {
+            //   icon: "mdi-currency-usd",
+            //   text: "รายงานส่วนต่างอัตราจ่าย",
+            //   to: "/report/reportOutcomerate",
+            //   status: true
+            // }
           ]
         },
         {

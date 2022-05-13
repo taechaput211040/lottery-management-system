@@ -58,10 +58,10 @@
         <div class="col-12 col-sm-4 col-md-6 col-lg-3">
           เลือกชนิดตัวเลข
           <v-select
-            :items="numberReportrender"
-            item-value="id"
+            :items="itemPayrate"
+            item-value="lottonumbertype_id"
             :disabled="toRound == null"
-            item-text="name"
+            item-text="lottonumbertype_name"
             hide-details="auto"
             @change="getFlexoddReport"
             v-model="numberType"
@@ -686,8 +686,6 @@ export default {
             parseInt(this.payoutrate.maximum_out_come_rate) <
           profit_max
         ) {
-          console.log("hooo");
-
           payrate = this.payoutrate.minimum_out_come_rate;
         } else {
           payrate = this.profitNormal(item) / (item.bet_amount + item.bet_fake);
@@ -759,6 +757,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+
       this.isLoading = false;
     },
     async selectRound(value) {
