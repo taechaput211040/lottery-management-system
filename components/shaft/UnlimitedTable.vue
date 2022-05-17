@@ -218,6 +218,8 @@
             <v-text-field
               outlined
               label="เลข"
+              filled
+              disabled
               type="number"
               dense
               @keydown="e => rangeInput(e, form.lotto_number)"
@@ -425,9 +427,9 @@ export default {
       };
       return params;
     },
-    searchData(){
-      this.pagination.page = 1
-      this.getSelfeData()
+    searchData() {
+      this.pagination.page = 1;
+      this.getSelfeData();
     },
     async getSelfeData() {
       this.isLoading = true;
@@ -473,7 +475,12 @@ export default {
           this.$fetch();
         } catch (error) {
           this.editlimitedDialog = false;
-          console.log(error);
+          this.$swal({
+            icon: "error",
+            title: `${error.response.data.message}`,
+            showConfirmButton: false,
+            timer: 1500
+          });
           this.$fetch();
         }
       } else {
@@ -496,6 +503,12 @@ export default {
           this.closeForm();
           this.$fetch();
         } catch (error) {
+          this.$swal({
+            icon: "error",
+            title: `${error.response.data.message}`,
+            showConfirmButton: false,
+            timer: 1500
+          });
           this.loading_btn = false;
           this.addlimitedDialog = false;
           this.closeForm();

@@ -506,13 +506,22 @@ export default {
             cancelButtonText: "ยกเลิก"
           }).then(async result => {
             if (result.isConfirmed) {
-              await this.configMaxLoss(body);
-              this.$swal({
-                icon: "success",
-                title: "ตั้งค่าเรียบร้อย",
-                showConfirmButton: false,
-                timer: 1500
-              });
+              try {
+                await this.configMaxLoss(body);
+                this.$swal({
+                  icon: "success",
+                  title: "ตั้งค่าเรียบร้อย",
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+              } catch (error) {
+                this.$swal({
+                  icon: "error",
+                  title: `${error.response.data.message}`,
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+              }
               this.getPerMaxloss();
             }
           });
@@ -606,9 +615,10 @@ export default {
           this.dlupdate = false;
           await this.selectFlexodd(this.selectCate);
         } catch (error) {
+          // console.log(error.response.data.message);
           this.$swal({
             icon: "error",
-            title: `กรุณากรอกข้อมูลให้ถูกต้องและครบถ้วน`,
+            title: `${error.response.data.message}`,
             showConfirmButton: false,
             timer: 1500
           });

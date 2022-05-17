@@ -65,7 +65,7 @@
               dark
               small
               @click="unlimitDetail(item)"
-              ><v-icon left>mdi-plus</v-icon>เพิ่มเลขอั้น
+              ><v-icon left>mdi-pencil</v-icon>จัดการเลขอั้น
             </v-btn>
           </template>
           <template #[`item.action`]="{item}">
@@ -484,13 +484,10 @@ export default {
         if (error.response.status == 400) {
           this.$swal({
             icon: "error",
-            title: `ขออภัย!! <br>ไม่สามารตั้งค่าอัตราจ่ายเกิน <br> ${this.numberWithCommas(
-              this.payrateValue.maximum_out_come_rate
-            )} บาทได้`,
+            title: `${error.response.data.message}`,
             showConfirmButton: false,
             timer: 1500
           });
-          this.$fetch();
         } else {
           this.$swal({
             icon: "error",
