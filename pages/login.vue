@@ -1,5 +1,6 @@
 <template>
   <div class="bg-page">
+    <loading-page v-if="isLoading" textShow="กำลังเข้าสู่ระบบ"></loading-page>
     <div class="login">
       <v-form class=" font-weight-bold">
         <div class="my-3 text-center  header-login">
@@ -58,10 +59,13 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
+import LoadingPage from "../components/form/LoadingPage.vue";
 export default {
+  components: { LoadingPage },
   layout: "session",
   data() {
     return {
+      isLoading: false,
       checkonline: false,
       username: "",
       password: "",
@@ -71,12 +75,12 @@ export default {
   async fetch() {},
   async beforeMount() {
     this.checklogin();
-
   },
   methods: {
     ...mapActions("auth", ["login", "gettoken"]),
 
     async auth() {
+      this.isLoading = true;
       try {
         const { data: response } = await this.login({
           username: this.username,
@@ -108,6 +112,7 @@ export default {
         this.password = "";
         console.log(err);
       }
+      this.isLoading = true;
     },
     checklogin() {
       const token = sessionStorage.getItem("token");

@@ -7,7 +7,9 @@
         <div></div>
         <div></div>
       </div>
-      <div class="text_loading"><h2>กำลังประมวลผล</h2></div>
+      <div class="text_loading">
+        <h2>{{ textShow }}</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -18,6 +20,10 @@ export default {
     loading: {
       default: true,
       type: Boolean
+    },
+    textShow: {
+      default: "กำลังประมวลผล",
+      type: String
     }
   }
 };
