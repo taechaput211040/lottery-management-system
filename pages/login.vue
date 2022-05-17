@@ -112,7 +112,7 @@ export default {
         this.password = "";
         console.log(err);
       }
-      this.isLoading = true;
+      this.isLoading = false;
     },
     checklogin() {
       const token = sessionStorage.getItem("token");
