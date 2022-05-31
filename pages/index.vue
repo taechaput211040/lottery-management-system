@@ -573,7 +573,7 @@ export default {
       return colorprogress;
     },
     numberWithCommas(x) {
-      var parts = parseInt(x)
+      var parts = parseFloat(x)
         .toFixed(2)
         .toString()
         .split(".");

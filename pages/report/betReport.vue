@@ -630,7 +630,7 @@ export default {
       this.dialogdetail = true;
     },
     numberWithCommas(x) {
-      var parts = parseInt(x)
+      var parts = parseFloat(x)
         .toFixed(2)
         .toString()
         .split(".");
