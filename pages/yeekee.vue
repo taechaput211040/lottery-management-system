@@ -4,11 +4,11 @@
       <h2 class="text-center">หวยยี่กี่</h2>
       <div v-if="this.existingSetting">
         <div class="pa-3 mt-3 rounded-lg white">
-          <h3 class="success--text font-weight-bold pa-2">ตั้งค่า</h3>
-          <div> ออกผลแบบพิเศษ (สร้างเลขเอง)</div>
+          <h3 class="success--text font-weight-bold pa-2 pl-6">ตั้งค่า</h3>
+          <div class="pl-6"> ออกผลแบบพิเศษ (สร้างเลขเอง)</div>
           <v-radio-group
             v-model="face"
-            row
+            class="pl-10"
           >
             <v-radio
               label="เปิด"
@@ -19,12 +19,12 @@
               :value=false
             ></v-radio>
           </v-radio-group>
-          <div> face : {{this.face}}</div>
+          <!-- <div> face : {{this.face}}</div> -->
           <!-- <div> minimum profit : {{this.minimum_profit}}</div> -->
           <!-- {{this.minimum_profit}} -->
-          <div>ยอดกำไรต่ำสุด (%)</div>
-          <div class="row">
-            <div class="col-9 col-sm-4">
+          <div class="py-2 pl-6">ยอดกำไรต่ำสุด (%)</div>
+          <div class="row pl-6">
+            <div class=" col-9 col-sm-4">
               <v-text-field
                 placeholder="ยอดกำไรขาดทุน"
                 outlined
@@ -35,11 +35,11 @@
                 hide-details="auto"
               ></v-text-field>
             </div>
-            <div class="col-3 col-sm-2">
-              <v-btn color="success" @click="confirmEdit()">
-                บันทึก
-              </v-btn>
-            </div>
+          </div>
+          <div class="col-3 col-sm-2 pl-6">
+            <v-btn color="success" @click="confirmEdit()">
+              บันทึก
+            </v-btn>
           </div>
         </div>
       </div>
