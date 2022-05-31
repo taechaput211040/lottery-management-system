@@ -28,3 +28,19 @@ export async function updateYeekeeSetting({ commit }, body) {
     }
   });
 }
+
+
+export async function createYeekeeSetting({ commit }, body) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.post(
+        `${process.env.API_SETTING_YEEKEE}/yeekee/setting/`,
+        body
+      );
+
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

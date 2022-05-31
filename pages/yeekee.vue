@@ -77,6 +77,8 @@
                     :value=false
                   ></v-radio>
                 </v-radio-group>
+                <!-- <div>{{face}}</div>
+                <div>{{minimum_profit}}</div> -->
                 <div>ยอดกำไรต่ำสุด (%)</div>
                 <div class="row">
                   <div class="col-12 ">
@@ -97,7 +99,7 @@
                 <v-btn
                   color="green darken-1"
                   text
-                  @click="createNewSetting()"
+                  @click="confirmCreate()"
                 >
                   create
                 </v-btn>
@@ -156,9 +158,10 @@ export default {
     };
   },
   methods:{
-    ...mapActions("yeekee",["getYeekeesetting","updateYeekeeSetting"]),
+    ...mapActions("yeekee",["getYeekeesetting","updateYeekeeSetting","createYeekeeSetting"]),
     async getYeekeeData(){
       try{
+        this.isLoading = true;
         this.existingSetting = true;
         let {data} = await this.getYeekeesetting();
 
@@ -166,6 +169,7 @@ export default {
         this.minimum_profit = data.minimum_profit
         this.face = data.face
         console.log(this.settingYeekee)
+        this.isLoading = false;
       } catch(error) {
         console.log(error)
         this.existingSetting = false;
@@ -173,18 +177,57 @@ export default {
     },
     async confirmEdit(){
       try {
+        this.$swal({
+            title: "ยืนยันการตั่งค่าใหม่ ?",
+            icon: "primary",
+            showCancelButton: true,
+            confirmButtonColor: "#4caf50",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "ตั้งค่า",
+            cancelButtonText: "ยกเลิก"
+          }).then(async result => {
+            if (result.isConfirmed) {
+              this.isLoading = true;
+              let body = {
+                minimum_profit: parseInt(this.minimum_profit),
+                face: this.face
+              }
+              console.log(body)
+              let res = await this.updateYeekeeSetting(body);
+              this.isLoading = false;
+              this.$swal({
+                icon: "success",
+                title: "ตั้งค่าเรียบร้อย",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
+          });
+
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async confirmCreate(){
+      try {
         this.isLoading = true;
 
         let body = {
           minimum_profit: parseInt(this.minimum_profit),
           face: this.face
         }
-        console.log(body)
-        let res = await this.updateYeekeeSetting(body);
-        console.log(res);
-
+        let res = await this.createYeekeeSetting(body);
+        console.log(body);
+        this.dialog = false
+        await this.getYeekeesetting();
         this.isLoading = false;
-
+        this.$swal({
+          icon: "success",
+          title: "สร้างการตั้งค่าใหม่สำเร็จ",
+          showConfirmButton: false,
+          timer: 1500
+              });
       } catch (error) {
         console.log(error)
       }
