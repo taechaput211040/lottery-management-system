@@ -478,12 +478,17 @@ export default {
           var wfday = today.getDay(),
             diff = today.getDate() - wfday + (wfday == 0 ? -6 : 1);
           var wlday = diff + 6;
+
+          var curr = new Date;
+          var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
+          var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
+          
           this.filterDate = {
             start_date: this.getDateTime(
-              new Date(today.setDate(diff)).setHours(0, 0, 0, 0)
+              new Date(firstday.setHours(0, 0, 0, 0))
             ),
             end_date: this.getDateTime(
-              new Date(today.setDate(wlday)).setHours(23, 59, 59, 999)
+              new Date(lastday.setHours(23, 59, 59, 999))
             )
           };
           break;

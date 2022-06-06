@@ -447,7 +447,7 @@ export default {
       }
     },
     numberWithCommas(x) {
-      var parts = x
+      var parts = parseFloat(x)
         .toFixed(2)
         .toString()
         .split(".");

@@ -2,7 +2,8 @@
   <div>
     <h2>ตั้งค่าหวยเพลา</h2>
     <div v-if="!this.$route.query.id">
-      <main-table></main-table>
+      <!-- <main-table></main-table> -->
+      <new-detail-table></new-detail-table>
     </div>
     <div
       v-else-if="this.$route.query.id && !this.$route.query.lottonumbertype_id"
@@ -16,9 +17,10 @@
 <script>
 import DetailTable from "../../components/shaft/DetailTable.vue";
 import MainTable from "../../components/shaft/MainTable.vue";
+import NewDetailTable from '../../components/shaft/NewDetailTable.vue';
 import UnlimitedTable from "../../components/shaft/UnlimitedTable.vue";
 export default {
-  components: { MainTable, DetailTable, UnlimitedTable },
+  components: { MainTable, DetailTable, UnlimitedTable, NewDetailTable },
   data() {
     return {
       datarender: [],
