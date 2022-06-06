@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class=" my-3 pa-3">
-      <v-row class="pa-1 ">
+    <div class="my-3 pa-3">
+      <v-row class="pa-1">
         <v-col cols="12" sm="6">
-          <div class="rounded-lg white " style="height:100%">
+          <div class="rounded-lg white" style="height: 100%">
             <div class="primary--text font-weight-bold pa-2">
               เลือกประเภทหวย
             </div>
@@ -36,9 +36,7 @@
                 label="เลือกชนิดหวย"
                 dense
                 placeholder="กรุณาเลือกชนิดของหวย"
-
               ></v-select>
-
             </div>
           </div>
         </v-col>
@@ -49,7 +47,13 @@
     </div>
     <div>
       <!-- normal lotto -->
-      <div v-if="selectCate != null && selectCate.typecategory_id !== '031d2311-ddc8-40ce-be39-342926748163'" class="rounded-lg white pa-3">
+      <div
+        v-if="
+          selectCate != null &&
+          selectCate.typecategory_id !== '031d2311-ddc8-40ce-be39-342926748163'
+        "
+        class="rounded-lg white pa-3"
+      >
         <div class="d-flex">
           <h4 class="my-2">หวยของตัวเอง</h4>
         </div>
@@ -73,28 +77,28 @@
               ไม่พบข้อมูล
             </v-alert>
           </template>
-          <template #[`item.no`]="{index}">
+          <template #[`item.no`]="{ index }">
             {{ index + 1 }}
           </template>
-          <template #[`item.maximum_out_come_rate`]="{item}">
+          <template #[`item.maximum_out_come_rate`]="{ item }">
             {{ numberWithCommas(item.maximum_out_come_rate) }}
           </template>
-          <template #[`item.minimum_bet_prize`]="{item}">
+          <template #[`item.minimum_bet_prize`]="{ item }">
             {{ numberWithCommas(item.minimum_bet_prize) }}
           </template>
-          <template #[`item.maximum_bet_prize`]="{item}">
+          <template #[`item.maximum_bet_prize`]="{ item }">
             {{ numberWithCommas(item.maximum_bet_prize) }}
           </template>
-          <template #[`item.self_receive_amount`]="{item}">
+          <template #[`item.self_receive_amount`]="{ item }">
             {{ numberWithCommas(item.self_receive_amount) }}
           </template>
-          <template #[`item.self_receive_balance`]="{item}">
+          <template #[`item.self_receive_balance`]="{ item }">
             {{ numberWithCommas(item.self_receive_balance) }}
           </template>
-          <template #[`item.discount_amount`]="{item}">
+          <template #[`item.discount_amount`]="{ item }">
             {{ item.discount_amount }} %
           </template>
-          <template #[`item.unlimitedNumber`]="{item}">
+          <template #[`item.unlimitedNumber`]="{ item }">
             <v-btn
               rounded
               color="primary"
@@ -104,7 +108,7 @@
               ><v-icon left>mdi-pencil</v-icon>จัดการเลขอั้น
             </v-btn>
           </template>
-          <template #[`item.action`]="{item}">
+          <template #[`item.action`]="{ item }">
             <v-btn
               rounded
               class="btn_setting"
@@ -116,7 +120,7 @@
             </v-btn>
           </template>
         </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
+        <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               outlined
@@ -138,7 +142,13 @@
       </div>
 
       <!-- yeekee lotto -->
-      <div v-if="selectCate != null && selectCate.typecategory_id == '031d2311-ddc8-40ce-be39-342926748163'" class="rounded-lg white pa-3">
+      <div
+        v-if="
+          selectCate != null &&
+          selectCate.typecategory_id == '031d2311-ddc8-40ce-be39-342926748163'
+        "
+        class="rounded-lg white pa-3"
+      >
         <div class="d-flex">
           <h4 class="my-2">หวยของตัวเอง</h4>
         </div>
@@ -162,28 +172,28 @@
               ไม่พบข้อมูล
             </v-alert>
           </template>
-          <template #[`item.no`]="{index}">
+          <template #[`item.no`]="{ index }">
             {{ index + 1 }}
           </template>
-          <template #[`item.maximum_out_come_rate`]="{item}">
+          <template #[`item.maximum_out_come_rate`]="{ item }">
             {{ numberWithCommas(item.maximum_out_come_rate) }}
           </template>
-          <template #[`item.minimum_bet_prize`]="{item}">
+          <template #[`item.minimum_bet_prize`]="{ item }">
             {{ numberWithCommas(item.minimum_bet_prize) }}
           </template>
-          <template #[`item.maximum_bet_prize`]="{item}">
+          <template #[`item.maximum_bet_prize`]="{ item }">
             {{ numberWithCommas(item.maximum_bet_prize) }}
           </template>
-          <template #[`item.self_receive_amount`]="{item}">
+          <template #[`item.self_receive_amount`]="{ item }">
             {{ numberWithCommas(item.self_receive_amount) }}
           </template>
-          <template #[`item.self_receive_balance`]="{item}">
+          <template #[`item.self_receive_balance`]="{ item }">
             {{ numberWithCommas(item.self_receive_balance) }}
           </template>
-          <template #[`item.discount_amount`]="{item}">
+          <template #[`item.discount_amount`]="{ item }">
             {{ item.discount_amount }} %
           </template>
-          <template #[`item.unlimitedNumber`]="{item}">
+          <template #[`item.unlimitedNumber`]="{ item }">
             <v-btn
               rounded
               color="primary"
@@ -193,7 +203,7 @@
               ><v-icon left>mdi-pencil</v-icon>จัดการเลขอั้น
             </v-btn>
           </template>
-          <template #[`item.action`]="{item}">
+          <template #[`item.action`]="{ item }">
             <v-btn
               rounded
               class="btn_setting"
@@ -205,7 +215,7 @@
             </v-btn>
           </template>
         </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
+        <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               outlined
@@ -224,7 +234,6 @@
             ></v-pagination>
           </v-col>
         </v-row>
-
       </div>
 
       <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
@@ -248,25 +257,24 @@
               ไม่พบข้อมูล
             </v-alert>
           </template>
-          <template #[`item.maximum_out_come_rate`]="{item}">
+          <template #[`item.maximum_out_come_rate`]="{ item }">
             {{ numberWithCommas(item.maximum_out_come_rate) }}
           </template>
 
-
-          <template #[`item.minimum_bet_prize`]="{item}">
+          <template #[`item.minimum_bet_prize`]="{ item }">
             {{ numberWithCommas(item.minimum_bet_prize) }}
           </template>
-          <template #[`item.minimum_out_come_rate`]="{item}">
+          <template #[`item.minimum_out_come_rate`]="{ item }">
             {{ numberWithCommas(item.minimum_out_come_rate) }}
           </template>
 
-          <template #[`item.maximum_bet_prize`]="{item}">
+          <template #[`item.maximum_bet_prize`]="{ item }">
             {{ numberWithCommas(item.maximum_bet_prize) }}
           </template>
-          <template #[`item.no`]="{index}">
+          <template #[`item.no`]="{ index }">
             {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
           </template>
-          <template #[`item.unlimitedNumber`]="{item}">
+          <template #[`item.unlimitedNumber`]="{ item }">
             <v-btn
               rounded
               color="primary"
@@ -277,7 +285,7 @@
             </v-btn>
           </template>
         </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
+        <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               outlined
@@ -325,12 +333,12 @@
               type="number"
               class="my-2"
               placeholder="กรุณากรอกอัตราการจ่ายสูงสุด"
-              @keypress="e => checkpositive(e)"
+              @keypress="(e) => checkpositive(e)"
               :rules="[
-                v => !!v || 'กรุณากรอกอัตราจ่ายสูงสุด',
-                v =>
+                (v) => !!v || 'กรุณากรอกอัตราจ่ายสูงสุด',
+                (v) =>
                   (v && v >= formupdate.maximum_out_come_rate) ||
-                  'กรุณากรอกอัตราจ่ายสูงสุดให้มากกว่าอัตราจ่ายต่ำสุด'
+                  'กรุณากรอกอัตราจ่ายสูงสุดให้มากกว่าอัตราจ่ายต่ำสุด',
               ]"
               hide-details="auto"
               v-model.number="formupdate.maximum_out_come_rate"
@@ -341,15 +349,15 @@
               label="อัตราจ่ายต่ำสุด"
               dense
               :rules="[
-                v => !!v || 'กรุณากรอกอัตราจ่ายต่ำสุด',
-                v =>
+                (v) => !!v || 'กรุณากรอกอัตราจ่ายต่ำสุด',
+                (v) =>
                   (v && v <= formupdate.maximum_out_come_rate) ||
-                  'กรุณากรอกอัตราจ่ายต่ำสุดน้อยกว่าอัตราจ่ายสูงสุด'
+                  'กรุณากรอกอัตราจ่ายต่ำสุดน้อยกว่าอัตราจ่ายสูงสุด',
               ]"
               type="number"
               class="my-2"
               placeholder="กรุณากรอกอัตราจ่ายต่ำสุด"
-              @keypress="e => checkpositive(e)"
+              @keypress="(e) => checkpositive(e)"
               hide-details="auto"
               v-model.number="formupdate.minimum_bet_prize"
             ></v-text-field>
@@ -374,16 +382,16 @@
             <!-- แทงสูงสุด -->
             <v-text-field
               outlined
-              @keypress="e => checkpositive(e)"
+              @keypress="(e) => checkpositive(e)"
               placeholder="กรุณากรอกยอดแทงสูงสุด"
               label="แทงสูงสุด"
               class="my-2"
               type="number"
               :rules="[
-                v => !!v || 'กรุณากรอกยอดแทงต่ำสุด',
-                v =>
+                (v) => !!v || 'กรุณากรอกยอดแทงต่ำสุด',
+                (v) =>
                   (v && v >= formupdate.minimum_bet_prize) ||
-                  'กรุณากรอกยอดเเทงสูงสุดให้มากกว่ายอดแทงต่ำสุด'
+                  'กรุณากรอกยอดเเทงสูงสุดให้มากกว่ายอดแทงต่ำสุด',
               ]"
               dense
               hide-details="auto"
@@ -393,7 +401,7 @@
             <v-text-field
               hide-details="auto"
               v-model.number="formupdate.self_receive_amount"
-              @keypress="e => checkpositive(e)"
+              @keypress="(e) => checkpositive(e)"
               label="รับของ"
               dense
               class="my-2"
@@ -405,7 +413,7 @@
               hide-details="auto"
               v-model.number="formupdate.discount_amount"
               label="ยอดส่วนลด (%)"
-              @keypress="e => checkpositive(e)"
+              @keypress="(e) => checkpositive(e)"
               outlined
               class="my-2"
               dense
@@ -442,19 +450,16 @@ export default {
       pageSizesupline: [5, 10, 15, 25],
       formset: {
         profit: 0,
-        flexodd: 0
+        flexodd: 0,
       },
       max_profit_lost: 0,
-      current_cat_id: '',
-      current_cat_title: '',
+      current_cat_id: "",
+      current_cat_title: "",
       adddl: false,
       dlupdate: false,
       formupdate: {},
-      selectCate: {
-        typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
-        typecategory_title: "หวยรัฐบาล"
-      },
-      selectType: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
+      selectCate: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
+      selectType: "02770ee9-3448-4258-8d40-a7a13c7d1257",
       listtype: [],
       isLoading: true,
       row: "",
@@ -465,169 +470,168 @@ export default {
           text: "No.",
           value: "no",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "ชนิดหวย",
           value: "lottonumbertype_name",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "อัตราจ่าย",
           value: "maximum_out_come_rate",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "รับของทั้งหมด",
           value: "self_receive_amount",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "รับของปัจจุบัน",
           value: "self_receive_balance",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "ส่วนลด",
           value: "discount_amount",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "แทงต่ำสุด",
           value: "minimum_bet_prize",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "แทงสูงสุด",
           value: "maximum_bet_prize",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "แก้ไขเลขอั้น",
           value: "unlimitedNumber",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
 
         {
           text: "ดำเนินการ",
           value: "action",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "เเก้ไขล่าสุด",
           value: "updated_by",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          align: "center"
-        }
+          align: "center",
+        },
       ],
       headersyeekeelotto: [
         {
           text: "No.",
           value: "no",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "ชนิดหวย",
           value: "lottonumbertype_name",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "อัตราจ่าย",
           value: "maximum_out_come_rate",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "ส่วนลด",
           value: "discount_amount",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "แทงต่ำสุด",
           value: "minimum_bet_prize",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "แทงสูงสุด",
           value: "maximum_bet_prize",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "ดำเนินการ",
           value: "action",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "เเก้ไขล่าสุด",
           value: "updated_by",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          align: "center"
-        }
+          align: "center",
+        },
       ],
       headersUpline: [
         {
           text: "No.",
           value: "no",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "ชนิดหวย",
           value: "lottonumbertype_name",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "อัตราจ่าย",
           value: "maximum_out_come_rate",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "ส่วนลด",
           value: "discount_amount",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "แทงต่ำสุด",
           value: "minimum_bet_prize",
           class: "font-weight-bold",
-          align: "center"
+          align: "center",
         },
         {
           text: "แทงสูงสุด",
           value: "maximum_bet_prize",
           class: "font-weight-bold",
-          align: "center"
-        }
+          align: "center",
+        },
       ],
       itemcategory: [],
-      selecttype: "",
       filter: {
         startDate: "",
-        endDate: ""
+        endDate: "",
       },
       dataOutcome: [],
       dataUpline: [],
-      percentFlexOdd: {}
+      percentFlexOdd: {},
     };
   },
   async fetch() {
@@ -640,7 +644,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions("shaft", ["getSellerAll","getAllsettingUpline","getAllsettingseller","updateSettingseller"]),
+    ...mapActions("shaft", [
+      "getSellerAll",
+      "getAllsettingUpline",
+      "getAllsettingseller",
+      "updateSettingseller",
+    ]),
     ...mapActions("flexodd", [
       "getTypelottoAll",
       "getCategoryflexbyid",
@@ -681,15 +690,15 @@ export default {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "ตั้งค่า",
-            cancelButtonText: "ยกเลิก"
-          }).then(async result => {
+            cancelButtonText: "ยกเลิก",
+          }).then(async (result) => {
             if (result.isConfirmed) {
               await this.setflexoddProfit(this.formset);
               this.$swal({
                 icon: "success",
                 title: "ตั้งค่าเรียบร้อย",
                 showConfirmButton: false,
-                timer: 1500
+                timer: 1500,
               });
             }
           });
@@ -701,7 +710,7 @@ export default {
           icon: "warning",
           title: "กรุณากรอกข้อมูลให้ครบ",
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
       }
     },
@@ -716,8 +725,8 @@ export default {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "ตั้งค่า",
-            cancelButtonText: "ยกเลิก"
-          }).then(async result => {
+            cancelButtonText: "ยกเลิก",
+          }).then(async (result) => {
             if (result.isConfirmed) {
               try {
                 await this.configMaxLoss(body);
@@ -725,14 +734,14 @@ export default {
                   icon: "success",
                   title: "ตั้งค่าเรียบร้อย",
                   showConfirmButton: false,
-                  timer: 1500
+                  timer: 1500,
                 });
               } catch (error) {
                 this.$swal({
                   icon: "error",
                   title: `${error.response.data.message}`,
                   showConfirmButton: false,
-                  timer: 1500
+                  timer: 1500,
                 });
               }
               this.getPerMaxloss();
@@ -746,7 +755,7 @@ export default {
           icon: "warning",
           title: "กรุณากรอกข้อมูลให้ครบ",
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
       }
     },
@@ -754,10 +763,13 @@ export default {
       this.selectCate = "";
       this.isLoading = true;
       try {
-        console.log('debug')
+        console.log("debug");
         const { data } = await this.getSellerAll(this.selectType);
-        console.log(data)
+        console.log(data);
         this.itemcategory = data.result;
+
+        // this.selectCate = "cfe77d55-e0f4-4a28-8dca-897005d2f77b";
+        console.log(this.selectCate)
       } catch (error) {
         console.log(error);
       }
@@ -792,10 +804,10 @@ export default {
     async getUplinebyid(id) {
       try {
         // console.log(id);
-        const { data }  = await this.getAllsettingUpline(id);
+        const { data } = await this.getAllsettingUpline(id);
         // console.log(data)
         this.dataUpline = data.result;
-        console.log(this.dataUpline)
+        console.log(this.dataUpline);
       } catch (error) {
         console.log(error);
       }
@@ -832,11 +844,11 @@ export default {
                 minimum_bet_prize: item.minimum_bet_prize,
                 maximum_bet_prize: item.maximum_bet_prize,
                 self_receive_amount: item.self_receive_amount,
-                discount_amount: item.discount_amount
-              }
-            ]
+                discount_amount: item.discount_amount,
+              },
+            ],
           };
-          console.log(body)
+          console.log(body);
           await this.updateSettingseller(body);
           await this.selectSeller(this.selectCate);
           this.loading_btn = false;
@@ -847,7 +859,7 @@ export default {
             icon: "error",
             title: `${error.response.data.message}`,
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
           this.loading_btn = false;
           this.dlupdate = false;
@@ -857,27 +869,24 @@ export default {
           icon: "error",
           title: `กรุณากรอกข้อมูลให้ถูกต้องและครบถ้วน`,
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
         this.loading_btn = false;
       }
     },
     numberWithCommas(x) {
-      var parts = parseFloat(x)
-        .toFixed(2)
-        .toString()
-        .split(".");
+      var parts = parseFloat(x).toFixed(2).toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
-    }
+    },
   },
   created() {
-    // this.selectCatebytype("cfe77d55-e0f4-4a28-8dca-897005d2f77b")
-    // this.selectSeller({
-    //     typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
-    //     typecategory_title: "หวยรัฐบาล"
-    //   })
-
-  }
+    this.selectCatebytype("cfe77d55-e0f4-4a28-8dca-897005d2f77b");
+    this.selectCate = "cfe77d55-e0f4-4a28-8dca-897005d2f77b";
+    this.selectSeller({
+      typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
+      typecategory_title: "หวยรัฐบาล",
+    });
+  },
 };
 </script>
