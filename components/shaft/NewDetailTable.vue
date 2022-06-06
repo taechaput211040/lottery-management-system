@@ -210,7 +210,7 @@
               color="black"
               dark
               small
-              @click="openupdateComerate(item)"
+              @click="openupdateComerateYeekee(item)"
               ><v-icon left>mdi-cog</v-icon> ตั้งค่า
             </v-btn>
           </template>
@@ -307,6 +307,7 @@
       </div>
     </div>
 
+    <!-- normal setting -->
     <v-dialog max-width="600px" v-model="dlupdate" persistent>
       <v-form ref="edtform">
         <v-card class="pa-3">
@@ -432,6 +433,103 @@
         </v-card></v-form
       >
     </v-dialog>
+
+    <!-- yeekee setting -->
+    <v-dialog max-width="600px" v-model="dlupdateYeekee" persistent>
+      <v-form ref="edtformYeekee">
+        <v-card class="pa-3">
+          <v-card-title primary-title class="justify-center font-weight-bold">
+            ตั้งค่าหวยเพลา
+          </v-card-title>
+          <div class="rounded-lg pa-2 elevation-3">
+            <!-- ชื่อ -->
+            <v-text-field
+              filled
+              label="ชื่อหวย"
+              hide-details="auto"
+              class="my-2"
+              outlined
+              dense
+              disabled
+              v-model="formupdateYeekee.lottonumbertype_name"
+            ></v-text-field>
+            <!-- อัตราจ่ายสูงสุด -->
+            <v-text-field
+              outlined
+              label="อัตราจ่ายสูงสุด"
+              dense
+              type="number"
+              class="my-2"
+              placeholder="กรุณากรอกอัตราการจ่ายสูงสุด"
+              @keypress="(e) => checkpositive(e)"
+              :rules="[
+                (v) => !!v || 'กรุณากรอกอัตราจ่ายสูงสุด',
+                (v) =>
+                  (v && v >= formupdateYeekee.maximum_out_come_rate) ||
+                  'กรุณากรอกอัตราจ่ายสูงสุดให้มากกว่าอัตราจ่ายต่ำสุด',
+              ]"
+              hide-details="auto"
+              v-model.number="formupdateYeekee.maximum_out_come_rate"
+            ></v-text-field>
+            <!-- อัตราจ่ายต่ำสุด -->
+            <v-text-field
+              outlined
+              label="อัตราจ่ายต่ำสุด"
+              dense
+              :rules="[
+                (v) => !!v || 'กรุณากรอกอัตราจ่ายต่ำสุด',
+                (v) =>
+                  (v && v <= formupdateYeekee.maximum_out_come_rate) ||
+                  'กรุณากรอกอัตราจ่ายต่ำสุดน้อยกว่าอัตราจ่ายสูงสุด',
+              ]"
+              type="number"
+              class="my-2"
+              placeholder="กรุณากรอกอัตราจ่ายต่ำสุด"
+              @keypress="(e) => checkpositive(e)"
+              hide-details="auto"
+              v-model.number="formupdateYeekee.minimum_bet_prize"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              @keypress="(e) => checkpositive(e)"
+              placeholder="กรุณากรอกยอดแทงสูงสุด"
+              label="แทงสูงสุด"
+              class="my-2"
+              type="number"
+              :rules="[
+                (v) => !!v || 'กรุณากรอกยอดแทงต่ำสุด',
+                (v) =>
+                  (v && v >= formupdateYeekee.minimum_bet_prize) ||
+                  'กรุณากรอกยอดเเทงสูงสุดให้มากกว่ายอดแทงต่ำสุด',
+              ]"
+              dense
+              hide-details="auto"
+              v-model.number="formupdateYeekee.maximum_bet_prize"
+            ></v-text-field>
+            <!-- ส่วนลด -->
+            <v-text-field
+              hide-details="auto"
+              v-model.number="formupdateYeekee.discount_amount"
+              label="ยอดส่วนลด (%)"
+              @keypress="(e) => checkpositive(e)"
+              outlined
+              class="my-2"
+              dense
+            ></v-text-field>
+          </div>
+          <v-card-actions class="justify-center">
+            <v-btn
+              class="btn_setting"
+              color="success"
+              :loading="loading_btn"
+              @click="submitEditYeekee(formupdateYeekee)"
+              >บันทึก</v-btn
+            >
+            <v-btn color="error" @click="closeEdit()">ยกเลิก</v-btn>
+          </v-card-actions>
+        </v-card></v-form
+      >
+    </v-dialog>
   </div>
 </template>
 
@@ -458,6 +556,8 @@ export default {
       adddl: false,
       dlupdate: false,
       formupdate: {},
+      dlupdateYeekee: false,
+      formupdateYeekee: {},
       selectCate: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
       selectType: "02770ee9-3448-4258-8d40-a7a13c7d1257",
       listtype: [],
@@ -777,6 +877,7 @@ export default {
     },
     closeEdit() {
       this.dlupdate = false;
+      this.dlupdateYeekee = false;
     },
 
     async selectSeller(value) {
@@ -817,6 +918,11 @@ export default {
       this.formupdate = Object.assign({}, item);
       // this.formupdate = item;
     },
+    openupdateComerateYeekee(item) {
+      this.dlupdateYeekee = true;
+      this.formupdateYeekee = Object.assign({}, item);
+      // this.formupdate = item;
+    },
     checkpositive(evt) {
       evt = evt ? evt : window.event;
       let charCode = evt.which ? evt.which : evt.keyCode;
@@ -844,6 +950,50 @@ export default {
                 minimum_bet_prize: item.minimum_bet_prize,
                 maximum_bet_prize: item.maximum_bet_prize,
                 self_receive_amount: item.self_receive_amount,
+                discount_amount: item.discount_amount,
+              },
+            ],
+          };
+          console.log(body);
+          await this.updateSettingseller(body);
+          await this.selectSeller(this.selectCate);
+          this.loading_btn = false;
+          this.dlupdate = false;
+        } catch (error) {
+          console.log(error.response.data.message);
+          this.$swal({
+            icon: "error",
+            title: `${error.response.data.message}`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.loading_btn = false;
+          this.dlupdate = false;
+        }
+      } else {
+        this.$swal({
+          icon: "error",
+          title: `กรุณากรอกข้อมูลให้ถูกต้องและครบถ้วน`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.loading_btn = false;
+      }
+    },
+    async submitEditYeekee(item) {
+      this.loading_btn = true;
+      console.log("this is yeekee submit")
+      item = JSON.parse(JSON.stringify(item));
+      if (this.$refs.edtformYeekee.validate()) {
+        try {
+          let body = {
+            typecategory_id: this.selectCate.typecategory_id,
+            lotto_numbertype: [
+              {
+                lottonumbertype_id: item.lottonumbertype_id,
+                maximum_out_come_rate: item.maximum_out_come_rate,
+                minimum_bet_prize: item.minimum_bet_prize,
+                maximum_bet_prize: item.maximum_bet_prize,
                 discount_amount: item.discount_amount,
               },
             ],

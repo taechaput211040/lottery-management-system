@@ -146,7 +146,14 @@
               ดูรายชื่อ Member</v-btn
             ></template
           >
-          <template #[`item.toggle`]="{ item }"> </template>
+          <template #[`item.toggle`]="{ item }">
+            <v-switch
+              v-model="item.status"
+              color="success"
+              inset
+              :label="item.status ? 'ON' : 'OFF'"
+            ></v-switch>
+          </template>
         </v-data-table>
         <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2" lg="2" xl="1">
