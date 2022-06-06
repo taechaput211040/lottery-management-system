@@ -450,8 +450,11 @@ export default {
       adddl: false,
       dlupdate: false,
       formupdate: {},
-      selectCate: null,
-      selectType: null,
+      selectCate: {
+        typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
+        typecategory_title: "หวยรัฐบาล"
+      },
+      selectType: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
       listtype: [],
       isLoading: true,
       row: "",
@@ -755,7 +758,6 @@ export default {
         const { data } = await this.getSellerAll(this.selectType);
         console.log(data)
         this.itemcategory = data.result;
-        console.log(this.itemcategory)
       } catch (error) {
         console.log(error);
       }
@@ -822,7 +824,7 @@ export default {
       if (this.$refs.edtform.validate()) {
         try {
           let body = {
-            typecategory_id: this.selectCate,
+            typecategory_id: this.selectCate.typecategory_id,
             lotto_numbertype: [
               {
                 lottonumbertype_id: item.lottonumbertype_id,
@@ -868,6 +870,14 @@ export default {
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
     }
+  },
+  created() {
+    // this.selectCatebytype("cfe77d55-e0f4-4a28-8dca-897005d2f77b")
+    // this.selectSeller({
+    //     typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
+    //     typecategory_title: "หวยรัฐบาล"
+    //   })
+
   }
 };
 </script>
