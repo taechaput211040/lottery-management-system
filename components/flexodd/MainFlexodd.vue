@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class=" my-3 pa-3">
+    <div class=" my-3 ">
       <v-row class="pa-1 ">
         <v-col cols="12" sm="6">
           <div class="rounded-lg white " style="height:100%">

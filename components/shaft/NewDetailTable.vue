@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="my-3 pa-3">
+    <div class="my-3 ">
       <v-row class="pa-1">
-        <v-col cols="12" sm="6">
+        <v-col cols="12" >
           <div class="rounded-lg white" style="height: 100%">
             <div class="primary--text font-weight-bold pa-2">
               เลือกประเภทหวย
@@ -870,6 +870,10 @@ export default {
 
         // this.selectCate = "cfe77d55-e0f4-4a28-8dca-897005d2f77b";
         console.log(this.selectCate)
+        // selectSeller({
+        //   typecategory_id: "",
+        //   typecategory_title: "",
+        // });
       } catch (error) {
         console.log(error);
       }
@@ -1002,7 +1006,7 @@ export default {
           await this.updateSettingseller(body);
           await this.selectSeller(this.selectCate);
           this.loading_btn = false;
-          this.dlupdate = false;
+          this.dlupdateYeekee = false;
         } catch (error) {
           console.log(error.response.data.message);
           this.$swal({
