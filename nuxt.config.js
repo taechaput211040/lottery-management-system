@@ -74,7 +74,7 @@ export default {
     API_SETTING_FLEX_ODD: process.env.API_SETTING_FLEX_ODD,
     API_LOTTO_REPORT: process.env.API_LOTTO_REPORT,
     API_SETTING_YEEKEE: process.env.API_SETTING_YEEKEE,
-    API_LOTTO_BET:process.env.API_LOTTO_BET
+    API_LOTTO_BET: process.env.API_LOTTO_BET
   },
   axios: {
     proxy: true,
@@ -91,9 +91,8 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
   router: {
-
-    // mode: "history",
+    mode: "history"
     // base: "/storage/dev-backoffice/"
-    base: "/storage/backoffice/"
+    // base: "/storage/backoffice/"
   }
 };
