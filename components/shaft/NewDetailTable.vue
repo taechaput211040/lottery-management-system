@@ -347,17 +347,17 @@
             <!-- อัตราจ่ายต่ำสุด -->
             <v-text-field
               outlined
-              label="อัตราจ่ายต่ำสุด"
+              label="แทงต่ำสุด"
               dense
               :rules="[
-                (v) => !!v || 'กรุณากรอกอัตราจ่ายต่ำสุด',
+                (v) => !!v || 'กรุณากรอกอัตราแทงต่ำสุด',
                 (v) =>
                   (v && v <= formupdate.maximum_out_come_rate) ||
-                  'กรุณากรอกอัตราจ่ายต่ำสุดน้อยกว่าอัตราจ่ายสูงสุด',
+                  'กรุณากรอกอัตราแทงต่ำสุดน้อยกว่าอัตราแทงสูงสุด',
               ]"
               type="number"
               class="my-2"
-              placeholder="กรุณากรอกอัตราจ่ายต่ำสุด"
+              placeholder="กรุณากรอกอัตราแทงต่ำสุด"
               @keypress="(e) => checkpositive(e)"
               hide-details="auto"
               v-model.number="formupdate.minimum_bet_prize"
@@ -471,20 +471,20 @@
               hide-details="auto"
               v-model.number="formupdateYeekee.maximum_out_come_rate"
             ></v-text-field>
-            <!-- อัตราจ่ายต่ำสุด -->
+            <!-- อัตราแทงต่ำสุด -->
             <v-text-field
               outlined
-              label="อัตราจ่ายต่ำสุด"
+              label="แทงต่ำสุด"
               dense
               :rules="[
-                (v) => !!v || 'กรุณากรอกอัตราจ่ายต่ำสุด',
+                (v) => !!v || 'กรุณากรอกอัตราแทงต่ำสุด',
                 (v) =>
                   (v && v <= formupdateYeekee.maximum_out_come_rate) ||
-                  'กรุณากรอกอัตราจ่ายต่ำสุดน้อยกว่าอัตราจ่ายสูงสุด',
+                  'กรุณากรอกอัตราแทงต่ำสุดน้อยกว่าอัตราแทงสูงสุด',
               ]"
               type="number"
               class="my-2"
-              placeholder="กรุณากรอกอัตราจ่ายต่ำสุด"
+              placeholder="กรุณากรอกอัตราแทงต่ำสุด"
               @keypress="(e) => checkpositive(e)"
               hide-details="auto"
               v-model.number="formupdateYeekee.minimum_bet_prize"

@@ -228,6 +228,7 @@ export default {
           showConfirmButton: false,
           timer: 1500
               });
+        this.getYeekeeData()
       } catch (error) {
         console.log(error)
       }
