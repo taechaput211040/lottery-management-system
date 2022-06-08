@@ -293,7 +293,12 @@ export default {
             to: "/flexodd",
             icon: "mdi-tune-vertical",
             status: true
-          },
+          },{
+          title: "ยี่กี่",
+          to: "/yeekee",
+          icon: "mdi-tune-vertical",
+          status: true
+        },
           {
             title: "รายการสมาชิก",
             to: "/reportAccount",
@@ -435,6 +440,12 @@ export default {
         {
           title: "น้ำไหล",
           to: "/flexodd",
+          icon: "mdi-tune-vertical",
+          status: true
+        },
+        {
+          title: "ยี่กี่",
+          to: "/yeekee",
           icon: "mdi-tune-vertical",
           status: true
         },

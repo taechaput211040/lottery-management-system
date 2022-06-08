@@ -4,9 +4,9 @@
       <h2>หวยเพลา / รายงานตัวเลขสูงสุด</h2>
       <div class="pa-1 rounded-lg white my-3 pa-2">
         <div class="row py-3">
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 ">
             เลือกประเภทหวย
-            <v-select
+            <!-- <v-select
               :items="listtype"
               item-text="title"
               item-value="id"
@@ -16,11 +16,25 @@
               @change="selectTypelotto"
               dense
               placeholder="กรุณาเลือกประเภทหวย"
-            ></v-select>
+            ></v-select> -->
+            <v-radio-group
+              hide-details="auto"
+              class="my-3"
+              v-model="selectType"
+              row
+              @change="selectTypelotto"
+            >
+              <v-radio
+                v-for="(item, i) in this.listtype"
+                :key="i"
+                :label="item.title"
+                :value="item.id"
+              ></v-radio>
+            </v-radio-group>
           </div>
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 " v-if="itemcategory[0]">
             เลือกชนิดหวย
-            <v-autocomplete
+            <!-- <v-autocomplete
               :items="itemcategory"
               item-text="title"
               hide-details="auto"
@@ -31,9 +45,24 @@
               outlined
               dense
               placeholder="กรุณาเลือกชนิดของหวย"
-            ></v-autocomplete>
+            ></v-autocomplete> -->
+            <v-radio-group
+              hide-details="auto"
+              class="my-3"
+              v-model="selectTypeCategory"
+              row
+              @change="selectRound"
+            >
+              <v-radio
+              class="pa-1"
+                v-for="(item, i) in this.itemcategory"
+                :key="i"
+                :label="item.title"
+                :value="item.id"
+              ></v-radio>
+            </v-radio-group>
           </div>
-          <div class="col-12 col-sm-4 col-md-auto">
+          <div class="col-12 " v-if="itemRound[0]">
             เลือกรอบหวย
             <v-autocomplete
               :items="itemRound"

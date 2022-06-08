@@ -311,6 +311,7 @@ export default {
       let params = await this.getParameter();
       try {
         this.isLoading = true;
+        console.log(params)
         let { result } = await this.getReportNumber(params);
         this.itemtypeaward = result.data;
         this.pagination.rowsNumber = result.total;

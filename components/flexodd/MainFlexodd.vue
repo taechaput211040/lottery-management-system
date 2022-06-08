@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class=" my-3 pa-3">
+    <div class=" my-3 ">
       <v-row class="pa-1 ">
         <v-col cols="12" sm="6">
           <div class="rounded-lg white " style="height:100%">
@@ -333,7 +333,7 @@ export default {
       dlupdate: false,
       formupdate: {},
       selectCate: null,
-      selectType: null,
+      selectType: "02770ee9-3448-4258-8d40-a7a13c7d1257",
       listtype: [],
       isLoading: true,
       row: "",
@@ -555,6 +555,7 @@ export default {
     async selectFlexodd(value) {
       this.getOutComeratebyid(value);
       this.getUplinebyid(value);
+      console.log(value)
     },
     async getOutComeratebyid(id) {
       this.isLoading = true;
@@ -643,6 +644,11 @@ export default {
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
     }
+  },
+  created(){
+    this.selectCatebytype("cfe77d55-e0f4-4a28-8dca-897005d2f77b");
+    this.selectCate = "cfe77d55-e0f4-4a28-8dca-897005d2f77b";
+    this.selectFlexodd("cfe77d55-e0f4-4a28-8dca-897005d2f77b");
   }
 };
 </script>

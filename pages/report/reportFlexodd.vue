@@ -4,9 +4,9 @@
     <loading-page v-if="isLoading"></loading-page>
     <div class="pa-1 rounded-lg white my-3 pa-2">
       <div class="row py-3">
-        <div class="col-12 col-sm-6 col-md-3">
+        <div class="col-12 col-sm-6">
           เลือกประเภทหวย
-          <v-select
+          <!-- <v-select
             :items="listtype"
             item-text="title"
             item-value="id"
@@ -16,11 +16,27 @@
             @change="selectTypelotto"
             dense
             placeholder="กรุณาเลือกประเภทหวย"
-          ></v-select>
+          ></v-select> -->
+          <v-radio-group
+            hide-details="auto"
+            class="my-3"
+            v-model="selectType"
+            row
+            @change="selectTypelotto"
+          >
+            <v-radio
+              v-for="(item, i) in this.listtype"
+              :key="i"
+              :label="item.title"
+              :value="item.id"
+            ></v-radio>
+          </v-radio-group>
         </div>
-        <div class="col-12 col-sm-6 col-md-3">
+
+        <div class="col-12 " v-if="itemcategory[0]">
           เลือกชนิดหวย
-          <v-autocomplete
+          <!-- <div> กรุณาเลือกประเภทหวย เพื่อดำเนินการต่อ</div> -->
+          <!-- <v-autocomplete
             :items="itemcategory"
             item-text="title"
             hide-details="auto"
@@ -31,9 +47,25 @@
             outlined
             dense
             placeholder="กรุณาเลือกชนิดของหวย"
-          ></v-autocomplete>
+          ></v-autocomplete> -->
+          <v-radio-group
+            hide-details="auto"
+            class="my-3"
+            v-model="selectTypeCategory"
+            row
+            @change="selectRound"
+          >
+            <v-radio
+            class="pa-1"
+              v-for="(item, i) in this.itemcategory"
+              :key="i"
+              :label="item.title"
+              :value="item.id"
+            ></v-radio>
+          </v-radio-group>
         </div>
-        <div class="col-12 col-sm-4 col-md-6 col-lg-3">
+
+        <div class="col-12 " v-if="itemRound[0]">
           เลือกรอบหวย
           <v-select
             :items="itemRound"
@@ -55,9 +87,10 @@
             </template></v-select
           >
         </div>
-        <div class="col-12 col-sm-4 col-md-6 col-lg-3">
+
+        <div class="col-12 " v-if="itemPayrate[0]">
           เลือกชนิดตัวเลข
-          <v-select
+          <!-- <v-select
             :items="itemPayrate"
             item-value="lottonumbertype_id"
             :disabled="toRound == null"
@@ -68,7 +101,22 @@
             outlined
             dense
             placeholder="กรุณาเลือกชนิดตัวเลข"
-          ></v-select>
+          ></v-select> -->
+          <v-radio-group
+            hide-details="auto"
+            class="my-3"
+            v-model="numberType"
+            row
+            @change="getFlexoddReport"
+          >
+            <v-radio
+              class="pa-1"
+              v-for="(item, i) in this.itemPayrate"
+              :key="i"
+              :label="item.lottonumbertype_name"
+              :value="item.lottonumbertype_id"
+            ></v-radio>
+          </v-radio-group>
         </div>
       </div>
     </div>

@@ -41,8 +41,8 @@
             </v-alert>
           </template>
 
-          <template #[`item.no`]="{index}"> {{ index + 1 }}</template>
-          <template #[`item.actions`]="{item}">
+          <template #[`item.no`]="{ index }"> {{ index + 1 }}</template>
+          <template #[`item.actions`]="{ item }">
             <v-btn
               color="black white--text"
               small
@@ -63,8 +63,16 @@
               ดูรายชื่อ Member</v-btn
             ></template
           >
+          <template #[`item.toggle`]="{ item}">
+            <v-switch
+              v-model="item.status"
+              color="success"
+              inset
+              :label="item.status ? 'ON' : 'OFF'"
+            ></v-switch>
+          </template>
         </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
+        <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               outlined
@@ -116,8 +124,8 @@
             </v-alert>
           </template>
 
-          <template #[`item.no`]="{index}"> {{ index + 1 }}</template>
-          <template #[`item.actions`]="{item}">
+          <template #[`item.no`]="{ index }"> {{ index + 1 }}</template>
+          <template #[`item.actions`]="{ item }">
             <v-btn
               color="black white--text"
               small
@@ -138,8 +146,16 @@
               ดูรายชื่อ Member</v-btn
             ></template
           >
+          <template #[`item.toggle`]="{ item }">
+            <v-switch
+              v-model="item.status"
+              color="success"
+              inset
+              :label="item.status ? 'ON' : 'OFF'"
+            ></v-switch>
+          </template>
         </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
+        <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               outlined
@@ -175,6 +191,8 @@ export default {
   components: { LoadingPage },
   data() {
     return {
+      switch1: false,
+      switch: [],
       Backbtn: false,
       getPrevPath: [],
       loading_btn: false,
@@ -193,14 +211,14 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 15,
-        rowsNumber: 0
+        rowsNumber: 0,
       },
       paginationMember: {
         sortBy: "desc",
         descending: false,
         page: 1,
         rowsPerPage: 15,
-        rowsNumber: 0
+        rowsNumber: 0,
       },
       headerAccount: [
         {
@@ -210,7 +228,7 @@ export default {
           align: "center",
           width: "100px",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Username",
@@ -218,21 +236,27 @@ export default {
           class: "font-weight-bold",
           cellClass: "primary--text font-weight-bold",
           align: "center",
-          sortable: false
+          sortable: false,
         },
         {
           text: "ระดับตำเเหน่ง",
           value: "position",
           align: "center",
-          sortable: false
+          sortable: false,
         },
         {
           text: "การดำเนินการ",
           value: "actions",
           align: "center",
-          sortable: false
-        }
-      ]
+          sortable: false,
+        },
+        {
+          text: "สถานะ",
+          value: "toggle",
+          align: "center",
+          sortable: false,
+        },
+      ],
     };
   },
   async fetch() {
@@ -247,20 +271,24 @@ export default {
   watch: {
     options: {
       async handler() {
+        var member;
         if (this.typeForRender === "viewAgent") {
           await this.getMember(this.thisUser);
         } else if (this.typeForRender === "viewMember") {
           await this.getMemberByuser(this.thisUser);
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   async mounted() {
     sessionStorage.removeItem("pathPrev");
     sessionStorage.removeItem("userPrev");
   },
   methods: {
+    sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    },
     showBackbtn() {
       if (
         (!sessionStorage.getItem("userPrev") && this.thisUser == "") ||
@@ -276,7 +304,7 @@ export default {
       let params = {
         username: value,
         currentPage: this.pagination.page,
-        limit: this.pagination.rowsPerPage
+        limit: this.pagination.rowsPerPage,
       };
       return params;
     },
@@ -304,6 +332,17 @@ export default {
       } else {
         this.thisUser = item;
       }
+      // console.log(this.accountRendering);
+      this.accountRendering.forEach(x => {
+        x.status = false
+      });
+      // console.log(this.accountRendering);
+
+      // for (const element of this.accountRendering) {
+      //   this.switch.push( { id: element.user_id,status: false} )
+      //   console.log(element.user_id.toString())
+      // }
+      console.log(this.switch);
       this.isLoader = false;
       this.loading_btn = false;
     },
@@ -321,6 +360,7 @@ export default {
       } else {
         this.thisUser = item;
       }
+      // console.log(this.thisUser);
       this.isLoader = false;
       this.loading_btn = false;
     },
@@ -328,7 +368,7 @@ export default {
       let params = {
         username: this.$store.state.auth.username,
         currentPage: this.paginationMember.page,
-        limit: this.paginationMember.rowsPerPage
+        limit: this.paginationMember.rowsPerPage,
       };
       return params;
     },
@@ -368,7 +408,7 @@ export default {
         this.prevUser = this.$store.state.auth.username;
         let form_path = [
           { username: this.$store.state.auth.username },
-          { username: item.username }
+          { username: item.username },
         ];
         sessionStorage.setItem(`userPrev`, JSON.stringify(form_path));
       } else {
@@ -394,8 +434,8 @@ export default {
 
       sessionStorage.setItem("userPrev", JSON.stringify(prevUsers));
       this.loading_btn = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
