@@ -22,8 +22,8 @@
           <!-- <div> face : {{this.face}}</div> -->
           <!-- <div> minimum profit : {{this.minimum_profit}}</div> -->
           <!-- {{this.minimum_profit}} -->
-          <div class="py-2 pl-6">ยอดกำไรต่ำสุด (%)</div>
-          <div class="row pl-6">
+          <div class="py-2 pl-6" v-if="face">ยอดกำไรต่ำสุด (%)</div>
+          <div class="row pl-6" v-if="face">
             <div class=" col-9 col-sm-4">
               <v-text-field
                 placeholder="ยอดกำไรขาดทุน"
@@ -79,8 +79,8 @@
                 </v-radio-group>
                 <!-- <div>{{face}}</div>
                 <div>{{minimum_profit}}</div> -->
-                <div>ยอดกำไรต่ำสุด (%)</div>
-                <div class="row">
+                <div v-if="face">ยอดกำไรต่ำสุด (%)</div>
+                <div v-if="face" class="row">
                   <div class="col-12 ">
                     <v-text-field
                       placeholder="ยอดกำไรขาดทุน"
@@ -178,7 +178,7 @@ export default {
     async confirmEdit(){
       try {
         this.$swal({
-            title: "ยืนยันการตั่งค่าใหม่ ?",
+            title: "ยืนยันการตั้งค่าใหม่ ?",
             icon: "primary",
             showCancelButton: true,
             confirmButtonColor: "#4caf50",

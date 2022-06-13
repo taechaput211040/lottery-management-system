@@ -884,37 +884,40 @@ export default {
       this.dlupdateYeekee = false;
     },
 
-    async selectSeller(value) {
+    async selectSeller(value, loading = false) {
       // console.log(value.typecategory_id)
       // console.log(value.typecategory_title)
 
       // console.log(this.selectCate)
       this.current_cat_id = value.typecategory_id;
       this.current_cat_title = value.typecategory_title;
-      this.getSellerSetting(value.typecategory_id);
-      this.getUplinebyid(value.typecategory_id);
+      await this.getUplinebyid(value.typecategory_id, loading);
+      await this.getSellerSetting(value.typecategory_id, loading);
     },
-    async getSellerSetting(id) {
+    async getSellerSetting(id, loading) {
       this.isLoading = true;
       try {
         const { data } = await this.getAllsettingseller(id);
         this.dataOutcome = data.result;
         console.log(this.dataOutcome);
-        this.isLoading = false;
+        this.isLoading = loading;
       } catch (error) {
         console.log(error);
-        this.isLoading = false;
+        this.isLoading = loading;
       }
     },
-    async getUplinebyid(id) {
+    async getUplinebyid(id, loading) {
       try {
+        this.isLoading = true;
         // console.log(id);
         const { data } = await this.getAllsettingUpline(id);
         // console.log(data)
         this.dataUpline = data.result;
         console.log(this.dataUpline);
+        this.isLoading = loading
       } catch (error) {
         console.log(error);
+        this.isloading = loading;
       }
     },
     openupdateComerate(item) {
@@ -946,7 +949,7 @@ export default {
       if (this.$refs.edtform.validate()) {
         try {
           let body = {
-            typecategory_id: this.selectCate.typecategory_id,
+            typecategory_id: this.current_cat_id,
             lotto_numbertype: [
               {
                 lottonumbertype_id: item.lottonumbertype_id,
@@ -960,7 +963,10 @@ export default {
           };
           console.log(body);
           await this.updateSettingseller(body);
-          await this.selectSeller(this.selectCate);
+          await this.selectSeller({
+            typecategory_id: this.current_cat_id,
+            typecategory_title: this.current_cat_title,
+          });
           this.loading_btn = false;
           this.dlupdate = false;
         } catch (error) {
@@ -1034,13 +1040,15 @@ export default {
       return parts.join(".");
     },
   },
-  created() {
+  async created() {
+    this.isloading = true;
     this.selectCatebytype("cfe77d55-e0f4-4a28-8dca-897005d2f77b");
     this.selectCate = "cfe77d55-e0f4-4a28-8dca-897005d2f77b";
-    this.selectSeller({
+    await this.selectSeller({
       typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
       typecategory_title: "หวยรัฐบาล",
-    });
+    }, true);
+    this.isLoading = false;
   },
 };
 </script>
