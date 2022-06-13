@@ -15,9 +15,9 @@
         <v-radio label="ผลยังไม่ออก" value="unsuccess"></v-radio>
       </v-radio-group>
 
-      <loading-page v-if="isLoading"></loading-page >
+      <loading-page v-if="isLoading"></loading-page>
       <div class="rounded-lg mt-5 pa-3 white">
-        <div class="col-12 col-sm-6 col-md-6 col-lg-4  pa-0">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-4 pa-0">
           <v-text-field
             v-model="searchtext"
             append-icon="mdi-magnify"
@@ -62,10 +62,10 @@
               ไม่พบข้อมูล
             </v-alert>
           </template>
-          <template #[`item.no`]="{index}">
+          <template #[`item.no`]="{ index }">
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
-          <template #[`item.save`]="{item}">
+          <template #[`item.save`]="{ item }">
             <v-btn
               color="black"
               text
@@ -77,7 +77,7 @@
               ><v-icon left>mdi-download-box</v-icon>กรอกผลรางวัล
             </v-btn>
           </template>
-          <template #[`item.calculate`]="{item}">
+          <template #[`item.calculate`]="{ item }">
             <!-- เงื่อนไข -->
 
             <v-btn
@@ -93,10 +93,10 @@
               ><v-icon left>mdi-download-box</v-icon>คำนวณผล
             </v-btn>
           </template>
-          <template #[`item.bet_lotto_time`]="{item}">
+          <template #[`item.bet_lotto_time`]="{ item }">
             {{ dateformat(item.bet_lotto_time) }}
           </template>
-          <template #[`item.status_lotto`]="{item}">
+          <template #[`item.status_lotto`]="{ item }">
             <v-chip small color="success" v-if="item.status_lotto == true"
               ><v-icon left>mdi-circle</v-icon> บันทึกผลรางวัลแล้ว</v-chip
             >
@@ -104,7 +104,7 @@
               ><v-icon left>mdi-circle</v-icon> ยังไม่ได้บันทึกผลรางวัล</v-chip
             >
           </template>
-          <template #[`item.status_calculate`]="{item}">
+          <template #[`item.status_calculate`]="{ item }">
             <v-chip small color="success" v-if="item.status_calculate == true"
               ><v-icon left>mdi-circle</v-icon>คำนวณผลเรียบร้อย</v-chip
             >
@@ -113,7 +113,7 @@
             >
           </template>
         </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
+        <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               dense
@@ -127,6 +127,7 @@
           <v-col cols="12" sm="10" lg="10">
             <v-pagination
               v-model="pagination.page"
+              @input="handlePageChange(pagination.page)"
               :total-visible="7"
               :length="
                 Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
@@ -138,7 +139,7 @@
       <v-dialog max-width="600px" v-model="dlcalculate">
         <form>
           <v-card>
-            <div class="pa-md-5 ">
+            <div class="pa-md-5">
               <v-card-title
                 class="justify-center primary--text font-weight-bold"
               >
@@ -149,7 +150,7 @@
                   <div class="row align-baseline">
                     <div class="col-4">{{ item.name }}</div>
                     <div
-                      class="col-8 row "
+                      class="col-8 row"
                       v-if="Array.isArray(item.lotto_number) == true"
                     >
                       <div
@@ -205,7 +206,7 @@
                 dense
                 class="ma-4"
                 :value="formCalculate.passcode"
-                :rules="[v => !!v || 'กรุณากรอกรหัสความปลอดภัย']"
+                :rules="[(v) => !!v || 'กรุณากรอกรหัสความปลอดภัย']"
                 :append-icon="value ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="() => (value = !value)"
                 :type="value ? 'password' : 'text'"
@@ -235,7 +236,7 @@
                   <div class="col-4">{{ item.name }}</div>
 
                   <div
-                    class="col-8 row "
+                    class="col-8 row"
                     v-if="Array.isArray(item.lotto_number) == true"
                   >
                     <div
@@ -245,12 +246,12 @@
                     >
                       <v-text-field
                         outlined
-                        @keypress="e => checkpositive(e)"
+                        @keypress="(e) => checkpositive(e)"
                         hide-details="auto"
                         dense
                         v-model="item.lotto_number[n_key]"
                         @keydown="
-                          e =>
+                          (e) =>
                             rangeInput(
                               e,
                               parseInt(item.number),
@@ -259,21 +260,21 @@
                         "
                         :counter="parseInt(item.number)"
                         :rules="[
-                          v => !!v,
-                          v => (v && v.length >= parseInt(item.number)) || ''
+                          (v) => !!v,
+                          (v) => (v && v.length >= parseInt(item.number)) || '',
                         ]"
                         small
                       ></v-text-field>
                     </div>
                   </div>
-                  <div class="col-8 row " v-else>
+                  <div class="col-8 row" v-else>
                     <div class="col-6 col-sm-4 col-md-4 pa-1 text-center">
                       <v-text-field
                         outlined
                         v-model="item.lotto_number"
-                        @keypress="e => checkpositive(e)"
+                        @keypress="(e) => checkpositive(e)"
                         @keydown="
-                          e =>
+                          (e) =>
                             rangeInput(
                               e,
                               parseInt(item.number),
@@ -282,8 +283,8 @@
                         "
                         :counter="parseInt(item.number)"
                         :rules="[
-                          v => !!v,
-                          v => (v && v.length >= parseInt(item.number)) || ''
+                          (v) => !!v,
+                          (v) => (v && v.length >= parseInt(item.number)) || '',
                         ]"
                         hide-details="auto"
                         dense
@@ -344,47 +345,47 @@ export default {
           cellClass: "font-weight-bold",
           align: "center",
           width: "80px",
-          sortable: false
+          sortable: false,
         },
         {
           text: "ชื่อหวย",
           value: "title",
           class: "font-weight-bold",
-          align: "left"
+          align: "left",
         },
         {
           text: "รอบวันที่",
           value: "lotto_round",
           class: "font-weight-bold",
           align: "left",
-          sortable: false
+          sortable: false,
         },
         {
           text: "เวลาออกผล",
           value: "bet_lotto_time",
           class: "font-weight-bold",
-          align: "left"
+          align: "left",
         },
         {
           text: "การบันทึกผลรางวัล",
           value: "status_lotto",
           class: "font-weight-bold",
           align: "left",
-          sortable: false
+          sortable: false,
         },
         {
           text: "การคำนวณผลรางวัล",
           value: "status_calculate",
           class: "font-weight-bold",
           align: "left",
-          sortable: false
+          sortable: false,
         },
         {
           text: "คำนวณผลรางวัล",
           value: "calculate",
           class: "font-weight-bold",
           align: "left",
-          sortable: false
+          sortable: false,
         },
         {
           text: "กรอกผลรางวัล",
@@ -392,23 +393,23 @@ export default {
           class: "font-weight-bold",
           align: "left",
 
-          sortable: false
-        }
+          sortable: false,
+        },
       ],
       progranlottoID: "",
       itemNumber: {},
       dataAwardrender: [],
       filter: {
         startDate: "2022-03-14 01:00:00.000",
-        endDate: "2022-04-01 01:00:00.000"
+        endDate: "2022-04-01 01:00:00.000",
       },
       pagination: {
         sortBy: "desc",
         descending: false,
         page: 1,
         rowsPerPage: 10,
-        rowsNumber: 0
-      }
+        rowsNumber: 0,
+      },
     };
   },
   computed: {
@@ -426,7 +427,7 @@ export default {
             cellClass: "font-weight-bold",
             align: "center",
             width: "80px",
-            sortable: false
+            sortable: false,
           },
           {
             text: "ชื่อหวย",
@@ -434,7 +435,7 @@ export default {
             class: "font-weight-bold",
             align: "left",
             width: "200px",
-            sortable: false
+            sortable: false,
           },
           {
             text: "รอบวันที่",
@@ -442,14 +443,14 @@ export default {
             class: "font-weight-bold",
             align: "left",
             width: "200px",
-            sortable: false
+            sortable: false,
           },
           {
             text: "เวลาออกผล",
             value: "bet_lotto_time",
             class: "font-weight-bold",
             align: "left",
-            width: "200px"
+            width: "200px",
           },
           {
             text: "สถานะการออกรางวัล",
@@ -457,7 +458,7 @@ export default {
             class: "font-weight-bold",
             align: "left",
             width: "200px",
-            sortable: false
+            sortable: false,
           },
           {
             text: "สถานะการคำนวณผลรางวัล",
@@ -465,8 +466,8 @@ export default {
             class: "font-weight-bold",
             align: "left",
             sortable: false,
-            width: "200px"
-          }
+            width: "200px",
+          },
         ];
         return headerender;
       } else if (this.$store.state.auth.rule === "PRIZE") {
@@ -478,7 +479,7 @@ export default {
             cellClass: "font-weight-bold",
             align: "center",
             width: "80px",
-            sortable: false
+            sortable: false,
           },
           {
             text: "ชื่อหวย",
@@ -486,7 +487,7 @@ export default {
             class: "font-weight-bold",
             align: "left",
             width: "200px",
-            sortable: false
+            sortable: false,
           },
           {
             text: "รอบวันที่",
@@ -494,14 +495,14 @@ export default {
             class: "font-weight-bold",
             align: "left",
             width: "200px",
-            sortable: false
+            sortable: false,
           },
           {
             text: "เวลาออกผล",
             value: "bet_lotto_time",
             class: "font-weight-bold",
             align: "left",
-            width: "200px"
+            width: "200px",
           },
           {
             text: "สถานะการออกรางวัล",
@@ -509,7 +510,7 @@ export default {
             class: "font-weight-bold",
             align: "left",
             width: "200px",
-            sortable: false
+            sortable: false,
           },
           {
             text: "สถานะการคำนวณผลรางวัล",
@@ -517,33 +518,33 @@ export default {
             class: "font-weight-bold",
             align: "left",
             sortable: false,
-            width: "200px"
+            width: "200px",
           },
           {
             text: "กรอกผลรางวัล",
             value: "save",
             class: "font-weight-bold",
             align: "left",
-            sortable: false
-          }
+            sortable: false,
+          },
         ];
         return headerender;
       } else {
         return headerender;
       }
-    }
+    },
   },
-  watch: {
-    options: {
-      async handler() {
-        await this.selectSection();
-      },
-      deep: true
-    }
-  },
+  // watch: {
+  //   options: {
+  //     async handler() {
+  //       await this.selectSection();
+  //     },
+  //     deep: true
+  //   }
+  // },
   async mounted() {
     this.isLoading = true;
-    this.selectSection();
+    // this.selectSection();
   },
   methods: {
     serchAward() {
@@ -567,7 +568,7 @@ export default {
       "getawardlotto",
       "getlottobyprogram",
       "savelottonumber",
-      "calculateAward"
+      "calculateAward",
     ]),
     getOptionalOrder() {
       let order = {};
@@ -601,11 +602,12 @@ export default {
         currentPage: this.pagination.page,
         limit: this.pagination.rowsPerPage,
         order_by: order == undefined ? undefined : order.sortBy,
-        order_mode: order == undefined ? undefined : order.sortDesc
+        order_mode: order == undefined ? undefined : order.sortDesc,
       };
       return params;
     },
     async selectSection(value) {
+      this.pagination.page = 1;
       if (value) {
         if (value === "success") {
           this.statusforsearch = true;
@@ -666,12 +668,16 @@ export default {
     submitCalculate() {
       this.alertdl = true;
     },
+    handlePageChange(size) {
+      this.pagination.page = size;
+      this.getAwardList();
+    },
     async confirmCalculate() {
       if (this.$refs.alertForm.validate()) {
         this.loading_btn = true;
         let body = {
           program_id: this.progranlottoID,
-          passcode: this.formCalculate.passcode
+          passcode: this.formCalculate.passcode,
         };
         console.log(body);
         try {
@@ -680,7 +686,7 @@ export default {
             icon: "success",
             title: "คำนวณผลเสร็จสิ้น",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
           this.alertdl = false;
           this.dlcalculate = false;
@@ -691,7 +697,7 @@ export default {
             icon: "error",
             title: "กรุณากรอกรหัสความปลดภัยให้ถูกต้อง",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
           console.log(error);
           this.loading_btn = false;
@@ -703,13 +709,13 @@ export default {
     async submitnumber() {
       let body = {
         program_id: this.progranlottoID,
-        lottonumbertype_details: []
+        lottonumbertype_details: [],
       };
 
       for (let i = 0; i < this.itemNumber.length; i++) {
         body.lottonumbertype_details.push({
           lottonumbertype_id: this.itemNumber[i].id,
-          lotto_number: this.itemNumber[i].lotto_number
+          lotto_number: this.itemNumber[i].lotto_number,
         });
       }
       if (this.$refs.formnumber.validate()) {
@@ -720,7 +726,7 @@ export default {
             icon: "success",
             title: "บันทึกผลเรียบร้อย",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
           this.selectSection();
           this.dlSavenumber = false;
@@ -729,7 +735,7 @@ export default {
             icon: "error",
             title: "บันทึกผลผิดพลาด",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
           console.log(error);
         }
@@ -767,8 +773,8 @@ export default {
       this.pagination.page = 1;
       this.pagination.rowsPerPage = size;
       this.selectSection();
-    }
-  }
+    },
+  },
 };
 </script>
 

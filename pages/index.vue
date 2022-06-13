@@ -401,10 +401,10 @@ export default {
     };
   },
   async fetch() {
-    this.changDatefillter("findate");
-    this.getDashboarddata();
-    this.getDataGraph();
-    this.gettoprecieve();
+    await this.changDatefillter("findate");
+    // this.getDashboarddata();
+    await this.getDataGraph();
+    await this.gettoprecieve();
   },
   methods: {
     ...mapActions("seller", ["recieveSellertofull"]),
@@ -482,7 +482,7 @@ export default {
           var curr = new Date;
           var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
           var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
-          
+
           this.filterDate = {
             start_date: this.getDateTime(
               new Date(firstday.setHours(0, 0, 0, 0))
