@@ -237,7 +237,7 @@
       </div>
 
       <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
-        <h4 class="my-2">หวยของ upline</h4>
+        <h4 class="my-2">อัตราจ่ายที่ได้รับมา</h4>
         <v-data-table
           class="elevation-2"
           :headers="headersUpline"
