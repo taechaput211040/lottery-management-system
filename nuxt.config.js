@@ -92,8 +92,8 @@ export default {
   build: {},
   router: {
 
-    mode: "history",
-    // base: "/storage/dev-backoffice/"
+    // mode: "history",
+    base: "/storage/dev-backoffice/"
     // base: "/storage/backoffice/"
   }
 };

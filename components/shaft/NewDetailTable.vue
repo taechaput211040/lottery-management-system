@@ -236,7 +236,7 @@
         </v-row>
       </div>
 
-      <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
+      <!-- <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
         <h4 class="my-2">อัตราจ่ายที่ได้รับมา</h4>
         <v-data-table
           class="elevation-2"
@@ -304,7 +304,7 @@
             ></v-pagination>
           </v-col>
         </v-row>
-      </div>
+      </div> -->
     </div>
 
     <!-- normal setting -->
@@ -891,7 +891,7 @@ export default {
       // console.log(this.selectCate)
       this.current_cat_id = value.typecategory_id;
       this.current_cat_title = value.typecategory_title;
-      await this.getUplinebyid(value.typecategory_id, loading);
+      // await this.getUplinebyid(value.typecategory_id, loading);
       await this.getSellerSetting(value.typecategory_id, loading);
     },
     async getSellerSetting(id, loading) {

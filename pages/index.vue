@@ -341,6 +341,14 @@ export default {
           cellClass: "font-weight-bold"
         },
         {
+          text: "เลขที่ถูกรางวัล",
+          value: "lotto_number",
+          sortable: false,
+          filterable: false,
+          align: "center",
+          cellClass: "font-weight-bold"
+        },
+        {
           text: "รับของปัจจุบัน",
           value: "self_receive_balance",
           sortable: false,
@@ -418,6 +426,7 @@ export default {
       try {
         let { result: response } = this.$store.state.seller.balance_top;
         this.itemrecieved = response.data;
+        console.log(this.itemrecieved)
       } catch (error) {}
     },
     async mapchart(item) {

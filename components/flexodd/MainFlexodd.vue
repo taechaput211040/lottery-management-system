@@ -150,7 +150,7 @@
         </v-row>
       </div>
 
-      <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
+      <!-- <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
         <h4 class="my-2">อัตราจ่ายที่ได้รับมา</h4>
         <v-data-table
           class="elevation-2"
@@ -207,7 +207,7 @@
             ></v-pagination>
           </v-col>
         </v-row>
-      </div>
+      </div> -->
     </div>
 
     <v-dialog max-width="400px" v-model="dlupdate" persistent>
@@ -554,7 +554,7 @@ export default {
 
     async selectFlexodd(value) {
       this.getOutComeratebyid(value);
-      this.getUplinebyid(value);
+      // this.getUplinebyid(value);
       console.log(value)
     },
     async getOutComeratebyid(id) {
