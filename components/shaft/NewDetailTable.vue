@@ -344,7 +344,7 @@
               hide-details="auto"
               v-model.number="formupdate.maximum_out_come_rate"
             ></v-text-field>
-            <!-- อัตราจ่ายต่ำสุด -->
+            <!-- แทงต่ำสุด -->
             <v-text-field
               outlined
               label="แทงต่ำสุด"
@@ -352,7 +352,7 @@
               :rules="[
                 (v) => !!v || 'กรุณากรอกอัตราแทงต่ำสุด',
                 (v) =>
-                  (v && v <= formupdate.maximum_out_come_rate) ||
+                  (v && v <= formupdate.maximum_bet_prize) ||
                   'กรุณากรอกอัตราแทงต่ำสุดน้อยกว่าอัตราแทงสูงสุด',
               ]"
               type="number"
@@ -362,24 +362,6 @@
               hide-details="auto"
               v-model.number="formupdate.minimum_bet_prize"
             ></v-text-field>
-
-            <!-- <v-text-field
-              outlined
-              label="แทงต่ำสุด"
-              type="number"
-              @keypress="e => checkpositive(e)"
-              placeholder="กรุณากรอกยอดแทงต่ำสุด"
-              :rules="[
-                v => !!v || 'กรุณากรอกยอดแทงต่ำสุด',
-                v =>
-                  (v && v <= formupdate.maximum_bet_prize) ||
-                  'กรุณากรอกยอดแทงต่ำสุดให้น้อยกว่ายอดแทงสูงสุด'
-              ]"
-              dense
-              class="my-2"
-              hide-details="auto"
-              v-model.number="formupdate.minimum_bet_prize"
-            ></v-text-field> -->
             <!-- แทงสูงสุด -->
             <v-text-field
               outlined
@@ -433,7 +415,6 @@
         </v-card></v-form
       >
     </v-dialog>
-
     <!-- yeekee setting -->
     <v-dialog max-width="600px" v-model="dlupdateYeekee" persistent>
       <v-form ref="edtformYeekee">
@@ -479,7 +460,7 @@
               :rules="[
                 (v) => !!v || 'กรุณากรอกอัตราแทงต่ำสุด',
                 (v) =>
-                  (v && v <= formupdateYeekee.maximum_out_come_rate) ||
+                  (v && v <= formupdateYeekee.maximum_bet_prize) ||
                   'กรุณากรอกอัตราแทงต่ำสุดน้อยกว่าอัตราแทงสูงสุด',
               ]"
               type="number"
@@ -489,6 +470,7 @@
               hide-details="auto"
               v-model.number="formupdateYeekee.minimum_bet_prize"
             ></v-text-field>
+            <!-- อัตราแทงสูงสุด -->
             <v-text-field
               outlined
               @keypress="(e) => checkpositive(e)"
@@ -529,6 +511,7 @@
           </v-card-actions>
         </v-card></v-form
       >
+
     </v-dialog>
   </div>
 </template>
