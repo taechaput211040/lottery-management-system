@@ -155,15 +155,17 @@ export default {
           };
           break;
         case "week":
-          var wfday = today.getDay(),
-            diff = today.getDate() - wfday + (wfday == 0 ? -6 : 1);
-          var wlday = diff + 6;
+
+          var curr = new Date; // get current date
+          var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay() + 1));
+          var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+6 + 1));
+
           this.filter = {
             startDate: this.getDateTime(
-              new Date(today.setDate(diff)).setHours(0, 0, 0, 0)
+              new Date(firstday).setHours(0, 0, 0, 0)
             ),
             endDate: this.getDateTime(
-              new Date(today.setDate(wlday)).setHours(23, 59, 59, 999)
+              new Date(lastday).setHours(23, 59, 59, 999)
             )
           };
           break;
