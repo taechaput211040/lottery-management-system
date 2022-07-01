@@ -93,7 +93,7 @@ export default {
   router: {
 
     // mode: "history",
-    // base: "/storage/dev-backoffice/"
-    base: "/storage/backoffice/"
+    base: "/storage/dev-backoffice/"
+    // base: "/storage/backoffice/"
   }
 };

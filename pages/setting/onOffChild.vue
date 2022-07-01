@@ -36,7 +36,7 @@
             :search="search"
             :paginations.sync="pagination"
             :headers="headerOnOff"
-            :items="itemtypeaward.result"
+            :items="itemtypeaward.data"
             :page.sync="pagination.page"
             :items-per-page.sync="pagination.itemsPerPage"
             :loading="isLoading"
@@ -73,6 +73,7 @@
                 outlined
                 hide-details="auto "
                 dense
+                @change="changepagesize"
                 v-model="pagination.itemsPerPage"
                 :items="pageSizes"
                 label="รายการต่อหน้า"
@@ -83,6 +84,7 @@
                 v-model="pagination.page"
                 :total-visible="7"
                 :length="Math.ceil(pagination.total / pagination.itemsPerPage)"
+                @input="handlePageChange(pagination.page)"
               ></v-pagination>
             </v-col>
           </v-row>
@@ -201,6 +203,15 @@ export default {
         username: !this.search ? undefined : this.search,
       };
       return param;
+    },
+    changepagesize(value) {
+      this.pagination.page = 1;
+      this.pagination.itemsPerPage = value;
+      this.getDataInfo();
+    },
+    handlePageChange(size) {
+      this.pagination.page = size;
+      this.getDataInfo();
     },
 
     async getDataInfo() {

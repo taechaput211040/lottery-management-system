@@ -326,7 +326,7 @@ export default {
         },
         {
           text: "ชื่อหวย",
-          value: "title",
+          value: "typecateogy_title",
           sortable: false,
           filterable: false,
           align: "center",

@@ -111,6 +111,9 @@
           <template #[`item.maximum_out_come_rate`]="{item}">
             {{ numberWithCommas(item.maximum_out_come_rate) }}
           </template>
+          <template #[`item.received_out_come_rate`]="{ item }">
+            {{ numberWithCommas(item.received_out_come_rate) }}
+          </template>
           <template #[`item.minimum_bet_prize`]="{item}">
             {{ numberWithCommas(item.minimum_bet_prize) }}
           </template>
@@ -360,6 +363,12 @@ export default {
           align: "center"
         },
         {
+          text: "อัตราจ่ายที่ได้รับมา",
+          value: "received_out_come_rate",
+          class: "font-weight-bold",
+          align: "center",
+        },
+        {
           text: "แทงต่ำสุด",
           value: "minimum_bet_prize",
           class: "font-weight-bold",
@@ -387,32 +396,32 @@ export default {
           align: "center"
         }
       ],
-      headersUpline: [
-        {
-          text: "ชนิดหวย",
-          value: "lottonumbertype_name",
-          class: "font-weight-bold",
-          align: "center"
-        },
-        {
-          text: "อัตราจ่าย",
-          value: "maximum_out_come_rate",
-          class: "font-weight-bold",
-          align: "center"
-        },
-        {
-          text: "แทงต่ำสุด",
-          value: "minimum_bet_prize",
-          class: "font-weight-bold",
-          align: "center"
-        },
-        {
-          text: "แทงสูงสุด",
-          value: "maximum_bet_prize",
-          class: "font-weight-bold",
-          align: "center"
-        }
-      ],
+      // headersUpline: [
+      //   {
+      //     text: "ชนิดหวย",
+      //     value: "lottonumbertype_name",
+      //     class: "font-weight-bold",
+      //     align: "center"
+      //   },
+      //   {
+      //     text: "อัตราจ่าย",
+      //     value: "maximum_out_come_rate",
+      //     class: "font-weight-bold",
+      //     align: "center"
+      //   },
+      //   {
+      //     text: "แทงต่ำสุด",
+      //     value: "minimum_bet_prize",
+      //     class: "font-weight-bold",
+      //     align: "center"
+      //   },
+      //   {
+      //     text: "แทงสูงสุด",
+      //     value: "maximum_bet_prize",
+      //     class: "font-weight-bold",
+      //     align: "center"
+      //   }
+      // ],
       itemcategory: [],
       selecttype: "",
       filter: {
