@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="my-3 ">
+    <div class="my-3">
       <v-row class="pa-1">
-        <v-col cols="12" >
+        <v-col cols="12">
           <div class="rounded-lg white" style="height: 100%">
             <div class="primary--text font-weight-bold pa-2">
               เลือกประเภทหวย
@@ -453,7 +453,6 @@
           </v-card-actions>
         </v-card></v-form
       >
-
     </v-dialog>
   </div>
 </template>
@@ -818,7 +817,7 @@ export default {
         this.itemcategory = data.result;
 
         // this.selectCate = "cfe77d55-e0f4-4a28-8dca-897005d2f77b";
-        console.log(this.selectCate)
+        console.log(this.selectCate);
         // selectSeller({
         //   typecategory_id: "",
         //   typecategory_title: "",
@@ -863,7 +862,7 @@ export default {
         // console.log(data)
         this.dataUpline = data.result;
         console.log(this.dataUpline);
-        this.isLoading = loading
+        this.isLoading = loading;
       } catch (error) {
         console.log(error);
         this.isloading = loading;
@@ -893,42 +892,64 @@ export default {
       }
     },
     async submitEdit(item) {
-      this.loading_btn = true;
       item = JSON.parse(JSON.stringify(item));
+      console.log(item);
       if (this.$refs.edtform.validate()) {
-        try {
-          let body = {
-            typecategory_id: this.current_cat_id,
-            lotto_numbertype: [
-              {
-                lottonumbertype_id: item.lottonumbertype_id,
-                maximum_out_come_rate: item.maximum_out_come_rate,
-                minimum_bet_prize: item.minimum_bet_prize,
-                maximum_bet_prize: item.maximum_bet_prize,
-                self_receive_amount: item.self_receive_amount,
-                discount_amount: item.discount_amount,
-              },
-            ],
-          };
-          console.log(body);
-          await this.updateSettingseller(body);
-          await this.selectSeller({
-            typecategory_id: this.current_cat_id,
-            typecategory_title: this.current_cat_title,
-          });
-          this.loading_btn = false;
-          this.dlupdate = false;
-        } catch (error) {
-          console.log(error.response.data.message);
-          this.$swal({
-            icon: "error",
-            title: `${error.response.data.message}`,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          this.loading_btn = false;
-          this.dlupdate = false;
-        }
+        this.$swal({
+          title: `คุณต้องการปรับข้อมุล เลยอั้น ของ${this.current_cat_title} : ${item.lottonumbertype_name} ทั้งหมดใช่ไหม`,
+          icon: "primary",
+          showCancelButton: true,
+          confirmButtonColor: "#4caf50",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ยืนยัน",
+          cancelButtonText: "ยกเลิก",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              this.isLoading = true;
+              let body = {
+                typecategory_id: this.current_cat_id,
+                lotto_numbertype: [
+                  {
+                    lottonumbertype_id: item.lottonumbertype_id,
+                    maximum_out_come_rate: item.maximum_out_come_rate,
+                    minimum_bet_prize: item.minimum_bet_prize,
+                    maximum_bet_prize: item.maximum_bet_prize,
+                    self_receive_amount: item.self_receive_amount,
+                    discount_amount: item.discount_amount,
+                  },
+                ],
+              };
+              console.log(body);
+              await this.updateSettingseller(body);
+              await this.selectSeller({
+                typecategory_id: this.current_cat_id,
+                typecategory_title: this.current_cat_title,
+              });
+              this.loading_btn = false;
+              this.dlupdate = false;
+              this.$swal({
+                icon: "success",
+                title: "ตั้งค่าเรียบร้อย",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            } catch (error) {
+              console.log(error.response.data.message);
+              this.$swal({
+                icon: "error",
+                title: `${error.response.data.message}`,
+                showConfirmButton: false,
+                timer: 2500,
+              });
+              this.loading_btn = false;
+              this.dlupdate = false;
+              this.isLoading = false;
+            }
+          }
+        });
+        this.loading_btn = false;
+        this.dlupdate = false;
       } else {
         this.$swal({
           icon: "error",
@@ -940,39 +961,63 @@ export default {
       }
     },
     async submitEditYeekee(item) {
-      this.loading_btn = true;
-      console.log("this is yeekee submit")
+      console.log("this is yeekee submit");
       item = JSON.parse(JSON.stringify(item));
       if (this.$refs.edtformYeekee.validate()) {
-        try {
-          let body = {
-            typecategory_id: this.selectCate.typecategory_id,
-            lotto_numbertype: [
-              {
-                lottonumbertype_id: item.lottonumbertype_id,
-                maximum_out_come_rate: item.maximum_out_come_rate,
-                minimum_bet_prize: item.minimum_bet_prize,
-                maximum_bet_prize: item.maximum_bet_prize,
-                discount_amount: item.discount_amount,
-              },
-            ],
-          };
-          console.log(body);
-          await this.updateSettingseller(body);
-          await this.selectSeller(this.selectCate);
-          this.loading_btn = false;
-          this.dlupdateYeekee = false;
-        } catch (error) {
-          console.log(error.response.data.message);
-          this.$swal({
-            icon: "error",
-            title: `${error.response.data.message}`,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          this.loading_btn = false;
-          this.dlupdate = false;
-        }
+        this.dlupdateYeekee = false
+        this.$swal({
+          title: `คุณต้องการปรับข้อมุล เลยอั้น ของ${this.current_cat_title} : ${item.lottonumbertype_name} ทั้งหมดใช่ไหม`,
+          icon: "primary",
+          showCancelButton: true,
+          confirmButtonColor: "#4caf50",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ยืนยัน",
+          cancelButtonText: "ยกเลิก",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            // -----------------------
+            try {
+              this.isLoading = true
+              let body = {
+                typecategory_id: this.selectCate.typecategory_id,
+                lotto_numbertype: [
+                  {
+                    lottonumbertype_id: item.lottonumbertype_id,
+                    maximum_out_come_rate: item.maximum_out_come_rate,
+                    minimum_bet_prize: item.minimum_bet_prize,
+                    maximum_bet_prize: item.maximum_bet_prize,
+                    discount_amount: item.discount_amount,
+                  },
+                ],
+              };
+              console.log(body);
+              await this.updateSettingseller(body);
+              await this.selectSeller(this.selectCate);
+              this.loading_btn = false;
+              this.dlupdateYeekee = false;
+              this.$swal({
+                icon: "success",
+                title: "ตั้งค่าเรียบร้อย",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            } catch (error) {
+              console.log(error.response.data.message);
+              this.$swal({
+                icon: "error",
+                title: `${error.response.data.message}`,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              this.isLoading = false;
+              this.loading_btn = false;
+              this.dlupdateYeekee = false;
+            }
+            this.loading_btn = false;
+            this.dlupdateYeekee = false;
+            // --------------------
+          }
+        });
       } else {
         this.$swal({
           icon: "error",
@@ -993,10 +1038,13 @@ export default {
     this.isloading = true;
     this.selectCatebytype("cfe77d55-e0f4-4a28-8dca-897005d2f77b");
     this.selectCate = "cfe77d55-e0f4-4a28-8dca-897005d2f77b";
-    await this.selectSeller({
-      typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
-      typecategory_title: "หวยรัฐบาล",
-    }, true);
+    await this.selectSeller(
+      {
+        typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
+        typecategory_title: "หวยรัฐบาล",
+      },
+      true
+    );
     this.isLoading = false;
   },
 };

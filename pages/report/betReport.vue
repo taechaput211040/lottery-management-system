@@ -83,7 +83,8 @@
           </template>
           <template #[`item.actions`]="{ item }">
             <div class="d-flex justify-center">
-              <v-tooltip bottom color="black" dark>
+              <!-- เพลา -->
+              <!-- <v-tooltip bottom color="black" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -100,9 +101,9 @@
                   </v-btn></template
                 >
                 <span>ดูรายละเอียดโพยแทง</span>
-              </v-tooltip>
-              <!-- /*เพลา -->
-              <v-tooltip bottom color="warning" dark>
+              </v-tooltip> -->
+              <!-- น้ำไหล -->
+              <!-- <v-tooltip bottom color="warning" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -118,8 +119,16 @@
                   </v-btn></template
                 >
                 <span>ดูรายละเอียดโพยรับของ</span>
-              </v-tooltip>
+              </v-tooltip> -->
 
+              <!-- รวม -->
+              <v-btn
+                rounded
+                color="primary"
+                small
+                @click="getDetail(item, 2)"
+                ><v-icon left>mdi-magnify</v-icon>ดูผลรางวัล
+              </v-btn>
               <!-- <v-tooltip bottom color="error" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -600,9 +609,17 @@ export default {
     async getRenderNumberlotto() {
       this.isLoading = true;
       let params = this.getparameterDetail();
-      console.log(params);
+      // console.log(params.type_purchase)
       try {
         let { data: res } = await this.getTransaction(params);
+
+        if(!res.data[0]){
+          this.detailstype = 1;
+          params = this.getparameterDetail();
+          var newData = await this.getTransaction(params);
+          res = newData.data
+        }
+        // console.log(res)
         let details = {
           typepurchase_name: this.itemDetailOpen.typepurchase_name,
           lotto_round: this.itemDetailOpen.lotto_round,
