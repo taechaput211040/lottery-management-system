@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="my-3 ">
+    <div class="my-3">
       <v-row class="pa-1">
-        <v-col cols="12" >
+        <v-col cols="12">
           <div class="rounded-lg white" style="height: 100%">
             <div class="primary--text font-weight-bold pa-2">
               เลือกประเภทหวย
@@ -83,6 +83,9 @@
           <template #[`item.maximum_out_come_rate`]="{ item }">
             {{ numberWithCommas(item.maximum_out_come_rate) }}
           </template>
+          <template #[`item.received_out_come_rate`]="{ item }">
+            {{ numberWithCommas(item.received_out_come_rate) }}
+          </template>
           <template #[`item.minimum_bet_prize`]="{ item }">
             {{ numberWithCommas(item.minimum_bet_prize) }}
           </template>
@@ -97,6 +100,9 @@
           </template>
           <template #[`item.discount_amount`]="{ item }">
             {{ item.discount_amount }} %
+          </template>
+          <template #[`item.received_discount_amount`]="{ item }">
+            {{ item.received_discount_amount }} %
           </template>
           <template #[`item.unlimitedNumber`]="{ item }">
             <v-btn
@@ -178,6 +184,9 @@
           <template #[`item.maximum_out_come_rate`]="{ item }">
             {{ numberWithCommas(item.maximum_out_come_rate) }}
           </template>
+          <template #[`item.received_out_come_rate`]="{ item }">
+            {{ numberWithCommas(item.received_out_come_rate) }}
+          </template>
           <template #[`item.minimum_bet_prize`]="{ item }">
             {{ numberWithCommas(item.minimum_bet_prize) }}
           </template>
@@ -192,6 +201,9 @@
           </template>
           <template #[`item.discount_amount`]="{ item }">
             {{ item.discount_amount }} %
+          </template>
+          <template #[`item.received_discount_amount`]="{ item }">
+            {{ item.received_discount_amount }} %
           </template>
           <template #[`item.unlimitedNumber`]="{ item }">
             <v-btn
@@ -235,76 +247,6 @@
           </v-col>
         </v-row>
       </div>
-
-      <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
-        <h4 class="my-2">หวยของ upline</h4>
-        <v-data-table
-          class="elevation-2"
-          :headers="headersUpline"
-          :loading="isLoading"
-          :items="dataUpline"
-          hide-default-footer
-          :options.sync="optionupline"
-        >
-          <template v-slot:no-data>
-            <v-alert
-              :value="true"
-              border="left"
-              color="blue-grey"
-              type="error"
-              icon="mdi-warning"
-            >
-              ไม่พบข้อมูล
-            </v-alert>
-          </template>
-          <template #[`item.maximum_out_come_rate`]="{ item }">
-            {{ numberWithCommas(item.maximum_out_come_rate) }}
-          </template>
-
-          <template #[`item.minimum_bet_prize`]="{ item }">
-            {{ numberWithCommas(item.minimum_bet_prize) }}
-          </template>
-          <template #[`item.minimum_out_come_rate`]="{ item }">
-            {{ numberWithCommas(item.minimum_out_come_rate) }}
-          </template>
-
-          <template #[`item.maximum_bet_prize`]="{ item }">
-            {{ numberWithCommas(item.maximum_bet_prize) }}
-          </template>
-          <template #[`item.no`]="{ index }">
-            {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
-          </template>
-          <template #[`item.unlimitedNumber`]="{ item }">
-            <v-btn
-              rounded
-              color="primary"
-              dark
-              small
-              @click="unlimitDetail(item)"
-              ><v-icon left>mdi-pencil</v-icon>จัดการเลขอั้น
-            </v-btn>
-          </template>
-        </v-data-table>
-        <v-row align="baseline" class="ma-3">
-          <v-col cols="12" sm="2" lg="2" xl="1">
-            <v-select
-              outlined
-              hide-details="auto "
-              dense
-              v-model="optionupline.itemsPerPage"
-              :items="pageSizesupline"
-              label="รายการต่อหน้า"
-            ></v-select>
-          </v-col>
-          <v-col cols="12" sm="10" lg="10">
-            <v-pagination
-              v-model="optionupline.page"
-              :total-visible="7"
-              :length="Math.ceil(dataUpline.length / optionupline.itemsPerPage)"
-            ></v-pagination>
-          </v-col>
-        </v-row>
-      </div>
     </div>
 
     <!-- normal setting -->
@@ -344,7 +286,7 @@
               hide-details="auto"
               v-model.number="formupdate.maximum_out_come_rate"
             ></v-text-field>
-            <!-- อัตราจ่ายต่ำสุด -->
+            <!-- แทงต่ำสุด -->
             <v-text-field
               outlined
               label="แทงต่ำสุด"
@@ -352,7 +294,7 @@
               :rules="[
                 (v) => !!v || 'กรุณากรอกอัตราแทงต่ำสุด',
                 (v) =>
-                  (v && v <= formupdate.maximum_out_come_rate) ||
+                  (v && v <= formupdate.maximum_bet_prize) ||
                   'กรุณากรอกอัตราแทงต่ำสุดน้อยกว่าอัตราแทงสูงสุด',
               ]"
               type="number"
@@ -362,24 +304,6 @@
               hide-details="auto"
               v-model.number="formupdate.minimum_bet_prize"
             ></v-text-field>
-
-            <!-- <v-text-field
-              outlined
-              label="แทงต่ำสุด"
-              type="number"
-              @keypress="e => checkpositive(e)"
-              placeholder="กรุณากรอกยอดแทงต่ำสุด"
-              :rules="[
-                v => !!v || 'กรุณากรอกยอดแทงต่ำสุด',
-                v =>
-                  (v && v <= formupdate.maximum_bet_prize) ||
-                  'กรุณากรอกยอดแทงต่ำสุดให้น้อยกว่ายอดแทงสูงสุด'
-              ]"
-              dense
-              class="my-2"
-              hide-details="auto"
-              v-model.number="formupdate.minimum_bet_prize"
-            ></v-text-field> -->
             <!-- แทงสูงสุด -->
             <v-text-field
               outlined
@@ -433,7 +357,6 @@
         </v-card></v-form
       >
     </v-dialog>
-
     <!-- yeekee setting -->
     <v-dialog max-width="600px" v-model="dlupdateYeekee" persistent>
       <v-form ref="edtformYeekee">
@@ -479,7 +402,7 @@
               :rules="[
                 (v) => !!v || 'กรุณากรอกอัตราแทงต่ำสุด',
                 (v) =>
-                  (v && v <= formupdateYeekee.maximum_out_come_rate) ||
+                  (v && v <= formupdateYeekee.maximum_bet_prize) ||
                   'กรุณากรอกอัตราแทงต่ำสุดน้อยกว่าอัตราแทงสูงสุด',
               ]"
               type="number"
@@ -489,6 +412,7 @@
               hide-details="auto"
               v-model.number="formupdateYeekee.minimum_bet_prize"
             ></v-text-field>
+            <!-- อัตราแทงสูงสุด -->
             <v-text-field
               outlined
               @keypress="(e) => checkpositive(e)"
@@ -585,6 +509,12 @@ export default {
           align: "center",
         },
         {
+          text: "อัตราจ่ายที่ได้รับมา",
+          value: "received_out_come_rate",
+          class: "font-weight-bold",
+          align: "center",
+        },
+        {
           text: "รับของทั้งหมด",
           value: "self_receive_amount",
           class: "font-weight-bold",
@@ -599,6 +529,12 @@ export default {
         {
           text: "ส่วนลด",
           value: "discount_amount",
+          class: "font-weight-bold",
+          align: "center",
+        },
+        {
+          text: "ส่วนลดที่ได้รับมา",
+          value: "received_discount_amount",
           class: "font-weight-bold",
           align: "center",
         },
@@ -655,8 +591,20 @@ export default {
           align: "center",
         },
         {
+          text: "อัตราจ่ายที่ได้รับมา",
+          value: "received_out_come_rate",
+          class: "font-weight-bold",
+          align: "center",
+        },
+        {
           text: "ส่วนลด",
           value: "discount_amount",
+          class: "font-weight-bold",
+          align: "center",
+        },
+        {
+          text: "ส่วนลดที่ได้รับมา",
+          value: "received_discount_amount",
           class: "font-weight-bold",
           align: "center",
         },
@@ -686,44 +634,44 @@ export default {
           align: "center",
         },
       ],
-      headersUpline: [
-        {
-          text: "No.",
-          value: "no",
-          class: "font-weight-bold",
-          align: "center",
-        },
-        {
-          text: "ชนิดหวย",
-          value: "lottonumbertype_name",
-          class: "font-weight-bold",
-          align: "center",
-        },
-        {
-          text: "อัตราจ่าย",
-          value: "maximum_out_come_rate",
-          class: "font-weight-bold",
-          align: "center",
-        },
-        {
-          text: "ส่วนลด",
-          value: "discount_amount",
-          class: "font-weight-bold",
-          align: "center",
-        },
-        {
-          text: "แทงต่ำสุด",
-          value: "minimum_bet_prize",
-          class: "font-weight-bold",
-          align: "center",
-        },
-        {
-          text: "แทงสูงสุด",
-          value: "maximum_bet_prize",
-          class: "font-weight-bold",
-          align: "center",
-        },
-      ],
+      // headersUpline: [
+      //   {
+      //     text: "No.",
+      //     value: "no",
+      //     class: "font-weight-bold",
+      //     align: "center",
+      //   },
+      //   {
+      //     text: "ชนิดหวย",
+      //     value: "lottonumbertype_name",
+      //     class: "font-weight-bold",
+      //     align: "center",
+      //   },
+      //   {
+      //     text: "อัตราจ่าย",
+      //     value: "maximum_out_come_rate",
+      //     class: "font-weight-bold",
+      //     align: "center",
+      //   },
+      //   {
+      //     text: "ส่วนลด",
+      //     value: "discount_amount",
+      //     class: "font-weight-bold",
+      //     align: "center",
+      //   },
+      //   {
+      //     text: "แทงต่ำสุด",
+      //     value: "minimum_bet_prize",
+      //     class: "font-weight-bold",
+      //     align: "center",
+      //   },
+      //   {
+      //     text: "แทงสูงสุด",
+      //     value: "maximum_bet_prize",
+      //     class: "font-weight-bold",
+      //     align: "center",
+      //   },
+      // ],
       itemcategory: [],
       filter: {
         startDate: "",
@@ -869,7 +817,7 @@ export default {
         this.itemcategory = data.result;
 
         // this.selectCate = "cfe77d55-e0f4-4a28-8dca-897005d2f77b";
-        console.log(this.selectCate)
+        console.log(this.selectCate);
         // selectSeller({
         //   typecategory_id: "",
         //   typecategory_title: "",
@@ -884,37 +832,40 @@ export default {
       this.dlupdateYeekee = false;
     },
 
-    async selectSeller(value) {
+    async selectSeller(value, loading = false) {
       // console.log(value.typecategory_id)
       // console.log(value.typecategory_title)
 
       // console.log(this.selectCate)
       this.current_cat_id = value.typecategory_id;
       this.current_cat_title = value.typecategory_title;
-      this.getSellerSetting(value.typecategory_id);
-      this.getUplinebyid(value.typecategory_id);
+      // await this.getUplinebyid(value.typecategory_id, loading);
+      await this.getSellerSetting(value.typecategory_id, loading);
     },
-    async getSellerSetting(id) {
+    async getSellerSetting(id, loading) {
       this.isLoading = true;
       try {
         const { data } = await this.getAllsettingseller(id);
         this.dataOutcome = data.result;
         console.log(this.dataOutcome);
-        this.isLoading = false;
+        this.isLoading = loading;
       } catch (error) {
         console.log(error);
-        this.isLoading = false;
+        this.isLoading = loading;
       }
     },
-    async getUplinebyid(id) {
+    async getUplinebyid(id, loading) {
       try {
+        this.isLoading = true;
         // console.log(id);
         const { data } = await this.getAllsettingUpline(id);
         // console.log(data)
         this.dataUpline = data.result;
         console.log(this.dataUpline);
+        this.isLoading = loading;
       } catch (error) {
         console.log(error);
+        this.isloading = loading;
       }
     },
     openupdateComerate(item) {
@@ -941,39 +892,64 @@ export default {
       }
     },
     async submitEdit(item) {
-      this.loading_btn = true;
       item = JSON.parse(JSON.stringify(item));
+      console.log(item);
       if (this.$refs.edtform.validate()) {
-        try {
-          let body = {
-            typecategory_id: this.selectCate.typecategory_id,
-            lotto_numbertype: [
-              {
-                lottonumbertype_id: item.lottonumbertype_id,
-                maximum_out_come_rate: item.maximum_out_come_rate,
-                minimum_bet_prize: item.minimum_bet_prize,
-                maximum_bet_prize: item.maximum_bet_prize,
-                self_receive_amount: item.self_receive_amount,
-                discount_amount: item.discount_amount,
-              },
-            ],
-          };
-          console.log(body);
-          await this.updateSettingseller(body);
-          await this.selectSeller(this.selectCate);
-          this.loading_btn = false;
-          this.dlupdate = false;
-        } catch (error) {
-          console.log(error.response.data.message);
-          this.$swal({
-            icon: "error",
-            title: `${error.response.data.message}`,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          this.loading_btn = false;
-          this.dlupdate = false;
-        }
+        this.$swal({
+          title: `คุณต้องการปรับข้อมุล เลยอั้น ของ${this.current_cat_title} : ${item.lottonumbertype_name} ทั้งหมดใช่ไหม`,
+          icon: "primary",
+          showCancelButton: true,
+          confirmButtonColor: "#4caf50",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ยืนยัน",
+          cancelButtonText: "ยกเลิก",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              this.isLoading = true;
+              let body = {
+                typecategory_id: this.current_cat_id,
+                lotto_numbertype: [
+                  {
+                    lottonumbertype_id: item.lottonumbertype_id,
+                    maximum_out_come_rate: item.maximum_out_come_rate,
+                    minimum_bet_prize: item.minimum_bet_prize,
+                    maximum_bet_prize: item.maximum_bet_prize,
+                    self_receive_amount: item.self_receive_amount,
+                    discount_amount: item.discount_amount,
+                  },
+                ],
+              };
+              console.log(body);
+              await this.updateSettingseller(body);
+              await this.selectSeller({
+                typecategory_id: this.current_cat_id,
+                typecategory_title: this.current_cat_title,
+              });
+              this.loading_btn = false;
+              this.dlupdate = false;
+              this.$swal({
+                icon: "success",
+                title: "ตั้งค่าเรียบร้อย",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            } catch (error) {
+              console.log(error.response.data.message);
+              this.$swal({
+                icon: "error",
+                title: `${error.response.data.message}`,
+                showConfirmButton: false,
+                timer: 2500,
+              });
+              this.loading_btn = false;
+              this.dlupdate = false;
+              this.isLoading = false;
+            }
+          }
+        });
+        this.loading_btn = false;
+        this.dlupdate = false;
       } else {
         this.$swal({
           icon: "error",
@@ -985,39 +961,63 @@ export default {
       }
     },
     async submitEditYeekee(item) {
-      this.loading_btn = true;
-      console.log("this is yeekee submit")
+      console.log("this is yeekee submit");
       item = JSON.parse(JSON.stringify(item));
       if (this.$refs.edtformYeekee.validate()) {
-        try {
-          let body = {
-            typecategory_id: this.selectCate.typecategory_id,
-            lotto_numbertype: [
-              {
-                lottonumbertype_id: item.lottonumbertype_id,
-                maximum_out_come_rate: item.maximum_out_come_rate,
-                minimum_bet_prize: item.minimum_bet_prize,
-                maximum_bet_prize: item.maximum_bet_prize,
-                discount_amount: item.discount_amount,
-              },
-            ],
-          };
-          console.log(body);
-          await this.updateSettingseller(body);
-          await this.selectSeller(this.selectCate);
-          this.loading_btn = false;
-          this.dlupdateYeekee = false;
-        } catch (error) {
-          console.log(error.response.data.message);
-          this.$swal({
-            icon: "error",
-            title: `${error.response.data.message}`,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          this.loading_btn = false;
-          this.dlupdate = false;
-        }
+        this.dlupdateYeekee = false
+        this.$swal({
+          title: `คุณต้องการปรับข้อมุล เลยอั้น ของ${this.current_cat_title} : ${item.lottonumbertype_name} ทั้งหมดใช่ไหม`,
+          icon: "primary",
+          showCancelButton: true,
+          confirmButtonColor: "#4caf50",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ยืนยัน",
+          cancelButtonText: "ยกเลิก",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            // -----------------------
+            try {
+              this.isLoading = true
+              let body = {
+                typecategory_id: this.selectCate.typecategory_id,
+                lotto_numbertype: [
+                  {
+                    lottonumbertype_id: item.lottonumbertype_id,
+                    maximum_out_come_rate: item.maximum_out_come_rate,
+                    minimum_bet_prize: item.minimum_bet_prize,
+                    maximum_bet_prize: item.maximum_bet_prize,
+                    discount_amount: item.discount_amount,
+                  },
+                ],
+              };
+              console.log(body);
+              await this.updateSettingseller(body);
+              await this.selectSeller(this.selectCate);
+              this.loading_btn = false;
+              this.dlupdateYeekee = false;
+              this.$swal({
+                icon: "success",
+                title: "ตั้งค่าเรียบร้อย",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            } catch (error) {
+              console.log(error.response.data.message);
+              this.$swal({
+                icon: "error",
+                title: `${error.response.data.message}`,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              this.isLoading = false;
+              this.loading_btn = false;
+              this.dlupdateYeekee = false;
+            }
+            this.loading_btn = false;
+            this.dlupdateYeekee = false;
+            // --------------------
+          }
+        });
       } else {
         this.$swal({
           icon: "error",
@@ -1034,13 +1034,18 @@ export default {
       return parts.join(".");
     },
   },
-  created() {
+  async created() {
+    this.isloading = true;
     this.selectCatebytype("cfe77d55-e0f4-4a28-8dca-897005d2f77b");
     this.selectCate = "cfe77d55-e0f4-4a28-8dca-897005d2f77b";
-    this.selectSeller({
-      typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
-      typecategory_title: "หวยรัฐบาล",
-    });
+    await this.selectSeller(
+      {
+        typecategory_id: "cfe77d55-e0f4-4a28-8dca-897005d2f77b",
+        typecategory_title: "หวยรัฐบาล",
+      },
+      true
+    );
+    this.isLoading = false;
   },
 };
 </script>

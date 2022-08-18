@@ -326,7 +326,7 @@ export default {
         },
         {
           text: "ชื่อหวย",
-          value: "title",
+          value: "typecateogy_title",
           sortable: false,
           filterable: false,
           align: "center",
@@ -335,6 +335,14 @@ export default {
         {
           text: "ชนิดตัวเลข",
           value: "lottonumbertype_name",
+          sortable: false,
+          filterable: false,
+          align: "center",
+          cellClass: "font-weight-bold"
+        },
+        {
+          text: "เลขที่ถูกรางวัล",
+          value: "lotto_number",
           sortable: false,
           filterable: false,
           align: "center",
@@ -401,10 +409,10 @@ export default {
     };
   },
   async fetch() {
-    this.changDatefillter("findate");
-    this.getDashboarddata();
-    this.getDataGraph();
-    this.gettoprecieve();
+    await this.changDatefillter("findate");
+    // this.getDashboarddata();
+    await this.getDataGraph();
+    await this.gettoprecieve();
   },
   methods: {
     ...mapActions("seller", ["recieveSellertofull"]),
@@ -418,6 +426,7 @@ export default {
       try {
         let { result: response } = this.$store.state.seller.balance_top;
         this.itemrecieved = response.data;
+        console.log(this.itemrecieved)
       } catch (error) {}
     },
     async mapchart(item) {
@@ -482,7 +491,7 @@ export default {
           var curr = new Date;
           var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
           var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
-          
+
           this.filterDate = {
             start_date: this.getDateTime(
               new Date(firstday.setHours(0, 0, 0, 0))

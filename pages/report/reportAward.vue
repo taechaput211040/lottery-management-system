@@ -5,9 +5,9 @@
       <div v-if="isLoading">
         <loading-page></loading-page>
       </div>
-      <div class="row  rounded-lg white ma-0 mb-3">
-        <div class=" col-12  col-md-4 pa-0">
-          <div class=" my-3 rounded-lg white">
+      <div class="row rounded-lg white ma-0 mb-3">
+        <div class="col-12 col-md-4 pa-0">
+          <div class="my-3 rounded-lg white">
             <h3 class="pa-3">เลือกประเภทหวยที่ต้องการค้นหา</h3>
             <v-divider></v-divider>
             <div class="pa-3 col-12 col-sm-6 col-md-12 col-lg-12">
@@ -25,7 +25,7 @@
             </div>
           </div>
         </div>
-        <div class=" col-12 col-md-8  pa-0">
+        <div class="col-12 col-md-8 pa-0">
           <filter-search
             @search="searchReport"
             v-if="selectType != ''"
@@ -33,10 +33,10 @@
         </div>
       </div>
 
-      <div class="white rounded-lg " v-show="selectType != ''">
+      <div class="white rounded-lg" v-show="selectType != ''">
         <h3 class="pa-4">ผลรางวัล</h3>
 
-        <div class=" rounded-lg">
+        <div class="rounded-lg">
           <v-data-table
             :server-items-length="pagination.rowsNumber"
             :items-per-page.sync="pagination.rowsPerPage"
@@ -57,10 +57,10 @@
                 ไม่พบข้อมูล
               </v-alert>
             </template>
-            <template #[`item.no`]="{index}">
+            <template #[`item.no`]="{ index }">
               {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
             </template>
-            <template #[`item.action`]="{item}">
+            <template #[`item.action`]="{ item }">
               <v-btn
                 rounded
                 color="primary"
@@ -69,11 +69,11 @@
                 ><v-icon left>mdi-magnify</v-icon>ดูผลรางวัล
               </v-btn>
             </template>
-            <template #[`item.bet_lotto_time`]="{item}">
+            <template #[`item.bet_lotto_time`]="{ item }">
               {{ dateformat(item.bet_lotto_time) }}
             </template>
           </v-data-table>
-          <v-row align="baseline" class="ma-3 ">
+          <v-row align="baseline" class="ma-3">
             <v-col cols="12" sm="2" lg="2" xl="1">
               <v-select
                 dense
@@ -88,6 +88,7 @@
               <v-pagination
                 v-model="pagination.page"
                 :total-visible="7"
+                @input="handlePageChange(pagination.page)"
                 :length="
                   Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
                 "
@@ -116,7 +117,7 @@
               :headers="headerDetail"
               hide-default-footer
             >
-              <template #[`item.lotto_number`]="{item}">
+              <template #[`item.lotto_number`]="{ item }">
                 <div v-if="!item.lotto_number">
                   <span class="font-weight-bold error--text">ยังไม่ออกผล</span>
                 </div>
@@ -138,7 +139,7 @@
                   </div>
                 </div>
               </template>
-              <template #[`item.bet_lotto_time`]="{item}">
+              <template #[`item.bet_lotto_time`]="{ item }">
                 {{ dateformat(item.bet_lotto_time) }}
               </template></v-data-table
             >
@@ -172,13 +173,13 @@ export default {
           value: "lottonumbertype_name",
           align: "left",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "วันที่",
           value: "bet_lotto_time",
           align: "left",
-          class: "font-weight-bold"
+          class: "font-weight-bold",
         },
         {
           text: "ตัวเลขผลรางวัล",
@@ -186,8 +187,8 @@ export default {
           sort: false,
           align: "center",
           class: "font-weight-bold",
-          width: "200px"
-        }
+          width: "200px",
+        },
       ],
       itemDetail: [],
       headersdatelotto: [
@@ -197,21 +198,21 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          width: "100px"
+          width: "100px",
         },
         {
           text: "ชนิดหวย",
           value: "typecategory_title",
           align: "left",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "วันที่",
           value: "bet_lotto_time",
           align: "center",
           class: "font-weight-bold",
-          width: "300px"
+          width: "300px",
         },
         {
           text: "ดูผล",
@@ -219,32 +220,32 @@ export default {
           sort: false,
           align: "center",
           class: "font-weight-bold",
-          width: "200px"
-        }
+          width: "200px",
+        },
       ],
       pagination: {
         sortBy: "desc",
         descending: false,
         page: 1,
         rowsPerPage: 15,
-        rowsNumber: 0
+        rowsNumber: 0,
       },
       itemtypeaward: [],
       selecttype: "",
       filter: {
         Date: "",
-        month: ""
+        month: "",
       },
-      pageSizes: [5, 10, 15, 25]
+      pageSizes: [5, 10, 15, 25],
     };
   },
   watch: {
-    options: {
-      async handler() {
-        await this.getReport();
-      },
-      deep: true
-    }
+    // options: {
+    //   async handler() {
+    //     await this.getReport();
+    //   },
+    //   deep: true,
+    // },
   },
   async fetch() {
     try {
@@ -258,6 +259,10 @@ export default {
   methods: {
     ...mapActions("lottosetting", ["getLottotype", "getTypeCategory"]),
     ...mapActions("report", ["getReportNumber"]),
+    handlePageChange(size) {
+      this.pagination.page = size;
+      this.getReport();
+    },
     async handlePageSizeChange(size) {
       this.pagination.page = 1;
       this.pagination.rowsPerPage = size;
@@ -288,7 +293,7 @@ export default {
         currentPage: this.pagination.page,
         limit: this.pagination.rowsPerPage,
         order_by: order == undefined ? undefined : order.sortBy,
-        order_mode: order == undefined ? undefined : order.sortDesc
+        order_mode: order == undefined ? undefined : order.sortDesc,
       };
       return parameter;
     },
@@ -311,7 +316,7 @@ export default {
       let params = await this.getParameter();
       try {
         this.isLoading = true;
-        console.log(params)
+        console.log(params);
         let { result } = await this.getReportNumber(params);
         this.itemtypeaward = result.data;
         this.pagination.rowsNumber = result.total;
@@ -319,8 +324,30 @@ export default {
         console.log(error);
       }
       this.isLoading = false;
-    }
-  }
+    },
+    getDateTime(date) {
+      return this.$moment(date).format("YYYY-MM-DD");
+    },
+  },
+  async created() {
+    let today = new Date();
+    this.selectType = "02770ee9-3448-4258-8d40-a7a13c7d1257";
+    this.filter = {
+      startDate: this.getDateTime(
+        new Date(today.getFullYear(), today.getMonth(), 1)
+      ),
+      endDate: this.getDateTime(
+        new Date(today.getFullYear(), today.getMonth() + 1, 0).setHours(
+          23,
+          59,
+          59,
+          999
+        )
+      ),
+    };
+    //
+    console.log(this.filter);
+  },
 };
 </script>
 

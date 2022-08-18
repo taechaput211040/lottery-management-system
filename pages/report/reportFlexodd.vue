@@ -23,6 +23,7 @@
             v-model="selectType"
             row
             @change="selectTypelotto"
+
           >
             <v-radio
               v-for="(item, i) in this.listtype"
@@ -35,19 +36,6 @@
 
         <div class="col-12 " v-if="itemcategory[0]">
           เลือกชนิดหวย
-          <!-- <div> กรุณาเลือกประเภทหวย เพื่อดำเนินการต่อ</div> -->
-          <!-- <v-autocomplete
-            :items="itemcategory"
-            item-text="title"
-            hide-details="auto"
-            item-value="id"
-            :disabled="selectType == null"
-            v-model="selectTypeCategory"
-            @change="selectRound"
-            outlined
-            dense
-            placeholder="กรุณาเลือกชนิดของหวย"
-          ></v-autocomplete> -->
           <v-radio-group
             hide-details="auto"
             class="my-3"
@@ -783,7 +771,14 @@ export default {
           limit: 500
         };
         const response = await this.getTypeCategory(params);
-        this.itemcategory = response.result[0].lottotype_id.data;
+        const filter = []
+        response.result[0].lottotype_id.data.forEach(element => {
+          if(element.id != '031d2311-ddc8-40ce-be39-342926748163'){
+            filter.push(element)
+          }
+        });
+        // console.log(filter);
+        this.itemcategory = filter;
         this.isLoading = false;
       } catch (error) {
         console.log(error);
@@ -829,7 +824,15 @@ export default {
         round = result[0].TypeCategoryId.data.sort(function(b, a) {
           return b.bet_lotto_time.localeCompare(a.bet_lotto_time);
         });
-        this.itemRound = round;
+        const filter = []
+        round.forEach(element => {
+          if(!element.status_calculate){
+            filter.push(element)
+          }
+        });
+        // console.log(round)
+        // console.log(filter)
+        this.itemRound = filter;
       } catch (error) {
         console.log(error);
         this.isLoading = false;

@@ -2,9 +2,9 @@
   <div>
     <h2>รายการแทง</h2>
     <loading-page v-if="isLoading"></loading-page>
-    <div class="row  rounded-lg white ma-0 mb-3">
-      <div class=" col-12  col-md-4 pa-0">
-        <div class=" my-3 rounded-lg white">
+    <div class="row rounded-lg white ma-0 mb-3">
+      <div class="col-12 col-md-4 pa-0">
+        <div class="my-3 rounded-lg white">
           <h3 class="pa-3">การแทง</h3>
           <v-divider></v-divider>
           <div class="pa-3 col-12 col-sm-6 col-md-12 col-lg-12">
@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class=" col-12 col-md-8  pa-0">
+      <div class="col-12 col-md-8 pa-0">
         <filter-search @search="searchfunction"></filter-search>
       </div>
     </div>
@@ -40,9 +40,9 @@
         <div class="my-3">
           <h3 class="pa-3">ยอดรายการแทง</h3>
           <v-divider></v-divider>
-          <div class=" row align-center px-4 pt-3 pb-4">
-            <div class="row pt-3  text-center">
-              <div class=" col-6 col-sm-3 col-md-2">
+          <div class="row align-center px-4 pt-3 pb-4">
+            <div class="row pt-3 text-center">
+              <div class="col-6 col-sm-3 col-md-2">
                 <div class="elevation-2 rounded-lg pa-2">
                   ยอดเเทงรวม
                   <h4>{{ numberWithCommas(summary.bet_amount) }} บาท</h4>
@@ -78,12 +78,13 @@
               ไม่พบข้อมูล
             </v-alert>
           </template>
-          <template #[`item.no`]="{index}">
+          <template #[`item.no`]="{ index }">
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
-          <template #[`item.actions`]="{item}">
+          <template #[`item.actions`]="{ item }">
             <div class="d-flex justify-center">
-              <v-tooltip bottom color="black" dark>
+              <!-- เพลา -->
+              <!-- <v-tooltip bottom color="black" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -96,15 +97,13 @@
                     color="black"
                     @click="getDetail(item, 1)"
                   >
-                    <v-icon dark>
-                      mdi-clipboard-text
-                    </v-icon>
+                    <v-icon dark> mdi-clipboard-text </v-icon>
                   </v-btn></template
                 >
                 <span>ดูรายละเอียดโพยแทง</span>
-              </v-tooltip>
-              <!-- /*เพลา -->
-              <v-tooltip bottom color="warning" dark>
+              </v-tooltip> -->
+              <!-- น้ำไหล -->
+              <!-- <v-tooltip bottom color="warning" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
@@ -116,14 +115,20 @@
                     color="warning"
                     @click="getDetail(item, 2)"
                   >
-                    <v-icon dark>
-                      mdi-clipboard-account
-                    </v-icon>
+                    <v-icon dark> mdi-clipboard-account </v-icon>
                   </v-btn></template
                 >
                 <span>ดูรายละเอียดโพยรับของ</span>
-              </v-tooltip>
+              </v-tooltip> -->
 
+              <!-- รวม -->
+              <v-btn
+                rounded
+                color="primary"
+                small
+                @click="getDetail(item, 2)"
+                ><v-icon left>mdi-magnify</v-icon>ดูผลรางวัล
+              </v-btn>
               <!-- <v-tooltip bottom color="error" dark>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -144,14 +149,14 @@
               </v-tooltip> -->
             </div>
           </template>
-          <template #[`item.winlose`]="{item}">
+          <template #[`item.winlose`]="{ item }">
             {{ numberWithCommas(item.winlose) }}
           </template>
-          <template #[`item.bet`]="{item}">
+          <template #[`item.bet`]="{ item }">
             {{ numberWithCommas(item.bet) }}
           </template>
         </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
+        <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2" lg="2" xl="1">
             <v-select
               outlined
@@ -166,6 +171,7 @@
           <v-col cols="12" sm="10" lg="10">
             <v-pagination
               v-model="pagination.page"
+              @input="handlePageChange(pagination.page)"
               :total-visible="7"
               :length="
                 Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)
@@ -182,9 +188,9 @@
           <h2 v-else>รายละเอียดโพยรับของ</h2>
         </v-card-actions>
         <v-divider></v-divider>
-        <div class=" pa-3 font-weight-bold row ma-0 align-center">
-          <div class="col-12 col-sm-6  pa-0">
-            <v-chip label outlined color="green" class="green--text "
+        <div class="pa-3 font-weight-bold row ma-0 align-center">
+          <div class="col-12 col-sm-6 pa-0">
+            <v-chip label outlined color="green" class="green--text"
               ><v-icon left>mdi-account</v-icon
               >{{ itemDetail.member_username }}</v-chip
             >
@@ -209,7 +215,7 @@
           :items="itemDetail.data"
           class="elevation-1"
         >
-          <template #[`item.status`]="{item}">
+          <template #[`item.status`]="{ item }">
             <v-chip color="yellow" v-if="parseInt(item.status) == 0" dark small
               ><v-icon left>mdi-circle</v-icon>กำลังประมวลผล</v-chip
             >
@@ -220,31 +226,31 @@
               ><v-icon left>mdi-circle</v-icon>ยกเลิก</v-chip
             >
           </template>
-          <template #[`item.agent_selfrecaive_name`]="{item}">
+          <template #[`item.agent_selfrecaive_name`]="{ item }">
             <span v-if="!item.agent_selfrecaive_name">-</span>
             <span v-else>{{ item.agent_selfrecaive_name }}</span>
           </template>
 
-          <template #[`item.no`]="{index}">
+          <template #[`item.no`]="{ index }">
             {{
               paginationDetail.rowsPerPage * (paginationDetail.page - 1) +
-                (index + 1)
+              (index + 1)
             }}
           </template>
-          <template #[`item.winlose`]="{item}">
+          <template #[`item.winlose`]="{ item }">
             {{ numberWithCommas(item.winlose) }}
           </template>
-          <template #[`item.bet`]="{item}">
+          <template #[`item.bet`]="{ item }">
             {{ numberWithCommas(item.bet) }}
           </template>
-          <template #[`item.payout`]="{item}">
+          <template #[`item.payout`]="{ item }">
             {{ numberWithCommas(item.payout) }}
           </template>
-          <template #[`item.discount`]="{item}">
+          <template #[`item.discount`]="{ item }">
             {{ numberWithCommas(item.discount) }}
           </template>
         </v-data-table>
-        <v-row align="baseline" class="ma-3 ">
+        <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2" lg="2">
             <v-select
               outlined
@@ -305,7 +311,7 @@ export default {
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
           width: "75px",
-          sortable: false
+          sortable: false,
         },
         {
           text: "ประเภท",
@@ -313,7 +319,7 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         {
           text: "หมายเลข",
@@ -321,7 +327,7 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         {
           text: "ยอด",
@@ -329,7 +335,7 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         {
           text: "ส่วนลด(บาท)",
@@ -337,7 +343,7 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         {
           text: "รวม(บาท)",
@@ -345,7 +351,7 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         {
           text: "จ่าย(บาท)",
@@ -353,7 +359,7 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         // {
         //   text: "Agent รับของ",
@@ -370,8 +376,8 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
-        }
+          sortable: false,
+        },
       ],
       dialogdetail: false,
       headersdatelotto: [
@@ -381,28 +387,28 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         {
           text: "agent",
           value: "agent_name",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "ชนิดหวย",
           value: "lottotype_name",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "ชื่อหวย",
           value: "title",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "ชื่องวด",
@@ -410,7 +416,7 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         {
           text: "ชนิดการเเทง",
@@ -418,35 +424,35 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
+          sortable: false,
         },
         {
           text: "วันที่",
           value: "date",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "Username",
           value: "member_username",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "ยอดเเทง(บาท)",
           value: "bet",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "เเพ้/ชนะ(บาท)",
           value: "winlose",
           align: "center",
           class: "font-weight-bold",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "ดำเนินการ",
@@ -454,8 +460,8 @@ export default {
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
-          sortable: false
-        }
+          sortable: false,
+        },
       ],
       itemtypeaward: [
         {
@@ -464,8 +470,8 @@ export default {
           date: "10-02-2022",
           threeup: "674",
           twoup: "74",
-          twodown: "01"
-        }
+          twodown: "01",
+        },
       ],
       itemReport: [],
       selectgroup: undefined,
@@ -476,36 +482,34 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 10,
-        rowsNumber: 0
+        rowsNumber: 0,
       },
       paginationDetail: {
         sortBy: "desc",
         descending: false,
         page: 1,
         rowsPerPage: 10,
-        rowsNumber: 0
+        rowsNumber: 0,
       },
       detailstype: "",
       itemDetailOpen: {},
-      searchInput: ""
+      searchInput: "",
     };
   },
   watch: {
-    options: {
-      async handler() {
-        await this.getReportdata();
-      },
-      deep: true
-    },
     optionsDetail: {
       async handler() {
         await this.getRenderNumberlotto();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   async fetch() {},
   methods: {
+    handlePageChange(size) {
+      this.pagination.page = size;
+      this.getReportdata();
+    },
     closedialog() {
       this.dialogdetail = false;
       this.paginationDetail = {
@@ -513,7 +517,7 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 10,
-        rowsNumber: 0
+        rowsNumber: 0,
       };
     },
     async renderbyselecttype(value) {
@@ -528,7 +532,7 @@ export default {
     ...mapActions("report", [
       "getBetReport",
       "getReportDetail",
-      "getTransaction"
+      "getTransaction",
     ]),
     async searchfunction(value) {
       this.filter = value;
@@ -564,7 +568,7 @@ export default {
         sort:
           order == "date=DESC"
             ? "date=DESC"
-            : `${order.sortBy}=${order.sortDesc}`
+            : `${order.sortBy}=${order.sortDesc}`,
       };
       return params;
     },
@@ -598,22 +602,30 @@ export default {
         round_id: this.itemDetailOpen.id,
         type_purchase: this.detailstype,
         page: this.paginationDetail.page,
-        limit: this.paginationDetail.rowsPerPage
+        limit: this.paginationDetail.rowsPerPage,
       };
       return params;
     },
     async getRenderNumberlotto() {
       this.isLoading = true;
       let params = this.getparameterDetail();
-      console.log(params);
+      // console.log(params.type_purchase)
       try {
         let { data: res } = await this.getTransaction(params);
+
+        if(!res.data[0]){
+          this.detailstype = 1;
+          params = this.getparameterDetail();
+          var newData = await this.getTransaction(params);
+          res = newData.data
+        }
+        // console.log(res)
         let details = {
           typepurchase_name: this.itemDetailOpen.typepurchase_name,
           lotto_round: this.itemDetailOpen.lotto_round,
           title: this.itemDetailOpen.title,
           date: this.itemDetailOpen.date,
-          member_username: this.itemDetailOpen.member_username
+          member_username: this.itemDetailOpen.member_username,
         };
         this.itemDetail = { ...res, ...details };
         this.paginationDetail.rowsNumber = this.itemDetail.pagination.total;
@@ -630,14 +642,18 @@ export default {
       this.dialogdetail = true;
     },
     numberWithCommas(x) {
+<<<<<<< HEAD
       var parts = parseFloat(x)
         .toFixed(2)
         .toString()
         .split(".");
+=======
+      var parts = parseInt(x).toFixed(2).toString().split(".");
+>>>>>>> yeekeeSetting
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
-    }
-  }
+    },
+  },
 };
 </script>
 

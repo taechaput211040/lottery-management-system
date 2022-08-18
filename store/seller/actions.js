@@ -13,6 +13,36 @@ export async function getAllsetting({ commit }) {
   });
 }
 
+export async function getSettingByPage(
+  { commit },
+  params = {
+    currentPage: undefined,
+    limit: undefined,
+    title: undefined,
+    self_status: undefined
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `${process.env.API_LOTTO_SETTING}/ManageLotto/get_typecategory_self`,
+        {
+          params: {
+            currentPage: params.currentPage,
+            limit: params.limit,
+            title: params.title,
+            self_status: params.self_status
+          }
+        }
+      );
+
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 export async function changeStaussetting({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -58,6 +88,35 @@ export async function getLottoDownline({ commit }) {
     }
   });
 }
+
+export async function getLottoDownlineFilter(
+  { commit },
+  params = {
+    currentPage: undefined,
+    limit: undefined,
+    username: undefined
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(
+        `${process.env.API_LOTTO_SETTING}/ManageLotto/get_member`,
+        {
+          params: {
+            currentPage: params.currentPage,
+            limit: params.limit,
+            username: params.username
+          }
+        }
+      );
+
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 export async function getTypeByUser({ commit }, username) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -116,8 +175,8 @@ export async function recieveSellertofull({ state, commit }, context) {
       } catch (error) {
         reject(error);
       }
-    }else{
-      console.log('havestate')
+    } else {
+      console.log("havestate");
     }
   });
 }

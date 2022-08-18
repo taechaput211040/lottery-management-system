@@ -11,24 +11,34 @@
     </div>
     <div v-else>
       <div class="white rounded-lg mt-2" v-if="!this.$route.query.username">
-        <div class="col-12 col-md-4 ">
+        <div class="col-12 col-md-6 row my-3">
           <v-text-field
             v-model="search"
             label="ค้นหาชื่อในสายงาน"
-            class="m-4"
+            class="m-4 mx-3"
             outlined
             dense
             hide-details="auto"
           ></v-text-field>
+          <v-btn
+            color="primary"
+            @click="searchdata()"
+            rounded
+            class="btn_search"
+          >
+            <v-icon left>mdi-magnify</v-icon> ค้นหา
+          </v-btn>
         </div>
 
         <div class="rounded-lg white">
           <v-data-table
             hide-default-footer
             :search="search"
-            :options.sync="option"
+            :paginations.sync="pagination"
             :headers="headerOnOff"
-            :items="itemtypeaward"
+            :items="itemtypeaward.data"
+            :page.sync="pagination.page"
+            :items-per-page.sync="pagination.itemsPerPage"
             :loading="isLoading"
           >
             <template v-slot:no-data>
@@ -42,31 +52,39 @@
                 ไม่พบข้อมูล
               </v-alert>
             </template>
-            <template #[`item.no`]="{index}">
-              {{ option.itemsPerPage * (option.page - 1) + (index + 1) }}
+            <template #[`item.no`]="{ index }">
+              {{
+                pagination.itemsPerPage * (pagination.page - 1) + (index + 1)
+              }}
             </template>
-            <template #[`item.actions`]="{item}">
-              <v-btn class="btn_edit white--text" rounded small @click="showdetial(item)"
+            <template #[`item.actions`]="{ item }">
+              <v-btn
+                class="btn_edit white--text"
+                rounded
+                small
+                @click="showdetial(item)"
                 ><v-icon left>mdi-pencil</v-icon> จัดการสถานะ</v-btn
               >
             </template>
           </v-data-table>
-          <v-row align="baseline" class="ma-3 ">
+          <v-row align="baseline" class="ma-3">
             <v-col cols="12" sm="2" lg="2" xl="1">
               <v-select
                 outlined
                 hide-details="auto "
                 dense
-                v-model="option.itemsPerPage"
+                @change="changepagesize"
+                v-model="pagination.itemsPerPage"
                 :items="pageSizes"
                 label="รายการต่อหน้า"
               ></v-select>
             </v-col>
             <v-col cols="12" sm="10" lg="10">
               <v-pagination
-                v-model="option.page"
+                v-model="pagination.page"
                 :total-visible="7"
-                :length="Math.ceil(itemtypeaward.length / option.itemsPerPage)"
+                :length="Math.ceil(pagination.total / pagination.itemsPerPage)"
+                @input="handlePageChange(pagination.page)"
               ></v-pagination>
             </v-col>
           </v-row>
@@ -118,8 +136,13 @@ export default {
   data() {
     return {
       search: "",
-      option: {},
+      pagination: {},
       pageSizes: [5, 10, 15, 25],
+      pagination: {
+        page: 1,
+        itemsPerPage: 10,
+        total: 0,
+      },
       itemdetail: [],
       isLoading: false,
       dataDetail: [],
@@ -134,49 +157,76 @@ export default {
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
           align: "center",
-          width: "80px"
+          width: "80px",
         },
         {
           text: "ชื่อ",
           value: "username",
           class: "font-weight-bold",
-          align: "left"
+          align: "left",
         },
         {
           text: "ดำเนินการ",
           value: "actions",
           class: "font-weight-bold",
           align: "center",
-          width: "200px"
-        }
+          width: "200px",
+        },
       ],
 
       itemtypeaward: [],
       selecttype: "",
       filter: {
         startDate: "",
-        endDate: ""
-      }
+        endDate: "",
+      },
     };
   },
   async fetch() {
-    this.isLoading = true;
-    try {
-      const { data } = await this.getLottoDownline();
-      this.isLoading = false;
-      this.itemtypeaward = data.result;
-    } catch (error) {
-      this.isLoading = false;
-      console.log(error);
-    }
+    this.getDataInfo();
   },
   methods: {
     ...mapActions("seller", [
-      "getLottoDownline",
+      "getLottoDownlineFilter",
       "changeStaussetting",
-      "getTypeByJser"
+      "getTypeByJser",
     ]),
+    searchdata() {
+      this.pagination.page = 1;
+      this.getDataInfo();
+    },
 
+    getParameter() {
+      let param = {
+        currentPage: this.pagination.page,
+        limit: this.pagination.itemsPerPage,
+        username: !this.search ? undefined : this.search,
+      };
+      return param;
+    },
+    changepagesize(value) {
+      this.pagination.page = 1;
+      this.pagination.itemsPerPage = value;
+      this.getDataInfo();
+    },
+    handlePageChange(size) {
+      this.pagination.page = size;
+      this.getDataInfo();
+    },
+
+    async getDataInfo() {
+      this.isLoading = true;
+      try {
+        let param = this.getParameter();
+        const { data } = await this.getLottoDownlineFilter(param);
+        this.isLoading = false;
+        this.itemtypeaward = data.result;
+        this.pagination.total = this.itemtypeaward.total;
+      } catch (error) {
+        this.isLoading = false;
+        console.log(error);
+      }
+    },
     async showdetial(data) {
       this.$router.push(`${this.$route.path}?username=${data.username}`);
       this.dataDetail = data.typecategory;
@@ -189,7 +239,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    }
-  }
+    },
+  },
 };
 </script>

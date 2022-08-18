@@ -111,6 +111,9 @@
           <template #[`item.maximum_out_come_rate`]="{item}">
             {{ numberWithCommas(item.maximum_out_come_rate) }}
           </template>
+          <template #[`item.received_out_come_rate`]="{ item }">
+            {{ numberWithCommas(item.received_out_come_rate) }}
+          </template>
           <template #[`item.minimum_bet_prize`]="{item}">
             {{ numberWithCommas(item.minimum_bet_prize) }}
           </template>
@@ -150,8 +153,8 @@
         </v-row>
       </div>
 
-      <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
-        <h4 class="my-2">หวยของ upline</h4>
+      <!-- <div v-if="selectCate != null" class="rounded-lg white pa-3 mt-3">
+        <h4 class="my-2">อัตราจ่ายที่ได้รับมา</h4>
         <v-data-table
           class="elevation-2"
           :headers="headersUpline"
@@ -207,7 +210,7 @@
             ></v-pagination>
           </v-col>
         </v-row>
-      </div>
+      </div> -->
     </div>
 
     <v-dialog max-width="400px" v-model="dlupdate" persistent>
@@ -360,6 +363,12 @@ export default {
           align: "center"
         },
         {
+          text: "อัตราจ่ายที่ได้รับมา",
+          value: "received_out_come_rate",
+          class: "font-weight-bold",
+          align: "center",
+        },
+        {
           text: "แทงต่ำสุด",
           value: "minimum_bet_prize",
           class: "font-weight-bold",
@@ -387,32 +396,32 @@ export default {
           align: "center"
         }
       ],
-      headersUpline: [
-        {
-          text: "ชนิดหวย",
-          value: "lottonumbertype_name",
-          class: "font-weight-bold",
-          align: "center"
-        },
-        {
-          text: "อัตราจ่าย",
-          value: "maximum_out_come_rate",
-          class: "font-weight-bold",
-          align: "center"
-        },
-        {
-          text: "แทงต่ำสุด",
-          value: "minimum_bet_prize",
-          class: "font-weight-bold",
-          align: "center"
-        },
-        {
-          text: "แทงสูงสุด",
-          value: "maximum_bet_prize",
-          class: "font-weight-bold",
-          align: "center"
-        }
-      ],
+      // headersUpline: [
+      //   {
+      //     text: "ชนิดหวย",
+      //     value: "lottonumbertype_name",
+      //     class: "font-weight-bold",
+      //     align: "center"
+      //   },
+      //   {
+      //     text: "อัตราจ่าย",
+      //     value: "maximum_out_come_rate",
+      //     class: "font-weight-bold",
+      //     align: "center"
+      //   },
+      //   {
+      //     text: "แทงต่ำสุด",
+      //     value: "minimum_bet_prize",
+      //     class: "font-weight-bold",
+      //     align: "center"
+      //   },
+      //   {
+      //     text: "แทงสูงสุด",
+      //     value: "maximum_bet_prize",
+      //     class: "font-weight-bold",
+      //     align: "center"
+      //   }
+      // ],
       itemcategory: [],
       selecttype: "",
       filter: {
@@ -554,7 +563,7 @@ export default {
 
     async selectFlexodd(value) {
       this.getOutComeratebyid(value);
-      this.getUplinebyid(value);
+      // this.getUplinebyid(value);
       console.log(value)
     },
     async getOutComeratebyid(id) {

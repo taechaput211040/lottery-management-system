@@ -91,7 +91,12 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
   router: {
+<<<<<<< HEAD
     mode: "history"
+=======
+
+    mode: "history",
+>>>>>>> yeekeeSetting
     // base: "/storage/dev-backoffice/"
     // base: "/storage/backoffice/"
   }
