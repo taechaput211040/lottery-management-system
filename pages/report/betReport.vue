@@ -642,14 +642,8 @@ export default {
       this.dialogdetail = true;
     },
     numberWithCommas(x) {
-<<<<<<< HEAD
-      var parts = parseFloat(x)
-        .toFixed(2)
-        .toString()
-        .split(".");
-=======
       var parts = parseInt(x).toFixed(2).toString().split(".");
->>>>>>> yeekeeSetting
+
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
     },
