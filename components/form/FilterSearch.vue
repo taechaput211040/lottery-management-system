@@ -1,6 +1,6 @@
 <template>
   <div class="my-3 rounded-lg white">
-    <h3 class="pa-3">วันที่ที่ต้องการค้นหา</h3>
+    <h3 class="pa-3">ค้นหา</h3>
     <v-divider></v-divider>
     <div class="pa-3">
       <v-row>

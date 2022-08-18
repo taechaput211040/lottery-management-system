@@ -72,8 +72,10 @@
           <v-pagination
             v-model="option.page"
             :total-visible="7"
-            :length="Math.ceil(dataDetail.length / option.itemsPerPage)"
+           
+
           ></v-pagination>
+           <!-- :length="Math.ceil(dataDetail.length / option.itemsPerPage)" -->
         </v-col>
       </v-row>
       <v-dialog v-model="dialogEdit" max-width="300">
@@ -128,6 +130,7 @@ export default {
         status: false
       },
       dataDetail: [],
+      dataDetail_lenght:0,
       headerDetail: [
         {
           text: "No.",
@@ -169,7 +172,20 @@ export default {
       this.isLoading = true;
       try {
         let { data } = await this.getTypeByUser(this.$route.query.username);
-        this.dataDetail = data.result;
+        if(data){
+           this.dataDetail = data.result.data;
+           if(typeof(this.dataDetail)== 'object'){
+            this.dataDetail_lenght = 0
+           }else{
+            this.dataDetail_lenght= this.dataDetail.length
+           }
+           
+ 
+        }
+       
+        // if(typeof(this.dataDetail)== 'object') this.dataDetail = [this.dataDetail]
+        
+
         this.isLoading = false;
       } catch (error) {
         console.log(error);

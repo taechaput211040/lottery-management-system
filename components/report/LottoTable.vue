@@ -181,7 +181,7 @@
         </v-row>
 
 
-        <div>
+        <div v-show="!$route.query.memberid">
           <div class="mt-5 pa-3">
             <h3>รายงานสมาชิก</h3>
           </div>
@@ -263,7 +263,7 @@
             </v-col>
           </v-row>
         </div>
-
+     
         <div
           class="white rounded-lg"
           v-if="$route.query.agentId && $route.query.memberid"
@@ -432,13 +432,18 @@ export default {
   },
   methods: {
     setRouter() {
-      if (!this.$route.query.agentId) {
+      console.log("setRouter ",this.datarender)
+      if (!this.$route.query.agentId || this.$route.query.agentId == 'undefined' ) {
+
         this.$router.push(
-          `${this.$route.fullPath}?agentId=${this.datarender.current.agent_id}`
+          `${this.$route.fullPath}?agentId=${this.datarender.current[0].agent_id}`
         );
       }
     },
     showBillDetail(item) {
+      console.log("showBillDetail")
+      console.log(`${this.$route.fullPath}&memberid=${item.member_id}`)
+      //  this.$router.push(`${this.$route.fullPath}&memberid=${item.member_id}`);
       if (this.$route.query.agentId) {
         this.$router.push(`${this.$route.fullPath}&memberid=${item.member_id}`);
       } else {
@@ -567,6 +572,7 @@ export default {
       this.isLoading = true;
       const form_path = JSON.parse(sessionStorage.getItem("userPrev"));
       const prevUsers = form_path.slice(0, form_path.length - 1);
+
       let userdata = prevUsers[prevUsers.length - 1];
       if (userdata) {
         this.agent_name = userdata.username;

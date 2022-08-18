@@ -180,6 +180,7 @@ export default {
         startDate: "",
         endDate: "",
       },
+      username: ''
     };
   },
   async fetch() {
@@ -197,10 +198,16 @@ export default {
     },
 
     getParameter() {
+      if(this.$route.query.username){
+        this.username = this.$route.query.username
+      }else{
+        this.username = !this.search ? undefined : this.search
+      }
+      
       let param = {
         currentPage: this.pagination.page,
         limit: this.pagination.itemsPerPage,
-        username: !this.search ? undefined : this.search,
+        username: this.username,
       };
       return param;
     },
@@ -218,6 +225,7 @@ export default {
       this.isLoading = true;
       try {
         let param = this.getParameter();
+        console.log("param ",param)
         const { data } = await this.getLottoDownlineFilter(param);
         this.isLoading = false;
         this.itemtypeaward = data.result;
