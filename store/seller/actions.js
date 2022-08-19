@@ -121,7 +121,13 @@ export async function getTypeByUser({ commit }, username) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `${process.env.API_LOTTO_SETTING}/ManageLotto/get_typecategory_by_user/${username}`
+        `${process.env.API_LOTTO_SETTING}/ManageLotto/get_typecategory_by_user/${username}`,
+        {
+          params: {
+            currentPage: 1,
+            limit: 1000
+          }
+        }
       );
 
       resolve(response);
@@ -172,6 +178,24 @@ export async function recieveSellertofull({ state, commit }, context) {
         );
         commit("set_topseller", response.data);
         resolve(response);
+      } catch (error) {
+        reject(error);
+      }
+    } else {
+      console.log("havestate");
+    }
+  });
+}
+export async function getLimitNumber({  state, commit }, context) {
+  return new Promise(async (resolve, reject) => {
+   
+    if (!state.balance_top) {
+      try {
+        let response = await this.$axios.get(
+          `${process.env.API_SETTING_SELLER}/seller/get_all_limit`
+        );
+   
+        resolve(response.data);
       } catch (error) {
         reject(error);
       }

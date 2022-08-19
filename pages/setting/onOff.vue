@@ -12,7 +12,7 @@
           <v-divider></v-divider>
           <div class="d-flex">
             <div class="col-4 rounded-lg white">
-              ชื่อหวยที่จ้องการค้นหา
+              ชื่อหวยที่ต้องการค้นหา
               <div class="col-12" style="padding: 10px 0 !important">
                 <v-text-field
                   dense

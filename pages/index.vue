@@ -74,6 +74,70 @@
         ></v-col>
       </v-row>
       <v-row>
+        <!-- start -->
+        <v-col cols="12" lg="12" xl="12" v-if="limitNumber">
+          <v-row>
+            <v-col cols="12" sm="6" md="12"
+              ><div class="rounded-lg white pb-2">
+                <div
+                  class="title_card align-center pa-4 font-weight-bold d-flex"
+                >
+                  <h2>เลขอั้น</h2>
+                  <v-spacer></v-spacer>
+                  <div class="text-center mt-5 mt-md-0">
+                    <v-btn
+                      v-for="(item, i) in limitNumber"
+                      :key="i"
+                      :label="item.title"
+                      :value="item.title"
+                      class="mx-1 font-weight-bold btn_style"
+                      :class="{ active_btnstyle: typeLimitnumber == i }"
+                      rounded
+                      color="primary"
+                      @click="changTypelimitnumber(i)"
+                    >
+                      <!-- @click="changDatefillter('findate')" -->
+                      {{ item.title }}
+                    </v-btn>
+                  </div>
+                </div>
+
+                <div
+                  class="title_card col-12 pa-4 font-weight-bold d-flex pt-0"
+                  v-if="limitNumber.length"
+                >
+                  <div
+                    v-for="(item_num, index) in limitNumber[typeLimitnumber]
+                      .type"
+                    :key="index"
+          
+                    class="col ps-0"
+                  > 
+                  <div class="col-6 ps-0 pt-0">
+                    <h3 class="mb-3">{{ item_num.lottonumbertype_name }}</h3>
+
+                      <div
+                        v-for="(item_type_nam, index_type) in item_num.number"
+                        :key="index_type"
+                        class="red--text"
+                      >
+                        <p class="red--text">
+                          เลข {{ item_type_nam.lotto_number }} 
+                          <span class="ps-5">จ่าย {{ item_type_nam.out_come_rate }}</span>
+                        </p>
+                      </div>
+                  </div>
+                    
+                  </div>
+                </div>
+                <div></div>
+              </div>
+            </v-col>
+          </v-row>
+        </v-col>
+        <!-- end  -->
+      </v-row>
+      <v-row>
         <v-col cols="12" lg="6" xl="5">
           <v-row>
             <v-col cols="12" sm="6" md="12"
@@ -105,10 +169,10 @@
                         ไม่พบข้อมูล
                       </v-alert>
                     </template>
-                    <template #[`item.no`]="{index}">
+                    <template #[`item.no`]="{ index }">
                       {{ index + 1 }}.
                     </template>
-                    <template #[`item.type`]="{item,index}">
+                    <template #[`item.type`]="{ item, index }">
                       <div class="pa-2">
                         <div class="d-flex justify-space-between">
                           <span class="font-weight-bold">{{ item.title }}</span>
@@ -122,7 +186,7 @@
                         ></v-progress-linear>
                       </div>
                     </template>
-                    <template #[`item.bet`]="{item}">
+                    <template #[`item.bet`]="{ item }">
                       {{ numberWithCommas(item.bet) }} บาท
                     </template>
                   </v-data-table>
@@ -159,10 +223,10 @@
                         ไม่พบข้อมูล
                       </v-alert>
                     </template>
-                    <template #[`item.no`]="{index}">
+                    <template #[`item.no`]="{ index }">
                       {{ index + 1 }}.
                     </template>
-                    <template #[`item.type`]="{item,index}">
+                    <template #[`item.type`]="{ item, index }">
                       <div class="pa-2">
                         <div class="d-flex justify-space-between">
                           <span class="font-weight-bold">{{ item.title }}</span>
@@ -177,7 +241,7 @@
                         ></v-progress-linear>
                       </div>
                     </template>
-                    <template #[`item.bet`]="{item}">
+                    <template #[`item.bet`]="{ item }">
                       {{ numberWithCommas(item.payout) }} บาท
                     </template>
                   </v-data-table>
@@ -218,11 +282,11 @@
                     ไม่พบข้อมูล
                   </v-alert>
                 </template>
-                <template #[`item.no`]="{index}"> {{ index + 1 }}. </template>
-                <template #[`item.self_receive_amount`]="{item}">
+                <template #[`item.no`]="{ index }"> {{ index + 1 }}. </template>
+                <template #[`item.self_receive_amount`]="{ item }">
                   {{ numberWithCommas(item.self_receive_amount) }}
                 </template>
-                <template #[`item.self_receive_balance`]="{item}">
+                <template #[`item.self_receive_balance`]="{ item }">
                   {{ numberWithCommas(item.self_receive_balance) }}
                 </template>
               </v-data-table>
@@ -264,16 +328,18 @@ export default {
       if (newVal) {
         this.Betdate = null;
       }
-    }
+    },
   },
   computed: {},
+
   data() {
     return {
-      typeOverview: "day",
+      typeOverview: "month",
+      typeLimitnumber: 0,
       graphRender: [],
       filterDate: {
         start_date: "2022-03-01T00:00:00.000Z",
-        end_date: "2022-04-30T23:59:59.999Z"
+        end_date: "2022-04-30T23:59:59.999Z",
       },
       betValue: 0,
       itempayout: [],
@@ -295,14 +361,14 @@ export default {
           filterable: false,
           align: "center",
           width: "50px",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "ประเภทหวย",
           value: "type",
           sortable: false,
           filterable: false,
-          align: "center"
+          align: "center",
         },
         {
           text: "ผลรวม",
@@ -311,8 +377,8 @@ export default {
           sortable: false,
           align: "center",
           cellClass: "font-weight-bold",
-          width: "150px"
-        }
+          width: "150px",
+        },
       ],
       header_recieve: [
         {
@@ -322,7 +388,7 @@ export default {
           filterable: false,
           align: "center",
           width: "50px",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "ชื่อหวย",
@@ -330,7 +396,7 @@ export default {
           sortable: false,
           filterable: false,
           align: "center",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "ชนิดตัวเลข",
@@ -338,7 +404,7 @@ export default {
           sortable: false,
           filterable: false,
           align: "center",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "เลขที่ถูกรางวัล",
@@ -346,7 +412,7 @@ export default {
           sortable: false,
           filterable: false,
           align: "center",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "รับของปัจจุบัน",
@@ -354,7 +420,7 @@ export default {
           sortable: false,
           filterable: false,
           align: "center",
-          cellClass: "font-weight-bold"
+          cellClass: "font-weight-bold",
         },
         {
           text: "ยอดรับของทั้งหมด",
@@ -362,8 +428,8 @@ export default {
           sortable: false,
           filterable: false,
           align: "center",
-          cellClass: "font-weight-bold"
-        }
+          cellClass: "font-weight-bold",
+        },
       ],
       itemrecieved: [],
       isLoading: false,
@@ -371,12 +437,12 @@ export default {
       itemgraphshow: [
         {
           name: "ยอดกำไร",
-          data: []
+          data: [],
         },
         {
           name: "ยอดขาดทุน",
-          data: []
-        }
+          data: [],
+        },
       ],
       chartOptions: {
         chart: {
@@ -390,34 +456,47 @@ export default {
             top: -2,
             left: 2,
             blur: 5,
-            opacity: 0.06
-          }
+            opacity: 0.06,
+          },
         },
         fill: {
           type: "solid",
-          fillOpacity: 0.7
+          fillOpacity: 0.7,
         },
 
         dataLabels: {
-          enabled: false
+          enabled: false,
         },
         colors: ["#00E396", "#FF5951"],
         stroke: {
-          curve: "smooth"
-        }
-      }
+          curve: "smooth",
+        },
+      },
+      limitNumber: [],
     };
   },
   async fetch() {
-    await this.changDatefillter("findate");
+    await this.changDatefillter("thismounth");
     // this.getDashboarddata();
     await this.getDataGraph();
     await this.gettoprecieve();
+    await this.getdatalimitnumber();
+  },
+  async mounted() {
+    console.log("mounted ");
+   
+    this.limitNumber = await this.getLimitNumber();
+    console.log("limitNumber ",this.limitNumber);
+    // await this.getdatalimitnumber();
   },
   methods: {
-    ...mapActions("seller", ["recieveSellertofull"]),
+    ...mapActions("seller", ["recieveSellertofull", "getLimitNumber"]),
     getDateTime(date) {
       return this.$moment(date).format("YYYY-MM-DDTHH:mm:ss" + "Z");
+    },
+    async getdatalimitnumber() {},
+    async changTypelimitnumber(i) {
+      this.typeLimitnumber = i;
     },
     async gettoprecieve() {
       if (!this.$store.state.seller.balance_top) {
@@ -426,7 +505,7 @@ export default {
       try {
         let { result: response } = this.$store.state.seller.balance_top;
         this.itemrecieved = response.data;
-        console.log(this.itemrecieved)
+        console.log(this.itemrecieved);
       } catch (error) {}
     },
     async mapchart(item) {
@@ -436,11 +515,11 @@ export default {
         for (let i = 0; i < item.length; i++) {
           this.itemgraphshow[0].data.push({
             x: this.$moment(item[i].date).format("YYYY-MM-DD"),
-            y: parseInt(item[i].bet).toFixed(2)
+            y: parseInt(item[i].bet).toFixed(2),
           });
           this.itemgraphshow[1].data.push({
             x: this.$moment(item[i].date).format("YYYY-MM-DD"),
-            y: parseInt(item[i].payout).toFixed(2)
+            y: parseInt(item[i].payout).toFixed(2),
           });
         }
       } else {
@@ -451,13 +530,13 @@ export default {
             x: this.$moment(dateRender[i].date.toString(), "LT").format(
               "HH:mm"
             ),
-            y: parseInt(dateRender[i].bet).toFixed(2)
+            y: parseInt(dateRender[i].bet).toFixed(2),
           });
           this.itemgraphshow[1].data.push({
             x: this.$moment(dateRender[i].date.toString(), "LT").format(
               "HH:mm"
             ),
-            y: parseInt(dateRender[i].payout).toFixed(2)
+            y: parseInt(dateRender[i].payout).toFixed(2),
           });
         }
       }
@@ -478,7 +557,7 @@ export default {
               .format(),
             end_date: this.$moment()
               .set({ hour: 23, minute: 59, second: 59 })
-              .format()
+              .format(),
           };
           break;
         case "week":
@@ -488,9 +567,11 @@ export default {
             diff = today.getDate() - wfday + (wfday == 0 ? -6 : 1);
           var wlday = diff + 6;
 
-          var curr = new Date;
+          var curr = new Date();
           var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
-          var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
+          var lastday = new Date(
+            curr.setDate(curr.getDate() - curr.getDay() + 6)
+          );
 
           this.filterDate = {
             start_date: this.getDateTime(
@@ -498,7 +579,7 @@ export default {
             ),
             end_date: this.getDateTime(
               new Date(lastday.setHours(23, 59, 59, 999))
-            )
+            ),
           };
           break;
         case "thismounth":
@@ -515,7 +596,7 @@ export default {
                 59,
                 999
               )
-            )
+            ),
           };
           break;
         default:
@@ -527,7 +608,7 @@ export default {
     getParameter() {
       let params = {
         start_time: this.filterDate.start_date,
-        end_time: this.filterDate.end_date
+        end_time: this.filterDate.end_date,
       };
       return params;
     },
@@ -535,11 +616,11 @@ export default {
     async getDataGraph() {
       try {
         let params = {
-          type: this.typeOverview
+          type: this.typeOverview,
         };
         let { data } = await this.getGraphReport(params);
 
-        this.graphRender = data.sort(function(a, b) {
+        this.graphRender = data.sort(function (a, b) {
           return new Date(a.date) - new Date(b.date);
         });
         this.mapchart(this.graphRender);
@@ -555,12 +636,12 @@ export default {
         this.payoutValue = response.payout;
         this.winloseValue = response.winlose;
         this.itembytype = response.programs
-          .sort(function(a, b) {
+          .sort(function (a, b) {
             return b.bet - a.bet;
           })
           .slice(0, 5);
         this.itempayout = response.programs
-          .sort(function(a, b) {
+          .sort(function (a, b) {
             return b.payout - a.payout;
           })
           .slice(0, 5);
@@ -587,14 +668,11 @@ export default {
       return colorprogress;
     },
     numberWithCommas(x) {
-      var parts = parseFloat(x)
-        .toFixed(2)
-        .toString()
-        .split(".");
+      var parts = parseFloat(x).toFixed(2).toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

@@ -153,7 +153,7 @@
             {{ numberWithCommas(item.winlose) }}
           </template>
           <template #[`item.bet`]="{ item }">
-            {{ numberWithCommas(item.bet) }}
+            {{ numberWithCommas(item.bet_amount) }}
           </template>
         </v-data-table>
         <v-row align="baseline" class="ma-3">
@@ -356,6 +356,14 @@ export default {
         {
           text: "จ่าย(บาท)",
           value: "payout",
+          align: "center",
+          class: "font-weight-bold",
+          cellClass: "font-weight-bold",
+          sortable: false,
+        },
+        {
+          text: "แพ้ชนะ(บาท)",
+          value: "winlose",
           align: "center",
           class: "font-weight-bold",
           cellClass: "font-weight-bold",
@@ -642,7 +650,7 @@ export default {
       this.dialogdetail = true;
     },
     numberWithCommas(x) {
-      var parts = parseInt(x).toFixed(2).toString().split(".");
+      var parts = parseFloat(x).toFixed(2).toString().split(".");
 
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");

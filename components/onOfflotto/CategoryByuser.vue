@@ -71,8 +71,8 @@
         <v-col cols="12" sm="10" lg="10">
           <v-pagination
             v-model="option.page"
-            :total-visible="7"
-           
+            :total-visible="20"
+           :length="Math.ceil(dataDetail.length / option.itemsPerPage)"
 
           ></v-pagination>
            <!-- :length="Math.ceil(dataDetail.length / option.itemsPerPage)" -->
