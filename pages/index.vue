@@ -407,7 +407,7 @@ export default {
           cellClass: "font-weight-bold",
         },
         {
-          text: "เลขที่ถูกรางวัล",
+          text: "เลข",
           value: "lotto_number",
           sortable: false,
           filterable: false,
@@ -484,8 +484,11 @@ export default {
   },
   async mounted() {
     console.log("mounted ");
+     let response = await this.$axios.get(
+          `${process.env.API_SETTING_SELLER}/seller/get_all_limit`
+        );
    
-    this.limitNumber = await this.getLimitNumber();
+    this.limitNumber = response.data;
     console.log("limitNumber ",this.limitNumber);
     // await this.getdatalimitnumber();
   },

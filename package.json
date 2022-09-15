@@ -24,6 +24,7 @@
     "vue-form-wizard": "^0.8.4",
     "vue-loading-overlay": "^3.0",
     "vue-sweetalert2": "^5.0.2",
+    "vue-vconsole-devtools": "^1.0.5",
     "vue2-editor": "^2.10.3",
     "vue2-loading": "^0.0.16",
     "vuetify": "^2.5.5"
